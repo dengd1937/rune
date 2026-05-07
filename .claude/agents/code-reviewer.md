@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: 写完或修改代码后立即使用 — commit 前对所有代码变更强制触发，审查质量、安全、可维护性，发现 CRITICAL 问题阻塞 commit。
+description: "[已废弃 v2.0] 由 task-driven-development skill 内部 Task(general-purpose) + code-quality-reviewer-prompt.md 替代。文件保留作历史向后兼容，新调用请勿使用。"
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: sonnet
 ---
