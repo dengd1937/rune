@@ -1,6 +1,6 @@
 ---
 name: design-reviewer
-description: Design artifact reviewer for V2-4 gate. Reviews design contracts, tokens, intent docs, and layout reports for completeness, structural consistency, and documentation compliance before handoff to development.
+description: 设计产物（contract/token/intent/layout）准备移交开发前使用 — 设计工作流 L2 V2-4 步骤（hard gate）强制触发，通过后才进入 Gate 3 用户审批；对抗式审查找出不应移交的理由，检查完整性、结构一致性、文档合规性。
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: sonnet
 ---

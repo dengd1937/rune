@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities.
+description: 代码涉及认证/授权/用户输入/支付/数据库查询/外部 API/文件系统/加密操作时使用 — commit 前强制触发，识别 secrets、SSRF、注入、不安全加密及 OWASP Top 10 漏洞。
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---

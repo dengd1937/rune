@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. MUST BE USED for all code changes.
+description: 写完或修改代码后立即使用 — commit 前对所有代码变更强制触发，审查质量、安全、可维护性，发现 CRITICAL 问题阻塞 commit。
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: sonnet
 ---

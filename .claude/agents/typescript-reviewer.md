@@ -1,6 +1,6 @@
 ---
 name: typescript-reviewer
-description: Expert TypeScript/React code reviewer specializing in type safety, async patterns, React hooks, and frontend security. Use for all TypeScript/TSX code changes. MUST BE USED for TypeScript/Next.js projects.
+description: TypeScript/TSX/React 代码改动 commit 前使用 — 专项审查类型安全（避免 any）、async 模式、React hooks 规则、前端安全；TypeScript/Next.js 项目强制触发。
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: sonnet
 ---

@@ -1,6 +1,6 @@
 ---
 name: architect
-description: 应用架构分析顾问。评估技术选型、模块边界、数据模型、API 契约。产出分析报告和 ADR 供用户审批。
+description: 用户进行重大技术选型、引入新模块/新依赖、改动数据模型或 API 契约时使用 — 重构中浮现的边界问题也触发；产出分析报告和 ADR 供用户审批，不直接写实现代码。
 tools: ["Read", "Grep", "Glob"]
 model: opus
 ---

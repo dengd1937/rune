@@ -1,6 +1,6 @@
 ---
 name: doc-writer
-description: 接收工作流的结构化数据，按模板格式化并写入正确位置。不决定内容——调用者提供所有数据。
+description: 调用方已备好结构化数据 + 模板标识符（如 module-doc、adr、design-spec）时使用 — 按模板格式化写入对应文件位置，本身不决定内容、不做研究。
 tools: ["Read", "Write", "Edit", "Glob"]
 model: haiku
 ---

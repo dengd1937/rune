@@ -1,6 +1,6 @@
 ---
 name: doc-updater
-description: 维护项目跨工作流的共享知识层——catalog、索引、README 评估、codemap。工作流完成后触发，保持共享知识与新增产物同步。
+description: 开发/设计/架构工作流完成后使用 — 同步 catalog、模块索引、README 评估、codemap，保持跨工作流共享知识与新增产物一致；不写新内容，只维护拓扑。
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: haiku
 ---
