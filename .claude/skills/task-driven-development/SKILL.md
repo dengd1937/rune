@@ -96,13 +96,20 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 
 - `{{TASK_TEXT}}` → 当前任务完整文本
 - `{{IMPLEMENTER_REPORT}}` → Step 1 的 implementer 状态报告
-- `{{DIFF}}` → `git diff HEAD~1` 输出
+- `{{DIFF}}` → 实施后未 commit 时用 `git diff HEAD`（包含工作区 + 暂存区的所有未 commit 改动）；commit 后用 `git diff HEAD~1`
 
 **通过**（结论 ✅）→ Step 4。
 
 **未通过**（结论 ❌）→ 将审查反馈 + 任务文本构造为新 prompt，重新调度 **implementer subagent**（general-purpose + implementer-prompt.md）修复 → 修复完成后回到 Step 2 重新质量门控和审查。
 
 **修复者是 implementer subagent，不是主代理。主代理不读完整审查反馈后自己改代码。**
+
+**简化复审条件**：如果修复满足以下全部条件，可跳过完整复审，直接确认修复满足 reviewer 反馈即进 Step 4 / Step 6：
+1. 修复内容完全采纳 reviewer 反馈，无引申
+2. 无超范围改动（仅改 reviewer 指出的位置）
+3. 修复 implementer 报告 DONE 且明确说明"未引入额外内容"
+
+不满足以上任一条件 → 必须走完整复审。
 
 ### Step 4：代码质量审查
 
@@ -111,6 +118,9 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 **必选（通用质量）：**
 读取 `code-quality-reviewer-prompt.md` 模板，替换占位符后，通过 `Task(subagent_type="general-purpose", model="opus")` 调度。
 不再调度 `code-reviewer` named agent（已废弃）。
+
+`{{DIFF}}` 来源同 Step 3：未 commit 时用 `git diff HEAD`，commit 后用 `git diff HEAD~1`。
+`{{BASE_SHA}}` / `{{HEAD_SHA}}`：未 commit 时填 `HEAD` / `working`；commit 后填实际 hash。
 
 **按语言/场景条件触发（与通用质量并发）：**
 

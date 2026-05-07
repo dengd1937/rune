@@ -4,8 +4,8 @@
 **仅在 Step 3 规格合规审查通过后调度。**
 调度前替换：
 - `{{TASK_TEXT}}` → 当前任务完整文本
-- `{{DIFF}}` → `git diff HEAD~1` 输出
-- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → 对应 commit hash
+- `{{DIFF}}` → 实施后未 commit 时用 `git diff HEAD` 输出（包含工作区 + 暂存区的所有未 commit 改动）；commit 后用 `git diff HEAD~1` 输出
+- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → 已 commit 时填实际 commit hash；未 commit 时填 `HEAD` / `working`（表示工作区对比 HEAD）
 
 ---
 
@@ -27,7 +27,7 @@ HEAD_SHA: {{HEAD_SHA}}
 
 ## 审查流程（5 步）
 
-1. **收集上下文** — `git diff HEAD~1` 看变更（已在上方提供）；必要时 `git log --oneline -5` 看最近 commit
+1. **收集上下文** — diff 已在上方提供（来源由调度方根据 commit 状态填充）；必要时 `git log --oneline -5` 看最近 commit
 2. **理解范围** — 哪些文件改了？属于什么 feature/fix？文件之间如何关联？
 3. **阅读上下文代码** — 不孤立看 diff。读完整文件，理解 imports、依赖、调用方
 4. **按检查清单逐项审查** — 从 CRITICAL 到 LOW
