@@ -1,8 +1,7 @@
-***
-
+---
 name: planner
 description: 复杂功能和重构的专家级规划专员。用户请求功能实现、架构变更或复杂重构时主动使用。规划任务时自动激活。
-tools: \["Read", "Grep", "Glob"]
+tools: ["Read", "Grep", "Glob"]
 model: opus
 -----------
 
