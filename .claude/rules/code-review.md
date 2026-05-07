@@ -26,10 +26,11 @@
 
 | Agent | 用途 |
 |-------|------|
-| **code-reviewer** | 通用代码质量、模式、最佳实践 |
-| **security-reviewer** | 安全漏洞、OWASP Top 10 |
-| **python-reviewer** | Python 专项问题 |
-| **typescript-reviewer** | TypeScript/React 类型安全、异步模式、hooks |
+| **task-driven-development skill** | 通用代码质量审查（Step 4 通过 general-purpose + code-quality-reviewer-prompt.md） |
+| **security-reviewer** | 安全漏洞、OWASP Top 10（Step 4 并发触发） |
+| **python-reviewer** | Python 专项问题（Step 4 并发触发） |
+| **typescript-reviewer** | TypeScript/React 类型安全、异步模式、hooks（Step 4 并发触发） |
+| **code-reviewer** | [已废弃] 由 task-driven-development skill 内部 prompt 模板替代 |
 
 ## 审批标准
 
