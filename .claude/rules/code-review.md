@@ -38,3 +38,17 @@
 - **阻塞**：发现 CRITICAL 问题
 
 → code-quality-gate skill / security-reviewer agent
+
+## Red Flags — 跳过审查的合理化借口
+
+| 借口 | 现实 |
+|---|---|
+| "代码看起来挺干净，应该没问题" | 没经过 reviewer agent = 没审查；自我感觉不算 |
+| "我自己审过了，不用再叫 agent" | 自审有确认偏差；reviewer agent 是独立第二意见 |
+| "改动很小，CRITICAL 不可能存在" | 一行改动就能引入 SQL 注入、原型污染、TOCTOU |
+| "改动不涉及安全敏感代码" | auth/输入/支付/外部 API/文件系统 都触发 security-reviewer，自判"敏感"易漏 |
+| "Python/TS 项目用通用 code-reviewer 就够" | 语言专项审查（python-reviewer/typescript-reviewer）必须叠加，不可替代 |
+| "刚刚审过类似改动" | 每个 commit 必须独立审查；上次的审查不覆盖这次 |
+| "review 中 CRITICAL 等会再修" | CRITICAL 阻塞 commit，必须**先**修 |
+| "HIGH 问题先合进去再开 issue" | HIGH 是警告级，需谨慎合并并明确记录原因，不是默认放行 |
+| "reviewer 误报了" | 误报需说明具体理由并由用户确认；不允许模型自行驳回 |
