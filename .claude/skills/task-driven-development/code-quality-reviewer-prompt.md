@@ -244,13 +244,18 @@ Fix: 移到环境变量并加到 .gitignore/.env.example
 
 | 严重程度 | 数量 | 状态 |
 |---------|------|------|
-| CRITICAL | 0 | pass |
-| HIGH | ? | warn/pass |
+| CRITICAL | ? | block |
+| HIGH | ? | block |
 | MEDIUM | ? | info |
 | LOW | ? | note |
 
-### 结论
-- APPROVE：无 CRITICAL 和 HIGH 问题
-- WARNING：仅 HIGH 问题（可谨慎合并）
-- BLOCK：发现 CRITICAL 问题，必须修复后重新审查
+### 结论（二态，不留中间状态）
+- **APPROVE**：无 CRITICAL 和 HIGH 问题（MEDIUM/LOW 不阻塞）
+- **BLOCK**：发现任意 CRITICAL 或 HIGH 问题，必须修复后重新审查
 ```
+
+---
+
+## 给主代理的设计说明（非输出内容）
+
+在 task-driven-development 流程内 HIGH = BLOCK 是**有意收紧**：AI 自动化场景没有人类把关，宁严勿宽。这与 `.claude/rules/code-review.md` 中"HIGH = 警告"的**人类 PR 审查**语义并行存在，不冲突。两套语义按语境分别使用。

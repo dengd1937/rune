@@ -132,9 +132,14 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 
 以上审查互相独立（read-only），并发执行，收集所有结果后统一判定。
 
-**所有审查通过（APPROVE 或 WARNING 无 CRITICAL/HIGH）** → Step 5。
+**判定规则（二态，无中间状态）：**
 
-**任一 BLOCK** → 将反馈 + 任务文本转给 **implementer subagent** 修复 → 修复后回到 Step 2。
+| reviewer 输出 | 处置 |
+|---|---|
+| 所有 reviewer 都 **APPROVE** | → Step 5 |
+| 任一 reviewer **BLOCK**（含任意 CRITICAL 或 HIGH） | → 转 implementer subagent 修复 → 回到 Step 2 |
+
+**HIGH = BLOCK 是有意收紧。** task-driven-development 是 AI 自动化流程，没有人类把关，所以 HIGH 必须修。这与 `.claude/rules/code-review.md` 中保留 "HIGH = 警告"的人类 PR 语义并行存在 —— 后者用于人类 PR 审查，前者用于 AI 流程内门控，二者不冲突。
 
 **修复者是 implementer subagent，不是主代理。**
 
