@@ -103,7 +103,7 @@ meridian/
 | `docs-lookup` | 通过 Context7 查阅文档 | API / 文档查询 |
 | `python-reviewer` | Python 代码审查 | Python 项目 |
 | `typescript-reviewer` | TypeScript / React / Next.js 代码审查 | TypeScript / Next.js 项目 |
-| `e2e-runner` | 浏览器端 E2E 测试执行 | 关键用户路径变更 |
+| `e2e-runner` | [已废弃] 由 implementer subagent 替代 | — |
 
 ## 三层文档架构
 

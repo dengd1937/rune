@@ -199,7 +199,7 @@ const usersWithPosts = await db.query(`
 - **环境变量验证** — 缺失必须抛 KeyError/异常，禁止静默默认值
 - **TypeScript 类型** — 避免 any，用 unknown 收窄
 - **TS UI 约束** — Tailwind v4 语义类、shadcn/ui 路径、Lucide 图标
-- **测试栈** — Vitest + RTL，E2E 优先 Vercel Agent Browser
+- **测试栈** — Vitest + RTL，E2E 用 Playwright
 - **Python 风格** — PEP 8 + 类型注解，依赖管理用 `uv add`
 - **emoji 政策** — 项目禁止 emoji 时不得引入
 

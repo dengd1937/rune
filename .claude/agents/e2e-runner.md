@@ -1,9 +1,11 @@
 ---
 name: e2e-runner
-description: 需要生成/维护/运行 E2E 测试，或验证关键用户流程时使用 — 优先 Vercel Agent Browser、回退 Playwright，自动管理 journey、隔离 flaky 用例、上传 screenshot/video/trace 产物。
+description: "[已废弃 v2.0] 由 task-driven-development skill 内部 implementer subagent 替代。E2E 测试作为普通任务由 implementer 按 TDD 流程执行。参考材料见 e2e-testing skill。文件保留作历史向后兼容，新调用请勿使用。"
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
+
+> **[已废弃 v2.0]** 以下内容已过时。E2E 测试现由 `task-driven-development` skill 内部 implementer subagent 按 TDD 流程执行。参考材料见 `e2e-testing` skill。
 
 # E2E Test Runner
 

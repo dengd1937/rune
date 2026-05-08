@@ -12,7 +12,7 @@
 | docs-lookup | Context7 查文档 |
 | python-reviewer | Python 代码审查 |
 | typescript-reviewer | TypeScript/React 代码审查 |
-| e2e-runner | 浏览器 E2E 测试 |
+| e2e-runner | [已废弃] 由 task-driven-development skill 内部 implementer subagent 替代 |
 | design-reviewer | 设计产物审查 |
 | doc-writer | 工作流产出的格式化写入（模板+路径） |
 | doc-updater | 跨工作流共享知识维护（catalog、索引、codemap） |
