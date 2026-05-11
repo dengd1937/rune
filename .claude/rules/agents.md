@@ -27,6 +27,7 @@
 | design-review | 方案对抗性审查 | writing-plans 之后、实现前 |
 | retro | 任务后复盘 | 功能/修复完成后 |
 | subagent-driven-development | 逐任务编排（implementer subagent + 并发审查 + 修复闭环） | 标准开发流程（默认） |
+| finishing-a-development-branch | 收尾工作流（测试验证 + 文档清理 + 集成选项 + worktree 清理） | 实现完成后 |
 
 ## 文档 Agent 分工
 

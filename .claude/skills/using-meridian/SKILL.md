@@ -78,6 +78,7 @@ description: Use when starting any conversation or after compact - establishes M
 | 产品发现+技术设计+spec 输出 | `brainstorm` skill / `/brainstorm` |
 | UI 任务 | `design-workflow` skill（DESIGN.md 检查由 skill 内部处理） |
 | commit 前质量门 | `commit-quality` skill |
+| 收尾（测试验证 + 集成选项 + 清理） | `finishing-a-development-branch` skill |
 | 任务后复盘 | `retro` skill |
 
 **常用 agent**（清单见 `.claude/agents/`）：security-reviewer / python-reviewer / typescript-reviewer

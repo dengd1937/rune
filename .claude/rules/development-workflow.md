@@ -50,9 +50,7 @@
 
 ### 收尾
 
-6. **文档** — 删除 `docs/plans/`；模块文档 → doc-writer agent 模板：`module-doc`；完成后 → doc-updater agent 更新模块索引和 codemap
-7. **Commit** → commit-quality skill → Conventional Commits → 禁止 `--no-verify`
-8. **预审查** — CI/CD 通过、冲突已解决、分支已同步
+6. **收尾** → finishing-a-development-branch skill → 验证测试 → 文档与产物清理 → commit 整理 → 环境检测 → 集成选项（PR/合并/保持/丢弃）→ 工作区清理
 
 ## 降级流程
 

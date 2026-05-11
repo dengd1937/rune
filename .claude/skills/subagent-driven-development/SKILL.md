@@ -156,18 +156,33 @@ Step 3 + Step 4 全部通过 → 标记任务完成 → 下一任务。
 
 ---
 
-## Phase 3：整体审查
+## Phase 3：全局审查
 
-所有任务完成后，通过 `Task(subagent_type="general-purpose", model="opus")` + `code-quality-reviewer-prompt.md` 模板做整体审查：任务间集成一致性、遗漏的全局性问题。
+所有任务通过 Phase 2 后，通过 `Task(subagent_type="general-purpose", model="opus")` + **`global-reviewer-prompt.md`** 模板做全局审查。
+
+读取 `global-reviewer-prompt.md` 模板，替换占位符后调度：
+
+- `{{PLAN_TEXT}}` → 完整计划文本（所有任务）
+- `{{TASK_SUMMARIES}}` → 每个任务的 implementer 状态报告摘要（DONE / DONE_WITH_CONCERNS + 关键决策）
+- `{{DIFF}}` → 使用 `git diff <first_base_SHA>..<last_head_SHA>` 获取全量 diff
+- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → 第一个任务的 base_SHA 和最后一个任务的 head_SHA
+
+**审查维度**：跨任务集成一致性、重复代码与冗余、架构漂移、全局安全策略、端到端流程完整性。
+
+**判定规则（二态）：**
+
+| reviewer 输出 | 处置 |
+|---|---|
+| APPROVE | → Phase 4 |
+| BLOCK（含任意 CRITICAL 或 HIGH） | → 转 implementer subagent 修复 → 修复完成后重新 Phase 3 |
+
+**修复者是 implementer subagent，不是主代理。**
 
 ---
 
-## Phase 4：最终确认
+## Phase 4：收尾
 
-- [ ] 测试覆盖率 >= 80%
-- [ ] 无残留调试产物
-- [ ] 每个 implementer 的 commit 符合 Conventional Commits（必要时 squash 整理 history）
-- [ ] docs/plans/ 已清理
+Phase 3 通过后，调用 `/finishing-a-development-branch` skill：验证测试 → 文档与产物清理 → commit 整理 → 环境检测 → 呈现集成选项 → 执行并清理工作区。
 
 ---
 
@@ -195,7 +210,7 @@ Step 3 + Step 4 全部通过 → 标记任务完成 → 下一任务。
 | Step 3 规格合规审查 | sonnet | general-purpose |
 | Step 4 通用质量审查 | opus | general-purpose |
 | Step 4 专项审查 | sonnet | named agent（security/python/ts） |
-| Phase 3 整体审查 | opus | general-purpose（同 Step 4 通用质量） |
+| Phase 3 全局审查 | opus | general-purpose（global-reviewer-prompt.md） |
 
 ---
 
