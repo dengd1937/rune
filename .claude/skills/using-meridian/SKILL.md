@@ -78,14 +78,16 @@ description: Use when starting any conversation or after compact - establishes M
 | 1. 产品发现+技术设计+spec | `brainstorm` | 任何创造性工作（新功能、行为变更） |
 | 2a. UI 设计（如需要） | `design-workflow` | 新页面/新组件/新交互/视觉改动 |
 | 2b. 实现计划 | `writing-plans` | 有 spec 后，接触代码前 |
-| 3. 逐任务实现+审查 | `subagent-driven-development` | 有计划后，逐任务执行 |
-| 4. 收尾 | `finishing-a-development-branch` | 实现完成，测试通过 |
+| 3. 逐任务实现 | `subagent-driven-development` | 有计划后，逐任务执行 |
+| 4. 代码审查 | `code-review` | implementer 完成 + 质量门控通过后 |
+| 5. 反馈处理 | `review-handling` | code-review 返回 BLOCK 时 |
+| 6. 收尾 | `finishing-a-development-branch` | 实现完成，审查通过 |
 
 ### 其他场景
 
 | 场景 | 入口 |
 |---|---|
-| bug 修复（先于读代码） | `investigate` skill |
+| bug 修复（根因调查→TDD修复→审查） | `investigate` skill |
 | commit 前质量门 | `commit-quality` skill |
 | 任务后复盘 | `retro` skill |
 

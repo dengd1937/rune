@@ -1,7 +1,6 @@
 # Global Reviewer Prompt 模板
 
-主代理在 Phase 3 通过 `Task(subagent_type="general-purpose", model="opus")` 调度全局审查时使用此模板。
-**仅在所有任务通过 Phase 2 逐任务审查后调度。**
+`code-review` skill 在 global 模式通过 `Task(subagent_type="general-purpose", model="opus")` 调度全局审查时使用此模板。
 调度前替换：
 - `{{PLAN_TEXT}}` → 完整计划文本（所有任务）
 - `{{TASK_SUMMARIES}}` → 每个任务的 implementer 状态报告摘要（DONE / DONE_WITH_CONCERNS + 关键决策）

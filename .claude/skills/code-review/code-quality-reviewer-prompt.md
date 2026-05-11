@@ -1,7 +1,6 @@
 # Code Quality Reviewer Prompt 模板
 
-主代理在 Step 4 通过 `Task(subagent_type="general-purpose", model="opus")` 调度通用代码质量审查时使用此模板。
-**仅在 Step 3 规格合规审查通过后调度。**
+`code-review` skill 在 per-task 模式通过 `Task(subagent_type="general-purpose", model="opus")` 调度通用代码质量审查时使用此模板。
 调度前替换：
 - `{{TASK_TEXT}}` → 当前任务完整文本
 - `{{DIFF}}` → implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>` 输出

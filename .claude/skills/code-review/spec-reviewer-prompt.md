@@ -1,6 +1,6 @@
 # Spec Reviewer Prompt 模板
 
-主代理在 Step 3 通过 `Task(subagent_type="general-purpose", model="sonnet")` 调度规格合规审查时使用此模板。
+`code-review` skill 在 per-task 模式（有 task_text 时）通过 `Task(subagent_type="general-purpose", model="sonnet")` 调度规格合规审查时使用此模板。
 调度前替换：
 - `{{TASK_TEXT}}` → 当前任务完整文本
 - `{{IMPLEMENTER_REPORT}}` → implementer 的状态报告
