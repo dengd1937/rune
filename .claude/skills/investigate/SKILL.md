@@ -245,12 +245,12 @@ async function gitInit(directory: string) {
 - 单次改动，只修根因
 - 禁止 "顺手" 改别的
 - 禁止 bundled refactoring
-- 确认测试通过（GREEN 验证）
+- 确认测试通过（GREEN 验证）—— **invoke `verifying-before-completion` skill**，在本消息内跑原复现测试，拿到 fresh PASS 输出后才允许进入 5c
 
 ### 5c. IMPROVE：重构（如需要）
 
 - 仅当有明确重构必要时执行
-- 测试保持 GREEN
+- 测试保持 GREEN —— **invoke `verifying-before-completion` skill**，重构每一步后在本消息内重跑 RED→GREEN 测试套件，禁止凭"应该没影响"放过
 
 ### 5d. 质量门控
 
@@ -358,6 +358,8 @@ async function gitInit(directory: string) {
 - L4 用 logger 不用 `console.log`，避免被 `code-quality-gate` 当作残留产物清除
 
 **完成判定：** 每层校验都有测试覆盖，所有测试 GREEN，回到 5d 重跑质量门控。
+
+**回 5d 前的硬步骤：invoke `verifying-before-completion` skill**，在本消息内跑原复现测试 + 每层防御独立测试，拿到 fresh PASS 输出（禁止凭 5f 加防御过程中的历史输出）。
 
 → 全部 GREEN → 继续 Phase 6。
 
