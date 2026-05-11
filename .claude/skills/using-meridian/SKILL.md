@@ -78,7 +78,8 @@ description: Use when starting any conversation or after compact - establishes M
 | 1. 产品发现+技术设计+spec | `brainstorm` | 任何创造性工作（新功能、行为变更） |
 | 2a. UI 设计（如需要） | `design-workflow` | 新页面/新组件/新交互/视觉改动 |
 | 2b. 实现计划 | `writing-plans` | 有 spec 后，接触代码前 |
-| 3. 逐任务实现 | `subagent-driven-development` | 有计划后，逐任务执行 |
+| 3a. 工作区隔离 | `using-git-worktrees` | SDD Phase 0a 调用（建议，可拒绝） |
+| 3b. 逐任务实现 | `subagent-driven-development` | 有计划后，逐任务执行 |
 | 4. 代码审查 | `code-review` | implementer 完成 + 质量门控通过后 |
 | 5. 反馈处理 | `review-handling` | code-review 返回 BLOCK 时 |
 | 6. 收尾 | `finishing-a-development-branch` | 实现完成，审查通过 |
@@ -94,6 +95,8 @@ description: Use when starting any conversation or after compact - establishes M
 ### 降级覆盖
 
 仅限单文件改动 + 用户明确确认 → 跳过 brainstorm/plans/subagent-driven-development，直接 code-quality-gate → commit。涉及 ≥2 文件的改动不允许降级。
+
+**降级路径仍建议调用 `using-git-worktrees`** —— 隔离工作区是工程实践，不受降级影响（用户仍可在 skill 询问时拒绝）。
 
 **常用 agent**（清单见 `.claude/agents/`）：security-reviewer / python-reviewer / typescript-reviewer
 

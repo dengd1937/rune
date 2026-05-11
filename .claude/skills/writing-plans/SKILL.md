@@ -11,6 +11,8 @@ Create task-level implementation plans for multi-step development work. Plans ar
 
 **Save plans to:** `docs/plans/<feature-name>.md`
 
+**Context：** writing-plans 阶段本身**不创建** worktree。如果实现阶段需要隔离工作区，由 `subagent-driven-development` 在 Phase 0a 调用 `using-git-worktrees` 完成。计划文件应在 worktree 创建前已 commit 到当前分支，便于 worktree 内可见。
+
 ---
 
 ## Scope Check

@@ -1,3 +1,4 @@
 docs/plans/
 **/__pycache__/
 .venv/
+.claude/worktrees/
