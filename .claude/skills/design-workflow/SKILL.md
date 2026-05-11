@@ -79,7 +79,7 @@ Investigate requirements and establish design direction before editing the canva
 **Actions:**
 
 - **If `DESIGN.md` exists**, read it first and run DESIGN.md preflight: complete sections become visual identity constraints; missing or ambiguous sections become design identity gaps that require user decision before they are treated as defaults
-- **If `docs/product/<feature>.md` exists**, read it as the functional requirements input: UI scope, user flows, feature list, competitor references, and design constraints come from the PM stage
+- **If `docs/specs/<feature>-design.md` exists**, read it as the functional requirements input: UI scope, user flows, feature list, competitor references, and design constraints come from the brainstorm stage. **If `docs/product/<feature>.md` exists** (legacy), read it instead.
 - Analyze the UI scope: pages, components, interactions, and constraints
 - **If `DESIGN.md` exists**, classify components into "matches existing DESIGN.md component styles", "requires documented identity gap", or "requires user-approved DESIGN.md update"
 - Search the project for reusable design assets and existing `docs/designs/` directories

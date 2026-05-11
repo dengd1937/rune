@@ -14,7 +14,7 @@
 - **骨架项目**：搜索成熟模板 → 并行 agent 评估 → 克隆最优方案迭代
 - **Repository 模式**：数据访问封装在标准接口后，业务逻辑依赖抽象 → typescript-patterns skill
 - **API 响应格式**：统一信封（成功标志、数据载荷、错误字段、分页元数据）→ typescript-patterns skill
-- **架构决策记录**：涉及技术选型、模块边界、数据模型、API 契约的变更应产出 ADR（`docs/architecture/adr/`）→ architect skill
+- **架构决策记录**：涉及技术选型、模块边界、数据模型、API 契约的变更应在 brainstorm Phase 4 中产出技术设计，记录于 feature spec（`docs/specs/`）；跨项目级架构决策仍产出 ADR（`docs/architecture/adr/`）→ brainstorm skill
 
 ## 安全
 

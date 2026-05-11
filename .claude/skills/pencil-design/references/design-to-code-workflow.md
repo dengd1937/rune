@@ -11,7 +11,7 @@ Target stack: React/Next.js, TypeScript, Tailwind CSS v4, shadcn/ui, Lucide icon
 Use this priority order:
 
 1. `DESIGN.md` in the project root, when present. It is the visual identity authority for typography, color, theme, depth, component styling, motion, spacing, and responsive behavior.
-2. Existing project design artifacts: `docs/product/`, `docs/designs/`, reusable Pencil components, and existing tokens.
+2. Existing project design artifacts: `docs/specs/`, `docs/product/` (legacy), `docs/designs/`, reusable Pencil components, and existing tokens.
 3. shadcn/ui visual defaults as a conservative fallback only when no project-specific direction exists.
 
 shadcn/ui can still be the preferred component implementation library even when DESIGN.md defines a different visual style.

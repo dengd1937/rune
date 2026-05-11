@@ -75,13 +75,12 @@ description: Use when starting any conversation or after compact - establishes M
 |---|---|
 | 标准开发流程（默认） | `task-driven-development` skill |
 | bug 修复（先于读代码） | `investigate` skill |
-| 产品想法细化 | `ideate` skill / `/ideate` |
+| 产品发现+技术设计+spec 输出 | `brainstorm` skill / `/brainstorm` |
 | UI 任务 | `design-workflow` skill（DESIGN.md 检查由 skill 内部处理） |
 | commit 前质量门 | `commit-quality` skill |
-| 架构决策（新模块 / 新依赖 / 数据模型） | `architect` skill / `/architect` |
 | 任务后复盘 | `retro` skill |
 
-**常用 agent**（清单见 `.claude/agents/`）：planner / security-reviewer / python-reviewer / typescript-reviewer / architect
+**常用 agent**（清单见 `.claude/agents/`）：planner / security-reviewer / python-reviewer / typescript-reviewer
 
 ## §7 工程边界
 

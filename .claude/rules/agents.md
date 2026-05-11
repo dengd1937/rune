@@ -16,17 +16,16 @@
 | design-reviewer | 设计产物审查 |
 | doc-writer | 工作流产出的格式化写入（模板+路径） |
 | doc-updater | 跨工作流共享知识维护（catalog、索引、codemap） |
-| architect | 应用架构分析（技术选型、模块边界、数据模型） |
+| architect | [已废弃] 由 brainstorm skill 内部的 Phase 4 技术设计替代 |
 
 ## 关键 Skill
 
 | Skill | 用途 | 触发方式 |
 |-------|------|---------|
 | investigate | 根因分析 | bug 修复前 |
-| ideate | 产品想法细化 | `/ideate` |
+| brainstorm | 产品发现+技术设计+spec 输出 | `/brainstorm` |
 | design-review | 方案对抗性审查 | planner 之后、实现前 |
 | retro | 任务后复盘 | 功能/修复完成后 |
-| architect | 架构评估与决策记录 | `/architect` 手动触发 |
 | task-driven-development | 逐任务编排（implementer subagent + 并发审查 + 修复闭环） | 标准开发流程（默认） |
 
 ## 文档 Agent 分工

@@ -22,7 +22,8 @@ model: haiku
 
 | 模板 ID | 目标路径 | 来源工作流 |
 |---------|---------|-----------|
-| `product-brief` | `docs/product/<feature>.md` | ideate Phase 4 |
+| `feature-spec` | `docs/specs/<feature>-design.md` | brainstorm Phase 5 |
+| `product-brief` | `docs/product/<feature>.md` | [legacy] ideate Phase 4 |
 | `design-intent` | `docs/designs/<feature>/intent.md` | design-workflow V2-1 |
 | `component-contract` | `docs/designs/<feature>/components/<Name>.md` | design-workflow V2-3 |
 | `token-source-map` | `docs/designs/<feature>/tokens/source-map.md` | design-workflow V2-2 / V2-3 |
@@ -30,7 +31,7 @@ model: haiku
 | `layout-report` | `docs/designs/<feature>/screenshots/layout-report.md` | design-workflow V2-4 |
 | `l1-design-note` | `docs/designs/<feature>/intent.md`（追加） | design-workflow L1 |
 | `module-doc` | `docs/modules/<module>.md` | development-workflow Step 6 |
-| `adr` | `docs/architecture/adr/<NNNN>-<slug>.md` | architect skill |
+| `adr` | `docs/architecture/adr/<NNNN>-<slug>.md` | brainstorm Phase 4（跨项目级） |
 
 ## 模板定义
 
@@ -109,6 +110,97 @@ model: haiku
 ## 后续工作流
 
 [路由决策结果]
+```
+
+### feature-spec
+
+`docs/specs/<feature>-design.md` — 统一的 feature specification，合并产品定义与技术设计。
+
+```markdown
+# [Feature Name]
+
+## Product Definition
+
+**一句话描述**：[产品是什么，给谁，解决什么问题]
+
+**目标用户**：[用户画像]
+
+**产品形态**：[Web / App / 平台 / 工具]
+
+**核心场景**：
+1. [场景描述]
+2. [场景描述]
+
+## Feature List
+
+| 功能 | 优先级 | 描述 | 依赖 |
+|------|--------|------|------|
+| [功能] | P0/P1/P2 | [描述] | [依赖] |
+
+## MVP Scope
+
+[P0 功能清单]
+
+## Competitive Analysis
+
+| 竞品 | 核心功能 | 我们的差异化 |
+|------|----------|-------------|
+| [竞品] | [功能] | [差异化] |
+
+## Technical Design
+
+### Selected Approach
+
+[选择的方案描述]
+
+### Alternatives Considered
+
+#### [方案 A]
+
+- **描述**：[方案描述]
+- **优点**：[...]
+- **缺点**：[...]
+- **影响范围**：[...]
+
+#### [方案 B]
+
+- **描述**：[方案描述]
+- **优点**：[...]
+- **缺点**：[...]
+- **影响范围**：[...]
+
+### Architecture
+
+[架构描述，组件划分，模块交互]
+
+### Data Model
+
+[实体关系，schema 变更，迁移策略]
+
+### API Contract
+
+[端点，请求/响应格式，版本策略]
+
+### Error Handling
+
+[错误分类，恢复策略，边界情况]
+
+## Design Constraints
+
+[技术约束，品牌要求，已有设计规范]
+
+## Technical Constraints & Risks
+
+- [约束/风险]
+
+## Success Metrics
+
+- [指标]：[目标值]
+
+## Routing Decision
+
+后续工作流：[Design Workflow L2 / Development Workflow / L1 Lightweight Design]
+理由：[一句话]
 ```
 
 ### design-intent

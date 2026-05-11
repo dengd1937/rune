@@ -13,7 +13,8 @@ model: haiku
 
 ```
 docs/
-├── product/           # 产品定义（ideate → doc-writer 写入）
+├── specs/             # Feature specifications（brainstorm → doc-writer 写入）
+├── product/           # [legacy] 产品定义（ideate → doc-writer 写入）
 ├── designs/<feature>/ # 设计产物（design-workflow → doc-writer 写入）
 │   ├── intent.md
 │   ├── components/*.md
@@ -34,7 +35,7 @@ docs/
 
 ### 1. Feature Catalog（`docs/FEATURE-CATALOG.md`）
 
-扫描 `docs/product/*.md`，维护索引：
+扫描 `docs/specs/*.md`，维护索引：
 
 ```markdown
 # Feature Catalog
@@ -46,7 +47,7 @@ docs/
 | [name] | Active/Draft/Deprecated | [link] | Done/In Progress/None | Done/In Progress/None |
 ```
 
-更新时机：ideate 完成、design-workflow 完成、development 完成。
+更新时机：brainstorm 完成、design-workflow 完成、development 完成。
 
 ### 2. Component Catalog（`docs/COMPONENT-CATALOG.md`）
 
@@ -120,7 +121,7 @@ docs/
 | [NNNN] | [标题] | 已批准/提议中/已废弃/已替代 | YYYY-MM-DD | [feature] |
 ```
 
-更新时机：architect skill 完成。
+更新时机：brainstorm Phase 4 完成（跨项目级决策）。
 
 ### 6. 项目 README 评估
 
@@ -143,7 +144,7 @@ docs/
 
 ## 工作流
 
-1. **扫描**：遍历 docs/product/、docs/designs/、docs/architecture/、docs/modules/，收集当前所有产物
+1. **扫描**：遍历 docs/specs/、docs/product/、docs/designs/、docs/architecture/、docs/modules/，收集当前所有产物
 2. **比对**：读取现有 catalog 文件，比对差异
 3. **更新**：添加新条目、更新状态变更的条目、标记引用已删除文件的条目为 Deprecated
 4. **写入**：将更新后的 catalog 写回磁盘
@@ -153,10 +154,10 @@ docs/
 ## 触发时机
 
 由工作流在完成后显式调用：
-- ideate 完成 → 更新 feature catalog + 评估 README
+- brainstorm 完成 → 更新 feature catalog + 评估 README
 - design-workflow 完成 → 更新 component catalog + feature catalog（设计状态） + 评估 README
 - development-workflow 完成 → 更新 module index + codemap + feature catalog（实现状态） + 评估 README
-- architect skill 完成 → 更新 ADR Index + 评估 README
+- brainstorm Phase 4 完成（跨项目级决策）→ 更新 ADR Index + 评估 README
 
 ## 原则
 

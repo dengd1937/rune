@@ -20,7 +20,7 @@ meridian/
 │   │   ├── git-workflow.md          # Git 规范
 │   │   └── languages.md             # Python / TypeScript 语言规范
 │   ├── skills/                      # 按需加载的详细指导
-│   │   ├── architect/
+│   │   ├── brainstorm/
 │   │   ├── code-quality-gate/
 │   │   ├── commit-quality/
 │   │   ├── design-review/
@@ -29,7 +29,6 @@ meridian/
 │   │   ├── django-security/
 │   │   ├── e2e-testing/
 │   │   ├── git-workflow/
-│   │   ├── ideate/
 │   │   ├── investigate/
 │   │   ├── pencil-design/
 │   │   ├── python-patterns/
@@ -51,23 +50,23 @@ meridian/
 从想法到代码，三条工作流按需串联：
 
 ```
-/ideate ─→ design-workflow ─→ task-driven-development
-  产品想法      UI 设计           逐任务开发
+/brainstorm ─→ design-workflow ─→ task-driven-development
+  产品+技术设计     UI 设计           逐任务开发
 ```
 
 | 阶段 | 触发 | 做什么 | 产出 |
 |------|------|--------|------|
-| **Ideate** | `/ideate` | 产品发现、竞品调研、功能分析与优先级 | `docs/product/` |
+| **Brainstorm** | `/brainstorm` | 产品发现、竞品调研、功能分析、技术设计、spec 输出 | `docs/specs/` |
 | **Design** | 新 UI 功能自动路由 L1/L2 | 意图 → wireframe → 高保真 → 审查门控 | `docs/designs/`（tokens、组件契约） |
 | **Development** | 实现阶段 | 调研 → 规划 → 逐任务 TDD → 质量门控 → 审查 → commit | 已提交代码（80%+ 覆盖率） |
 
-三条工作流独立可用 — 纯后端功能跳过 Design，无 UI 变更的重构跳过 Ideate 和 Design。
+三条工作流独立可用 — 纯后端功能跳过 Design，无 UI 变更的重构跳过 Brainstorm 和 Design。
 
 ## Skills
 
 | Skill | 用途 |
 |---|---|
-| [ideate](.claude/skills/ideate/SKILL.md) | 产品想法细化 — Product Discovery、竞品调研、功能分析、文档输出 |
+| [brainstorm](.claude/skills/brainstorm/SKILL.md) | 产品发现+技术设计+spec 输出 — 从想法到统一 feature spec |
 | [design-workflow](.claude/skills/design-workflow/SKILL.md) | UI 设计工作流 V2 — L1 轻量 / L2 标准（wireframe → 高保真 → 审查 → 交付） |
 | [pencil-design](.claude/skills/pencil-design/SKILL.md) | Pencil MCP 设计与代码生成 — token 管理、组件映射、视觉验证 |
 | [design-review](.claude/skills/design-review/SKILL.md) | 方案对抗性审查 — 压力测试架构、可行性、测试、性能与范围 |
@@ -110,13 +109,13 @@ meridian/
 工作流产出文档经过两层 agent 处理，形成闭环：
 
 ```
-工作流（ideate / design / development）
+工作流（brainstorm / design / development）
   │  产出结构化数据（对话中确认）
   ▼
 doc-writer agent（独立上下文）
   │  按模板格式化 → 写入文件
   ▼
-文件落盘（docs/product/、docs/designs/、docs/modules/）
+文件落盘（docs/specs/、docs/designs/、docs/modules/）
   │
   ▼
 doc-updater agent（独立上下文）

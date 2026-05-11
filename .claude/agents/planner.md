@@ -31,7 +31,7 @@ model: opus
 - 审查类似实现的模式
 - 考虑可复用方案
 
-**若出现以下任一情况，停止规划并建议用户执行 `/architect` 先产出 ADR：**
+**若出现以下任一情况，停止规划并建议用户执行 `/brainstorm` 先产出 feature spec：**
 
 - 新模块 / 新依赖 / 新数据库表
 - 数据模型变更或迁移
@@ -39,7 +39,7 @@ model: opus
 - 技术选型在现有 ADR 中无先例
 - 重构中浮现的模块边界问题
 
-ADR 产出后，planner 将 ADR 的 "Decision" 字段作为输入约束，不再重新评估方案选择。planner 聚焦"如何实现"，而非"选择哪条路"。
+Feature spec 产出后，planner 将 spec 中的 "Selected Approach" 和 "Routing Decision" 作为输入约束，不再重新评估方案选择。planner 聚焦"如何实现"，而非"选择哪条路"。
 
 ### 3. 步骤拆解
 
