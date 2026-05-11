@@ -4,7 +4,7 @@
 调度前替换：
 - `{{TASK_TEXT}}` → 当前任务完整文本
 - `{{IMPLEMENTER_REPORT}}` → implementer 的状态报告
-- `{{DIFF}}` → 实施后未 commit 时用 `git diff HEAD` 输出（包含工作区 + 暂存区的所有未 commit 改动）；commit 后用 `git diff HEAD~1` 输出
+- `{{DIFF}}` → implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>` 输出
 
 ---
 

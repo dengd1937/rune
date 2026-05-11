@@ -35,7 +35,7 @@ meridian/
 │   │   ├── python-testing/
 │   │   ├── retro/
 │   │   ├── security-reviewer/
-│   │   ├── task-driven-development/
+│   │   ├── subagent-driven-development/
 │   │   ├── tdd-workflow/
 │   │   ├── typescript-patterns/
 │   │   ├── typescript-testing/
@@ -50,7 +50,7 @@ meridian/
 从想法到代码，三条工作流按需串联：
 
 ```
-/brainstorm ─→ design-workflow ─→ task-driven-development
+/brainstorm ─→ design-workflow ─→ subagent-driven-development
   产品+技术设计     UI 设计           逐任务开发
 ```
 
@@ -85,7 +85,7 @@ meridian/
 | [investigate](.claude/skills/investigate/SKILL.md) | 根因分析门禁 — 假设优先调试，禁止无调查改代码 |
 | [retro](.claude/skills/retro/SKILL.md) | 任务复盘 — 审视流程遵守、决策路径与 AI 行为，提出改进建议 |
 | [using-git-worktrees](.claude/skills/using-git-worktrees/SKILL.md) | Git worktree 并行开发，减少 stash 和上下文切换 |
-| [task-driven-development](.claude/skills/task-driven-development/SKILL.md) | 多文件改动按任务编排 — 逐任务 TDD+审查循环 |
+| [subagent-driven-development](.claude/skills/subagent-driven-development/SKILL.md) | 多文件改动按任务编排 — 逐任务 TDD+审查循环 |
 | [writing-plans](.claude/skills/writing-plans/SKILL.md) | 实施方案规划 — 任务拆解、No Placeholders、自检+plan-reviewer 双重质量保障 |
 
 ## Agents

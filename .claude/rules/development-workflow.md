@@ -37,16 +37,16 @@
 
 对计划中的每个任务，重复以下步骤。每个任务完成后才能进入下一个任务。
 
-3. **TDD** → task-driven-development skill 内部调度 implementer subagent（general-purpose + implementer-prompt.md）→ RED→GREEN→IMPROVE → 覆盖率 80%+
+3. **TDD** → subagent-driven-development skill 内部调度 implementer subagent（general-purpose + implementer-prompt.md）→ RED→GREEN→IMPROVE → 覆盖率 80%+
    - UI 实现不得绕过设计 token：禁止硬编码颜色、圆角、阴影、字体等视觉值，禁止使用 arbitrary Tailwind 作为常规方案
    - UI 实现必须保持组件契约和 DESIGN.md（如存在）一致；发现缺失 token 或契约缺口时回到设计产物补齐
 4. **质量门控** → code-quality-gate skill → 格式化 + lint + 类型检查
-5. **代码审查** → task-driven-development skill 内部编排（Step 3 规格合规 + Step 4 并发质量审查，含 python-reviewer / typescript-reviewer / security-reviewer 按需并发触发）
+5. **代码审查** → subagent-driven-development skill 内部编排（Step 3 规格合规 + Step 4 并发质量审查，含 python-reviewer / typescript-reviewer / security-reviewer 按需并发触发）
    - UI 任务审查必须检查 semantic token 使用、组件契约一致性、DESIGN.md 约束继承、Playwright 视觉回归和 axe 可访问性验证
 
 不允许跨任务合并审查。不允许"实现所有文件后统一审查"。
 
-→ task-driven-development skill（编排细节）
+→ subagent-driven-development skill（编排细节）
 
 ### 收尾
 

@@ -13,7 +13,7 @@
 #      subagent_type == "general-purpose" 且 prompt 含 GP_REVIEWER_PROMPTS 中任一文件名
 #
 # 设计角色：仅检测"是否调用过 reviewer"。verdict / diff 一致性 / 时效性
-#           校验由 task-driven-development skill 的修复闭环兜底，hook 不做。
+#           校验由 subagent-driven-development skill 的修复闭环兜底，hook 不做。
 
 import json
 import os
@@ -165,7 +165,7 @@ def _emit(files: list[str], saw_reviewer: bool) -> None:
         f"  - {listed}{suffix}\n"
         "合规路径任选其一：\n"
         "  (A) Task(subagent_type=\"general-purpose\") + code-quality-reviewer-prompt.md\n"
-        "      （task-driven-development skill 的标准 Step 4 通用质量审查）\n"
+        "      （subagent-driven-development skill 的标准 Step 4 通用质量审查）\n"
         "  (B) 调用 named reviewer：security-reviewer / python-reviewer / typescript-reviewer\n"
         "Emergency override: export SKIP_REVIEW_CHECK=1",
         file=sys.stderr,

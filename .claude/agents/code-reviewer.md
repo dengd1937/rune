@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: "[已废弃 v2.0] 由 task-driven-development skill 内部 Task(general-purpose) + code-quality-reviewer-prompt.md 替代。文件保留作历史向后兼容，新调用请勿使用。"
+description: "[已废弃 v2.0] 由 subagent-driven-development skill 内部 Task(general-purpose) + code-quality-reviewer-prompt.md 替代。文件保留作历史向后兼容，新调用请勿使用。"
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: sonnet
 ---

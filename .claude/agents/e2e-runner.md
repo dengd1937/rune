@@ -1,11 +1,11 @@
 ---
 name: e2e-runner
-description: "[已废弃 v2.0] 由 task-driven-development skill 内部 implementer subagent 替代。E2E 测试作为普通任务由 implementer 按 TDD 流程执行。参考材料见 e2e-testing skill。文件保留作历史向后兼容，新调用请勿使用。"
+description: "[已废弃 v2.0] 由 subagent-driven-development skill 内部 implementer subagent 替代。E2E 测试作为普通任务由 implementer 按 TDD 流程执行。参考材料见 e2e-testing skill。文件保留作历史向后兼容，新调用请勿使用。"
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
 
-> **[已废弃 v2.0]** 以下内容已过时。E2E 测试现由 `task-driven-development` skill 内部 implementer subagent 按 TDD 流程执行。参考材料见 `e2e-testing` skill。
+> **[已废弃 v2.0]** 以下内容已过时。E2E 测试现由 `subagent-driven-development` skill 内部 implementer subagent 按 TDD 流程执行。参考材料见 `e2e-testing` skill。
 
 # E2E Test Runner
 

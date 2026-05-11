@@ -1,6 +1,6 @@
 ---
 name: tdd-guide
-description: "[已废弃 v2.0] 由 task-driven-development skill 内部 Task(general-purpose) + implementer-prompt.md 替代。文件保留作历史向后兼容，新调用请勿使用。"
+description: "[已废弃 v2.0] 由 subagent-driven-development skill 内部 Task(general-purpose) + implementer-prompt.md 替代。文件保留作历史向后兼容，新调用请勿使用。"
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 ---
@@ -92,7 +92,7 @@ Release-critical paths should target pass^3 stability before merge.
 
 ## Task Executor Mode
 
-When dispatched by the task-driven-development skill, enter single-task execution mode.
+When dispatched by the subagent-driven-development skill, enter single-task execution mode.
 
 ### Constraints
 
@@ -107,7 +107,7 @@ When dispatched by the task-driven-development skill, enter single-task executio
 ### Execution Chain
 
 1. TDD RED→GREEN→IMPROVE (for the current task)
-2. 报告状态给调度方（质量门控和 commit 由 task-driven-development skill 统一管理）
+2. 报告状态给调度方（质量门控和 commit 由 subagent-driven-development skill 统一管理）
 
 ### Status Reporting
 

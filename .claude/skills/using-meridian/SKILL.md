@@ -73,7 +73,7 @@ description: Use when starting any conversation or after compact - establishes M
 
 | 场景 | 入口 |
 |---|---|
-| 标准开发流程（默认） | `task-driven-development` skill |
+| 标准开发流程（默认） | `subagent-driven-development` skill |
 | bug 修复（先于读代码） | `investigate` skill |
 | 产品发现+技术设计+spec 输出 | `brainstorm` skill / `/brainstorm` |
 | UI 任务 | `design-workflow` skill（DESIGN.md 检查由 skill 内部处理） |

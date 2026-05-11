@@ -4,8 +4,8 @@
 **仅在 Step 3 规格合规审查通过后调度。**
 调度前替换：
 - `{{TASK_TEXT}}` → 当前任务完整文本
-- `{{DIFF}}` → 实施后未 commit 时用 `git diff HEAD` 输出（包含工作区 + 暂存区的所有未 commit 改动）；commit 后用 `git diff HEAD~1` 输出
-- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → 已 commit 时填实际 commit hash；未 commit 时填 `HEAD` / `working`（表示工作区对比 HEAD）
+- `{{DIFF}}` → implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>` 输出
+- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → Controller 在调度 implementer 前记录的 base_SHA / implementer 报告的 commit SHA
 
 ---
 
@@ -258,4 +258,4 @@ Fix: 移到环境变量并加到 .gitignore/.env.example
 
 ## 给主代理的设计说明（非输出内容）
 
-在 task-driven-development 流程内 HIGH = BLOCK 是**有意收紧**：AI 自动化场景没有人类把关，宁严勿宽。这与 `.claude/rules/code-review.md` 中"HIGH = 警告"的**人类 PR 审查**语义并行存在，不冲突。两套语义按语境分别使用。
+在 subagent-driven-development 流程内 HIGH = BLOCK 是**有意收紧**：AI 自动化场景没有人类把关，宁严勿宽。这与 `.claude/rules/code-review.md` 中"HIGH = 警告"的**人类 PR 审查**语义并行存在，不冲突。两套语义按语境分别使用。

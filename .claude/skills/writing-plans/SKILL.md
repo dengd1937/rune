@@ -5,7 +5,7 @@ description: "Use when you have a spec or requirements for a multi-step task, be
 
 # Writing Plans
 
-Create task-level implementation plans for multi-step development work. Plans are the execution input for the `task-driven-development` skill.
+Create task-level implementation plans for multi-step development work. Plans are the execution input for the `subagent-driven-development` skill.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
@@ -76,7 +76,7 @@ Before defining tasks, map out which files will be created or modified:
 
 ## 执行方式
 
-本计划通过 `/task-driven-development` skill 执行。以下任务描述是 skill 的输入规格，不是直接执行指令。
+本计划通过 `/subagent-driven-development` skill 执行。以下任务描述是 skill 的输入规格，不是直接执行指令。
 
 ## 概述
 [2-3 句摘要]
@@ -196,7 +196,7 @@ Agent tool (general-purpose):
 
 ## Per-Task Execution Gate
 
-以下三道门控由 `task-driven-development` skill 在执行时自动管理，计划中只需在每个任务的"审查要求"中指定审查类型：
+以下三道门控由 `subagent-driven-development` skill 在执行时自动管理，计划中只需在每个任务的"审查要求"中指定审查类型：
 
 1. **TDD** — RED→GREEN→IMPROVE 循环完成
 2. **Quality Gate** — 格式化 / lint / 类型检查通过
@@ -206,7 +206,7 @@ Agent tool (general-purpose):
 
 ## Execution Handoff
 
-计划执行编排由 `task-driven-development` skill 负责。skill 会：
+计划执行编排由 `subagent-driven-development` skill 负责。skill 会：
 
 - 通过 Agent tool 调度 implementer subagent（隔离上下文）
 - 将完整任务文本粘贴到 prompt 中；不让 subagent 读取计划文件

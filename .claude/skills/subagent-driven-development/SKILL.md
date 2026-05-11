@@ -1,9 +1,9 @@
 ---
-name: task-driven-development
-description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审查循环。
+name: subagent-driven-development
+description: 标准开发流程的执行引擎。逐任务派遣独立 subagent + 两阶段审查。
 ---
 
-# 任务驱动开发
+# Subagent 驱动开发
 
 标准开发流程的执行引擎。非降级场景默认使用。
 
@@ -69,6 +69,12 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 
 **注：** 不再调度 `tdd-guide` named agent。tdd-guide.md 已标记废弃，仅作历史向后兼容。
 
+**提问处理：**
+
+如果 implementer 在开始工作前提问（通过 NEEDS_CONTEXT 或显式提问）→ Controller 回答问题 → 重新调度（fresh subagent，携带原始任务文本 + 回答）。
+
+不要忽略提问。提问说明信息不足，强行执行会导致方向性错误。
+
 **状态处理：**
 
 | 状态 | 处理 |
@@ -95,8 +101,8 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 读取 `spec-reviewer-prompt.md` 模板，替换占位符后通过 **`Task(subagent_type="general-purpose", model="sonnet")`** 调度：
 
 - `{{TASK_TEXT}}` → 当前任务完整文本
-- `{{IMPLEMENTER_REPORT}}` → Step 1 的 implementer 状态报告
-- `{{DIFF}}` → 实施后未 commit 时用 `git diff HEAD`（包含工作区 + 暂存区的所有未 commit 改动）；commit 后用 `git diff HEAD~1`
+- `{{IMPLEMENTER_REPORT}}` → Step 1 的 implementer 状态报告（含 commit SHA）
+- `{{DIFF}}` → implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>`
 
 **通过**（结论 ✅）→ Step 4。
 
@@ -104,7 +110,7 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 
 **修复者是 implementer subagent，不是主代理。主代理不读完整审查反馈后自己改代码。**
 
-**简化复审条件**：如果修复满足以下全部条件，可跳过完整复审，直接确认修复满足 reviewer 反馈即进 Step 4 / Step 6：
+**简化复审条件**：如果修复满足以下全部条件，可跳过完整复审，直接确认修复满足 reviewer 反馈即进 Step 5：
 1. 修复内容完全采纳 reviewer 反馈，无引申
 2. 无超范围改动（仅改 reviewer 指出的位置）
 3. 修复 implementer 报告 DONE 且明确说明"未引入额外内容"
@@ -119,8 +125,8 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 读取 `code-quality-reviewer-prompt.md` 模板，替换占位符后，通过 `Task(subagent_type="general-purpose", model="opus")` 调度。
 不再调度 `code-reviewer` named agent（已废弃）。
 
-`{{DIFF}}` 来源同 Step 3：未 commit 时用 `git diff HEAD`，commit 后用 `git diff HEAD~1`。
-`{{BASE_SHA}}` / `{{HEAD_SHA}}`：未 commit 时填 `HEAD` / `working`；commit 后填实际 hash。
+`{{DIFF}}` 来源同 Step 3：implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>`。
+`{{BASE_SHA}}` / `{{HEAD_SHA}}`：Controller 在调度 implementer 前记录当前 HEAD 作为 base_SHA，implementer 返回后用其报告的 commit SHA 作为 head_SHA。
 
 **按语言/场景条件触发（与通用质量并发）：**
 
@@ -139,18 +145,14 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 | 所有 reviewer 都 **APPROVE** | → Step 5 |
 | 任一 reviewer **BLOCK**（含任意 CRITICAL 或 HIGH） | → 转 implementer subagent 修复 → 回到 Step 2 |
 
-**HIGH = BLOCK 是有意收紧。** task-driven-development 是 AI 自动化流程，没有人类把关，所以 HIGH 必须修。这与 `.claude/rules/code-review.md` 中保留 "HIGH = 警告"的人类 PR 语义并行存在 —— 后者用于人类 PR 审查，前者用于 AI 流程内门控，二者不冲突。
+**HIGH = BLOCK 是有意收紧。** subagent-driven-development 是 AI 自动化流程，没有人类把关，所以 HIGH 必须修。这与 `.claude/rules/code-review.md` 中保留 "HIGH = 警告"的人类 PR 语义并行存在 —— 后者用于人类 PR 审查，前者用于 AI 流程内门控，二者不冲突。
 
 **修复者是 implementer subagent，不是主代理。**
 
 ### Step 5：门控判定
 
-Step 3 + Step 4 全部通过 → Step 6 Commit。
+Step 3 + Step 4 全部通过 → 标记任务完成 → 下一任务。
 任一未通过 → 反馈已在 Step 3/Step 4 转回 implementer subagent；待修复完成后重新从 Step 2 开始。
-
-### Step 6：Commit
-
-调用 `/commit-quality` skill 提交当前任务。commit 后 → 下一任务。
 
 ---
 
@@ -164,7 +166,7 @@ Step 3 + Step 4 全部通过 → Step 6 Commit。
 
 - [ ] 测试覆盖率 >= 80%
 - [ ] 无残留调试产物
-- [ ] commit 符合 Conventional Commits
+- [ ] 每个 implementer 的 commit 符合 Conventional Commits（必要时 squash 整理 history）
 - [ ] docs/plans/ 已清理
 
 ---
@@ -199,7 +201,7 @@ Step 3 + Step 4 全部通过 → Step 6 Commit。
 
 ## 无子代理时的回退
 
-主会话顺序执行每任务 TDD 循环（参考 implementer-prompt.md 的 TDD 执行链）：写测试 → RED → 实现 → GREEN → 重构 → 质量门控 → 内联代码审查（参考 code-quality-reviewer-prompt.md 的检查清单）→ commit。逐任务串行，不跳跃。
+主会话顺序执行每任务 TDD 循环（参考 implementer-prompt.md 的 TDD 执行链）：写测试 → RED → 实现 → GREEN → 重构 → commit → 质量门控 → 内联代码审查（参考 code-quality-reviewer-prompt.md 的检查清单）。逐任务串行，不跳跃。
 
 ---
 

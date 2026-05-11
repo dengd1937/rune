@@ -26,11 +26,11 @@
 
 | Agent | 用途 |
 |-------|------|
-| **task-driven-development skill** | 通用代码质量审查（Step 4 通过 general-purpose + code-quality-reviewer-prompt.md） |
+| **subagent-driven-development skill** | 通用代码质量审查（Step 4 通过 general-purpose + code-quality-reviewer-prompt.md） |
 | **security-reviewer** | 安全漏洞、OWASP Top 10（Step 4 并发触发） |
 | **python-reviewer** | Python 专项问题（Step 4 并发触发） |
 | **typescript-reviewer** | TypeScript/React 类型安全、异步模式、hooks（Step 4 并发触发） |
-| **code-reviewer** | [已废弃] 由 task-driven-development skill 内部 prompt 模板替代 |
+| **code-reviewer** | [已废弃] 由 subagent-driven-development skill 内部 prompt 模板替代 |
 
 ## 审批标准（人类 PR 审查语境）
 
@@ -39,9 +39,9 @@
 - **阻塞**：发现 CRITICAL 问题
 
 > **注：语境差异。** 上述三态语义用于**人类 PR 审查**。
-> 在 `task-driven-development` skill（AI 自动化流程）内 HIGH 被收紧为 BLOCK，
+> 在 `subagent-driven-development` skill（AI 自动化流程）内 HIGH 被收紧为 BLOCK，
 > 改为二态（APPROVE / BLOCK），原因是 AI 流程没有人类把关、宁严勿宽。
-> 详见 `.claude/skills/task-driven-development/code-quality-reviewer-prompt.md`。
+> 详见 `.claude/skills/subagent-driven-development/code-quality-reviewer-prompt.md`。
 
 → code-quality-gate skill / security-reviewer agent
 

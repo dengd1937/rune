@@ -79,7 +79,7 @@ When changes span multiple files:
 - Split by task; each task runs its own RED→GREEN→IMPROVE cycle
 - Never batch-write tests or batch-implement
 - Run test verification immediately after each task completes; do not wait until all tasks are done
-- Follow the orchestration logic in the task-driven-development skill
+- Follow the orchestration logic in the subagent-driven-development skill
 - If the repository is under Git, create a checkpoint commit after each TDD stage
 - Do not squash or rewrite these checkpoint commits until the workflow is complete
 - Each checkpoint commit message must describe the stage and the exact evidence captured
