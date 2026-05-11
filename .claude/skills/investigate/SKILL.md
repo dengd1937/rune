@@ -70,6 +70,14 @@ origin: meridian
 
 两种范式可以串联：先 hypothesis-driven，发现假设无法静态收敛 → 切到 trace-driven 用运行时证据定位触发源。
 
+**3c 与 3d 的决策树**（两者触发条件存在重叠，按以下优先级判断）：
+
+| 场景 | 选 |
+|---|---|
+| 已知组件边界、断裂位置不明（"哪一层挂了"） | 走 **3c** instrumentation 定断裂层 |
+| 不知触发源、数据污染类（"为什么这个值在这里"） | 走 **3d** backward tracing |
+| 两条都适用 | **先 3c 定断裂层 → 在断裂层内做 3d backward trace**（3c 提供层级定位，3d 在该层内做源头追溯） |
+
 ### 3a. 逐一验证（hypothesis-driven 主路径）
 
 对每个假设，找对应证据来证实或排除：
@@ -117,31 +125,31 @@ origin: meridian
 3. 分析证据 → 定位"断裂层"（哪一层入站正常但出站异常）
 4. 回到 3a，针对断裂层形成新假设
 
-**模板示例（多层 shell 链路）：**
+**模板示例（多层 shell 链路）—— 以下为 macOS CI codesign 场景示例，Layer 3/4 命令按实际技术栈替换：**
 
 ```bash
-# Layer 1: Workflow / 入口层
+# Layer 1: Workflow / 入口层（env 注入是否成功）
 echo "=== Layer 1: workflow env ==="
 echo "IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}"
 
-# Layer 2: 构建脚本
+# Layer 2: 构建脚本（env 是否传递到 child process）
 echo "=== Layer 2: build script env ==="
 env | grep IDENTITY || echo "IDENTITY not propagated"
 
-# Layer 3: 业务操作前的状态
+# Layer 3: 业务操作前的状态（macOS keychain；其他栈替换为对应"状态快照"命令）
 echo "=== Layer 3: pre-operation state ==="
 security list-keychains
 
-# Layer 4: 操作本身
+# Layer 4: 操作本身（macOS codesign；其他栈替换为对应的最终操作 + verbose 输出）
 codesign --sign "$IDENTITY" --verbose=4 "$APP"
 ```
 
 **模板示例（应用层调用链）：**
 
 ```typescript
-// 在关心的组件边界添加临时 instrumentation（修复后必须移除）
+// 在关心的组件边界添加临时 instrumentation（必须用 [TEMP-INSTR] 前缀标记，修复后必须移除）
 async function gitInit(directory: string) {
-  console.error('[DEBUG] gitInit entry:', {
+  console.error('[TEMP-INSTR] gitInit entry:', {
     directory,
     cwd: process.cwd(),
     stack: new Error().stack,
@@ -152,7 +160,7 @@ async function gitInit(directory: string) {
 
 **产物：** "断裂层"报告（哪一层入站 OK / 出站异常），作为 3a 新一轮假设的输入。
 
-**清理：** 诊断 instrumentation 是临时代码，根因确认后必须从代码中移除（不允许残留进 commit；`code-quality-gate` 会扫描 `console.log` / `debugger` 等残留）。
+**清理：** 诊断 instrumentation 是临时代码，根因确认后必须从代码中移除（不允许残留进 commit）。所有临时诊断输出**必须**带 `[TEMP-INSTR]` 前缀，便于 `code-quality-gate` 扫描（除既有的 `console.log` / `debugger` / `breakpoint()` 之外，gate 还应扫描 `[TEMP-INSTR]` 前缀字符串，无论用 `console.log` 还是 `console.error`）。
 
 ### 3d. Backward Tracing（trace-driven 主路径）
 
@@ -189,6 +197,8 @@ async function gitInit(directory: string) {
 - `console.error` 注入：测试场景下用，不用 logger（可能被吞）
 - 二分定位：当某测试触发污染但不知是哪个时，用 bisection script 一个一个跑
 - git blame：当怀疑是近期改动引入时
+
+**清理（同 3c）：** 3d 注入的所有诊断输出（包括 stack 打印、`console.error` 调用）**必须**带 `[TEMP-INSTR]` 前缀，根因确认后从代码移除，不允许残留进 commit。
 
 **追溯不下去时的回退：** 加 instrumentation（见 3c），让运行时证据告诉你"是谁"。
 
@@ -246,12 +256,19 @@ async function gitInit(directory: string) {
 
 调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测。
 
-**通过** → 评估 5f 触发条件 → 触发则走 5f 后回 5d / 未触发直接 Phase 6。
+**通过** → 评估 5f 触发条件 → 触发时**推荐**走 5f（完成后回 5d）/ 不触发或明确理由跳过则直接 Phase 6。
 **失败** → 修复 → 重跑 5d。
 
 ### 5e. 3 次失败熔断
 
-如果修复尝试 ≥3 次仍未解决（GREEN 失败或质量门控反复失败）：
+**失败计数范围**（统一一个计数器，覆盖整个 Phase 5）：
+
+- 5b GREEN 失败（测试一直不过）
+- 5d 质量门控反复失败
+- 5f 中单层防御校验测试 ≥3 次仍 RED
+- 5f 完成后回 5d 失败
+
+任一路径上累计失败次数 ≥3 次：
 
 **STOP。** 输出架构质疑报告：
 
@@ -289,6 +306,10 @@ async function gitInit(directory: string) {
 | 同一 bug 引发的关联防御（mock 绕过、跨平台边界） | ✅ 属于 |
 | 顺手修复其他无关 bug | ❌ 不属于（外科手术原则适用） |
 | 借机重构无关代码 | ❌ 不属于 |
+
+**判别准则：** 改动是否在**本次 bug 的数据流路径上**？
+- ✅ 数据流上：从触发源到症状所经过的层都属于范围（哪怕需要修测试 mock 才能加 L1 校验也属于）
+- ❌ 数据流外：与本次 bug 数据流无关的任何改动一律不属于（即使"看起来相关"）
 
 **四层防御模板：**
 
