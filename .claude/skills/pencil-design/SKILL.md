@@ -11,7 +11,7 @@ metadata:
 
 # Pencil Design Skill
 
-Design production-quality UIs in Pencil and generate clean, maintainable code from them. This skill provides the execution layer for the [design workflow](/.claude/rules/design-workflow.md) stages `V2-2` and `V2-3`.
+Design production-quality UIs in Pencil and generate clean, maintainable code from them. This skill provides the execution layer for the [design workflow](/.claude/skills/design-workflow/SKILL.md) stages `V2-2` and `V2-3`.
 
 ## When to Use This Skill
 

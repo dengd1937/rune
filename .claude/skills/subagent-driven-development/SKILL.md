@@ -145,7 +145,7 @@ description: "Use when executing implementation plans with independent tasks. Di
 | 所有 reviewer 都 **APPROVE** | → Step 5 |
 | 任一 reviewer **BLOCK**（含任意 CRITICAL 或 HIGH） | → 转 implementer subagent 修复 → 回到 Step 2 |
 
-**HIGH = BLOCK 是有意收紧。** subagent-driven-development 是 AI 自动化流程，没有人类把关，所以 HIGH 必须修。这与 `.claude/rules/code-review.md` 中保留 "HIGH = 警告"的人类 PR 语义并行存在 —— 后者用于人类 PR 审查，前者用于 AI 流程内门控，二者不冲突。
+**HIGH = BLOCK 是有意收紧。** subagent-driven-development 是 AI 自动化流程，没有人类把关，所以 HIGH 必须修。这与人类 PR 审查中保留 "HIGH = 警告" 的语义并行存在 —— 后者用于人类 PR 审查，前者用于 AI 流程内门控，二者不冲突。
 
 **修复者是 implementer subagent，不是主代理。**
 

@@ -10,14 +10,7 @@ meridian/
 ├── .claude/
 │   ├── agents/                      # Agent 定义（planner、code-reviewer 等）
 │   ├── hooks/                       # 安全与质量 hook 脚本
-│   ├── rules/                       # 硬性约束规则
-│   │   ├── agents.md                # Agent 编排与分工
-│   │   ├── common.md                # 代码质量、安全、测试通用规范
-│   │   ├── code-review.md           # 代码审查流程与严重等级
-│   │   ├── communication.md         # 交互原则（暴露不确定性）
-│   │   ├── design-workflow.md       # 设计工作流路由
-│   │   ├── git-workflow.md          # Git 规范
-│   │   └── languages.md             # Python / TypeScript 语言规范
+│   ├── rules/                       # （已清空 — 规范已下放到 skills/agents/using-meridian）
 │   ├── skills/                      # 按需加载的详细指导
 │   │   ├── brainstorm/
 │   │   ├── code-quality-gate/
@@ -178,8 +171,8 @@ cp -r .claude/skills/git-workflow /your-project/.claude/skills/
 # 复制全部 skills
 cp -r .claude/skills/* /your-project/.claude/skills/
 
-# 复制全部 rules
-cp -r .claude/rules/* /your-project/.claude/rules/
+# 复制 rules（如果需要自定义）
+mkdir -p /your-project/.claude/rules
 ```
 
 ### 方式二：Git submodule
@@ -195,9 +188,9 @@ git submodule add https://github.com/dengd1937/meridian.git .claude/meridian
 
 ## 设计原则
 
-- Rules 保持"薄"——只放硬性约束和触发入口，详细指导推到 skills 按需加载
+- Rules 已下放 — 铁律和行为护栏在 using-meridian（SessionStart hook 注入），具体规范在 skills（按需加载）和 reviewer agents（审查时强制），hooks 提供物理拦截
 - 文档模板集中管理（doc-writer agent），工作流不含内联模板
-- Hooks 提供确定性安全执行层（物理拦截），rules 提供软性行为引导
+- Hooks 提供确定性安全执行层（物理拦截），using-meridian 提供行为护栏
 
 ## License
 

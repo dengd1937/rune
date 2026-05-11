@@ -9,24 +9,14 @@
 5. **先规划后执行** — 复杂功能编码前先规划
 6. **逐任务执行** — 多文件改动按任务拆分，每个任务独立走 TDD+审查
 
-## 规则索引
+## 规范分层
 
-| 关注领域 | 规则文件 | 详细指导 |
-|---------|---------|---------|
-| Agent 与 Skill 编排 | [agents.md](rules/agents.md) | — |
-| 代码质量、安全、测试 | [common.md](rules/common.md) | code-quality-gate skill / security-reviewer agent / tdd-workflow skill |
-| 代码审查流程 | [code-review.md](rules/code-review.md) | code-reviewer agent |
-| 交互原则 | [communication.md](rules/communication.md) | — |
-| 开发工作流 | skill 链路（见 using-meridian §6） | brainstorm → writing-plans → subagent-driven-development → finishing-a-development-branch |
-| Git 规范 | [git-workflow.md](rules/git-workflow.md) | git-workflow skill |
-| 设计工作流（路由） | [design-workflow.md](rules/design-workflow.md) | design-workflow skill |
-| 语言规范 | [languages.md](rules/languages.md) | python-patterns skill / typescript-patterns skill |
-
-## 快速参考
-
-- **开发流程：** 调研 → 规划 → **逐任务循环（TDD→质量门控→审查）** → 文档 → Commit → 预审查
-- **Commit 格式：** `<type>: <description>` — 类型：feat, fix, refactor, docs, test, chore, perf, ci
-- **关键 Agent：** commit 前 → code-reviewer + security-reviewer；bug 修复前 → investigate
+| 层 | 内容 | 加载时机 |
+|---|---|---|
+| **铁律 + 路由 + 行为护栏** | using-meridian skill（SessionStart hook 注入） | 始终 |
+| **Skill 按需指导** | 各 skill（brainstorm、git-workflow、python-patterns、typescript-patterns 等） | 调用时 |
+| **Agent 审查强制** | reviewer agents（code-quality-reviewer-prompt、python-reviewer、typescript-reviewer、security-reviewer） | 审查时 |
+| **Hook 物理拦截** | pre-write-secrets.sh、pre-bash-guard.sh、post-write-quality.sh、pre-commit-review-check.py | 写/提交时 |
 
 ## 验收标准
 

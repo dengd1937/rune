@@ -192,7 +192,7 @@ const usersWithPosts = await db.query(`
 
 ## 项目特定检查（自动启用）
 
-如检测到 `CLAUDE.md` 或 `.claude/rules/`，额外检查项目规则：
+如检测到 `CLAUDE.md` 或 `using-meridian` skill，额外检查项目规则：
 
 - **文件大小限制** — meridian: 200-400 行典型，800 max
 - **不可变性强制** — spread 而非 mutation（CRITICAL 规则）
@@ -258,4 +258,4 @@ Fix: 移到环境变量并加到 .gitignore/.env.example
 
 ## 给主代理的设计说明（非输出内容）
 
-在 subagent-driven-development 流程内 HIGH = BLOCK 是**有意收紧**：AI 自动化场景没有人类把关，宁严勿宽。这与 `.claude/rules/code-review.md` 中"HIGH = 警告"的**人类 PR 审查**语义并行存在，不冲突。两套语义按语境分别使用。
+在 subagent-driven-development 流程内 HIGH = BLOCK 是**有意收紧**：AI 自动化场景没有人类把关，宁严勿宽。这与人类 PR 审查中保留 "HIGH = 警告" 的语义并行存在，不冲突。两套语义按语境分别使用。
