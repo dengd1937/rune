@@ -1,6 +1,6 @@
 ---
 name: verifying-before-completion
-description: Use before any claim of done/passing/working/fixed/correct — requires running a fresh verification command in the current message and reading its output before stating success. Triggered after investigate 5b/5c/5f, code-quality-gate pass declarations, and subagent DONE reports.
+description: Use after implementation, fix, or quality-gate run — before claiming tests pass, build succeeds, lint clean, or bug fixed. Requires running a fresh verification command in the same conversation turn and reading its output before stating success. Invoked from investigate 5b/5c/5f, subagent DONE handling, and pre-commit/PR moments.
 origin: meridian
 ---
 
@@ -44,9 +44,8 @@ origin: meridian
 | `investigate` 5c IMPROVE 后 | 当前消息内重跑 RED→GREEN 测试套件，确认未回归 |
 | `investigate` 5f 回 5d 之前 | 当前消息内跑复现测试 + 每层防御独立测试 |
 | `code-quality-gate` 通过声明前 | 当前消息内有 lint/format/typecheck 完整输出 |
-| 接收 subagent DONE 报告时 | `git diff` 看实际改动 + 跑相关测试 |
-| commit / push / PR 创建前 | 全量测试套件 + 覆盖率 |
-| 切换下一任务前 | 当前任务的 acceptance criteria 逐条 verify |
+| 接收 subagent DONE 报告时 | `git diff` 看实际改动 + 跑相关测试（详见下文 Subagent 场景） |
+| commit / push / PR 创建前 | 全量测试套件 + 覆盖率（与 `commit-quality` 串联，详见下文） |
 
 ---
 
@@ -107,22 +106,26 @@ origin: meridian
 
 ---
 
-## Subagent 场景的特殊要求
+## Subagent 场景的推荐补强
 
-主代理接收 implementer/reviewer subagent 的 DONE 报告时，**禁止**仅凭报告做下一步决策。必须：
+**触发条件：** 主代理接收 implementer/reviewer subagent 的 DONE/APPROVE 报告，且即将基于该报告进入下一流程节点（如 SDD Step 2/3、Phase 6 收尾）时。
+
+**推荐补强（非硬改 SDD 控制流）：**
 
 1. `git diff <base_SHA>..<head_SHA>` —— 确认 subagent 真改了它声称改的文件
 2. 跑 subagent 应该已经跑过的测试命令 —— 不复用 subagent 的 output
-3. 如果 diff 为空或与报告不符 → 视为 BLOCK，要求 subagent 重新执行
+3. 如果 diff 为空或与报告不符 → 视为 BLOCK，要求 subagent 重新执行（与 SDD 既有 BLOCKED 状态处理一致）
 
-这条与"Trust but verify"原则一致，但提升为硬步骤。
+这条是 SDD "trust but verify" 原则的横切补强建议，**不修改 SDD 流程控制本身**。SDD skill 中既有的 Step 1 状态处理（DONE/BLOCKED/NEEDS_CONTEXT）保持原样；本节为主代理在收到 DONE 时提供推荐的 verify 动作清单。
 
 ---
 
-## 与 `code-quality-gate` / `code-review` 的关系
+## 与既有 skill 的边界
 
-- **code-quality-gate**：跑命令本身是被该 skill 包装的；本 skill 要求的是"宣称 quality-gate 通过前必须有 fresh 命令输出"
-- **code-review**：reviewer subagent 报 APPROVE 后，主代理仍需 verify reviewer 真看了 diff（看 reviewer 报告里有没有引用具体 line:number），而不是盲信 verdict
+- **`code-quality-gate`**：跑命令本身被该 skill 包装；本 skill 要求的是"宣称 quality-gate 通过前必须有 fresh 命令输出"
+- **`code-review`**：reviewer subagent 报 APPROVE 后，主代理仍需 verify reviewer 真看了 diff（看 reviewer 报告里有没有引用具体 file:line），而非盲信 verdict
+- **`commit-quality`**：负责 commit 前 lint staged 文件 + secrets 扫描；本 skill 补强其前序步骤——`commit-quality` 触发前必须已有全量测试 PASS 输出作为 evidence（fresh 输出，不复用历史）
+- **`code-quality-gate` vs `commit-quality`**：前者按文件改动后触发（任务内的 lint/format/typecheck），后者按 commit 前触发（staged-only lint + secrets）；本 skill 在两者之间作为诚信门串联使用
 
 ---
 
