@@ -17,7 +17,7 @@
 | 代码质量、安全、测试 | [common.md](rules/common.md) | code-quality-gate skill / security-reviewer agent / tdd-workflow skill |
 | 代码审查流程 | [code-review.md](rules/code-review.md) | code-reviewer agent |
 | 交互原则 | [communication.md](rules/communication.md) | — |
-| 开发工作流（动态路由） | [development-workflow.md](rules/development-workflow.md) | 各步骤对应 agent/skill |
+| 开发工作流 | skill 链路（见 using-meridian §6） | brainstorm → writing-plans → subagent-driven-development → finishing-a-development-branch |
 | Git 规范 | [git-workflow.md](rules/git-workflow.md) | git-workflow skill |
 | 设计工作流（路由） | [design-workflow.md](rules/design-workflow.md) | design-workflow skill |
 | 语言规范 | [languages.md](rules/languages.md) | python-patterns skill / typescript-patterns skill |

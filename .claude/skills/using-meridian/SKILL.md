@@ -40,7 +40,7 @@ description: Use when starting any conversation or after compact - establishes M
 
 ## §3 产出约束
 
-- **不主动创建 *.md** —— 分析、总结、说明直接在对话里给。例外：`docs/plans/` 由 development-workflow 要求创建，完成后必须删
+- **不主动创建 *.md** —— 分析、总结、说明直接在对话里给。例外：`docs/plans/` 由 writing-plans skill 创建，完成后必须删
 - **临时测试脚本**（`test_*.py` / `verify_*.py`）执行后**立即**删除 —— 验证完就是冗余代码
 - **不可变性（CRITICAL）** —— 永远创建新对象，禁止原地修改
 - **外科手术式修改** —— 发现无关问题告知用户，不擅自动手
@@ -71,15 +71,27 @@ description: Use when starting any conversation or after compact - establishes M
 
 ## §6 流程与产物指针
 
+### 新功能开发链路（按顺序触发）
+
+| 步骤 | Skill | 触发条件 |
+|---|---|---|
+| 1. 产品发现+技术设计+spec | `brainstorm` | 任何创造性工作（新功能、行为变更） |
+| 2a. UI 设计（如需要） | `design-workflow` | 新页面/新组件/新交互/视觉改动 |
+| 2b. 实现计划 | `writing-plans` | 有 spec 后，接触代码前 |
+| 3. 逐任务实现+审查 | `subagent-driven-development` | 有计划后，逐任务执行 |
+| 4. 收尾 | `finishing-a-development-branch` | 实现完成，测试通过 |
+
+### 其他场景
+
 | 场景 | 入口 |
 |---|---|
-| 标准开发流程（默认） | `subagent-driven-development` skill |
 | bug 修复（先于读代码） | `investigate` skill |
-| 产品发现+技术设计+spec 输出 | `brainstorm` skill / `/brainstorm` |
-| UI 任务 | `design-workflow` skill（DESIGN.md 检查由 skill 内部处理） |
 | commit 前质量门 | `commit-quality` skill |
-| 收尾（测试验证 + 集成选项 + 清理） | `finishing-a-development-branch` skill |
 | 任务后复盘 | `retro` skill |
+
+### 降级覆盖
+
+仅限单文件改动 + 用户明确确认 → 跳过 brainstorm/plans/subagent-driven-development，直接 code-quality-gate → commit。涉及 ≥2 文件的改动不允许降级。
 
 **常用 agent**（清单见 `.claude/agents/`）：security-reviewer / python-reviewer / typescript-reviewer
 

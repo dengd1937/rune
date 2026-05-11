@@ -38,7 +38,7 @@ You read from filesystem only. You do NOT call Pencil MCP tools. You do NOT anal
 **Not expected at V2-4**:
 
 - `.pen` files are managed by the Pencil editor and are NOT committed to the repo. Their absence is NEVER a blocker.
-- `visual-regression-report.md` and `accessibility-report.md` are produced during the development workflow Step 3 (against the implemented frontend), not during design-time review. If these files happen to exist (e.g., re-review after implementation), you may cross-check them — but their absence is NEVER a blocker at V2-4.
+- `visual-regression-report.md` and `accessibility-report.md` are produced during subagent-driven-development (implementer subagent, against the implemented frontend), not during design-time review. If these files happen to exist (e.g., re-review after implementation), you may cross-check them — but their absence is NEVER a blocker at V2-4.
 
 ---
 

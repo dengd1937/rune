@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: 标准开发流程的执行引擎。逐任务派遣独立 subagent + 两阶段审查。
+description: "Use when executing implementation plans with independent tasks. Dispatches a fresh subagent per task with two-stage review (spec compliance first, then code quality). Required after writing-plans skill. Terminal state: invokes finishing-a-development-branch skill."
 ---
 
 # Subagent 驱动开发

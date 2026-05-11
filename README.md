@@ -15,7 +15,6 @@ meridian/
 │   │   ├── common.md                # 代码质量、安全、测试通用规范
 │   │   ├── code-review.md           # 代码审查流程与严重等级
 │   │   ├── communication.md         # 交互原则（暴露不确定性）
-│   │   ├── development-workflow.md   # 开发工作流（动态路由）
 │   │   ├── design-workflow.md       # 设计工作流路由
 │   │   ├── git-workflow.md          # Git 规范
 │   │   └── languages.md             # Python / TypeScript 语言规范

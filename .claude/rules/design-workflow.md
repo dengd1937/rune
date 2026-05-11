@@ -15,7 +15,7 @@
 - **L1（轻量）**：无新 token、无新组件、无新页面、无新交互 → 加载 `design-workflow` skill L1
 - **L2（标准）**：其他所有 UI 工作 → 加载 `design-workflow` skill V2-1 到 V2-5
 
-L2 Gate 3 通过后的产物（intent.md、screenshots/、components/、tokens/）进入 development-workflow。开发时通过 Pencil MCP 实时读取设计属性。
+L2 Gate 3 通过后的产物（intent.md、screenshots/、components/、tokens/）进入 `writing-plans` → `subagent-driven-development` 链路。开发时通过 Pencil MCP 实时读取设计属性。
 
 ## DESIGN.md
 

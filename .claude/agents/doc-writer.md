@@ -30,7 +30,7 @@ model: haiku
 | `review-verdict` | `docs/designs/<feature>/review-verdict.md` | design-workflow V2-4 |
 | `layout-report` | `docs/designs/<feature>/screenshots/layout-report.md` | design-workflow V2-4 |
 | `l1-design-note` | `docs/designs/<feature>/intent.md`（追加） | design-workflow L1 |
-| `module-doc` | `docs/modules/<module>.md` | development-workflow Step 6 |
+| `module-doc` | `docs/modules/<module>.md` | finishing-a-development-branch Step 2 |
 | `adr` | `docs/architecture/adr/<NNNN>-<slug>.md` | brainstorm Phase 4（跨项目级） |
 
 ## 模板定义

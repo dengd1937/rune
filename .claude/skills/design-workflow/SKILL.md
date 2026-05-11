@@ -1,6 +1,6 @@
 ---
 name: design-workflow
-description: "UI design workflow orchestration (v2). TRIGGER when: new UI feature, new page, new component, or visual change; tasks involving docs/designs/ directories, *.pen files, Pencil MCP tools, or design tokens; reading design artifacts before implementation. Skip for backend-only, config-only, refactoring without visual impact."
+description: "Use after brainstorm for tasks involving UI — new pages, new components, new visual interactions, or new design tokens. TRIGGER when: new UI feature, new page, new component, or visual change; tasks involving docs/designs/ directories, *.pen files, Pencil MCP tools, or design tokens. Skip for: backend-only, config-only, refactoring without visual impact. Terminal state: handoff to writing-plans skill."
 metadata:
   author: sre-copilot
   version: "2.0"
@@ -154,7 +154,7 @@ Refine the wireframe into the final design, expand the token system, and documen
 
 Review all design artifacts before handoff. This is the single hard approval gate in the standard path.
 
-> Playwright visual regression and axe-core accessibility audits belong to the development workflow Step 3. This stage reviews design-time artifacts only.
+> Playwright visual regression and axe-core accessibility audits belong to `subagent-driven-development` Step 1 (implementer subagent). This stage reviews design-time artifacts only.
 
 **Phase 1 - Design-time visual checks**
 
@@ -193,15 +193,14 @@ Run the `design-reviewer` agent against `docs/designs/<feature>/`. The agent che
 
 ### V2-5. Handoff to Development Workflow
 
-After Gate 3, design artifacts become inputs to the development workflow.
+After Gate 3, design artifacts become inputs to the `writing-plans` skill, which produces the plan consumed by `subagent-driven-development`.
 
-**If `DESIGN.md` exists**, all handoff artifacts already comply with it (enforced in V2-3 and V2-4). Ensure `intent.md` references DESIGN.md as the visual authority so the development workflow maintains the same constraints.
+**If `DESIGN.md` exists**, all handoff artifacts already comply with it (enforced in V2-3 and V2-4). Ensure `intent.md` references DESIGN.md as the visual authority so `writing-plans` and `subagent-driven-development` maintain the same constraints.
 
-| Dev Step | Consumes | How |
+| Skill | Consumes | How |
 |----------|----------|-----|
-| Step 1 (Research & Reuse) | `DESIGN.md` if present, `intent.md`, `screenshots/`, Pencil MCP | Confirm visual authority, design direction, and target; read precise properties via MCP if needed |
-| Step 2 (Plan First) | `components/*.md`, `review-verdict.md`, `tokens/source-map.md` | Reference component contracts, DESIGN.md gaps, token provenance, and review findings in the implementation plan |
-| Step 3 (TDD) | `tokens/*`, `components/*.md`, `DESIGN.md` if present | Validate token usage, prevent hardcoded visual values, run Playwright visual regression, run axe-core accessibility audit |
+| writing-plans (plan creation) | `components/*.md`, `review-verdict.md`, `tokens/source-map.md` | Reference component contracts, DESIGN.md gaps, token provenance, and review findings in the implementation plan |
+| subagent-driven-development (implementation) | `tokens/*`, `components/*.md`, `DESIGN.md` if present | Validate token usage, prevent hardcoded visual values, run Playwright visual regression, run axe-core accessibility audit |
 
 **Implementation-side rule:** If implementation changes the visual contract or reveals a missing token, update `docs/designs/<feature>/` in the same PR. Do not patch around the gap with hardcoded values.
 

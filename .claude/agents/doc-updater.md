@@ -156,7 +156,7 @@ docs/
 由工作流在完成后显式调用：
 - brainstorm 完成 → 更新 feature catalog + 评估 README
 - design-workflow 完成 → 更新 component catalog + feature catalog（设计状态） + 评估 README
-- development-workflow 完成 → 更新 module index + codemap + feature catalog（实现状态） + 评估 README
+- subagent-driven-development 完成 → 更新 module index + codemap + feature catalog（实现状态） + 评估 README
 - brainstorm Phase 4 完成（跨项目级决策）→ 更新 ADR Index + 评估 README
 
 ## 原则

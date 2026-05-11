@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: 实现完成后使用 — 验证测试、文档清理、commit 整理、结构化集成选项（PR/合并/保持/丢弃）及 worktree 清理
+description: "Use when implementation is complete and all tasks have passed review — verifies tests, cleans up docs/plans and artifacts, presents structured integration options (PR/merge/keep/discard), and cleans up workspace. Required after subagent-driven-development skill. Not for use when tests fail or review has open issues."
 ---
 
 # Finishing a Development Branch

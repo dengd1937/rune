@@ -16,7 +16,7 @@ Use `L1` when **all** of the following are true:
    - what changed
    - why it changed
    - which existing tokens/components were reused
-5. Proceed directly to the development workflow Step 2 and Step 3.
+5. Proceed directly to `writing-plans` → `subagent-driven-development`.
 
 ## Outputs
 

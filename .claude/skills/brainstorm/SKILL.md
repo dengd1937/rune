@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: "Collaborative ideation-to-spec skill. Guides from vague idea through product discovery, competitive research, feature analysis, technical design, and spec writing — producing a unified feature spec at docs/specs/<feature>-design.md."
+description: "You MUST use this before any creative work — creating features, building components, adding functionality, modifying behavior, or solving ambiguous problems. Guides from vague idea through product discovery, competitive research, feature analysis, technical design, and spec writing, producing a unified feature spec. Terminal state: invokes writing-plans skill (non-UI) or design-workflow skill (UI tasks). This applies to EVERY project regardless of perceived simplicity."
 origin: meridian
 ---
 
@@ -468,7 +468,7 @@ Self-review 通过后，**请用户审阅 spec 文件**：
   ├─ Phase 1-4 → doc-writer agent template: feature-spec → docs/specs/<feature>-design.md
   │                                                                     │
   │              design-workflow V2-1 消费此文件
-  │              development-workflow Step 1 消费此文件
+  │              writing-plans skill 消费此文件
   │
   └─ doc-updater agent 更新 feature catalog
 ```
