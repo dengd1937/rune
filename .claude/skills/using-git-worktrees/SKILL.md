@@ -33,7 +33,7 @@ BRANCH=$(git branch --show-current)
 git rev-parse --show-superproject-working-tree 2>/dev/null
 ```
 
-**若 `GIT_DIR != GIT_COMMON` 且非子模块：** 已在 linked worktree。**跳过创建**，直接到 Step 3（项目就绪）。
+**若 `GIT_DIR != GIT_COMMON` 且非子模块：** 已在 linked worktree。**跳过创建**，直接到 Step 2（项目就绪）。
 
 报告（携带分支状态）：
 - 在命名分支上："Already in isolated workspace at `<path>` on branch `<name>`."
@@ -45,7 +45,7 @@ git rev-parse --show-superproject-working-tree 2>/dev/null
 
 > "Would you like me to set up an isolated worktree? It protects your current branch from changes."
 
-已声明的偏好直接遵循，不再询问。用户拒绝则在原地工作，跳到 Step 3。
+已声明的偏好直接遵循，不再询问。用户拒绝则在原地工作，跳到 Step 2。
 
 ---
 
@@ -55,7 +55,7 @@ git rev-parse --show-superproject-working-tree 2>/dev/null
 
 ### 1a. 原生 worktree 工具（优先）
 
-用户已同意建 worktree（Step 0）。你是否已经有原生工具？可能名为 `EnterWorktree` / `WorktreeCreate` / `/worktree` 命令 / `--worktree` 标志 / Agent tool 的 `isolation: "worktree"` 参数。若有，使用它并跳到 Step 3。
+用户已同意建 worktree（Step 0）。你是否已经有原生工具？可能名为 `EnterWorktree` / `WorktreeCreate` / `/worktree` 命令 / `--worktree` 标志 / Agent tool 的 `isolation: "worktree"` 参数。若有，使用它并跳到 Step 2。
 
 原生工具自动处理目录放置、分支创建和清理。当你有原生工具时还用 `git worktree add` 会创建宿主看不见也管不了的幻影状态。
 
@@ -109,7 +109,7 @@ cd "$WORKTREE_PATH"
 
 ---
 
-## Step 3：项目就绪
+## Step 2：项目就绪
 
 自动检测并运行对应 setup：
 
@@ -129,7 +129,7 @@ if [ -f go.mod ]; then go mod download; fi
 
 ---
 
-## Step 4：验证 Baseline
+## Step 3：验证 Baseline
 
 跑测试套件确认起点干净：
 

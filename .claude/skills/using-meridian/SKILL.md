@@ -78,7 +78,7 @@ description: Use when starting any conversation or after compact - establishes M
 | 1. 产品发现+技术设计+spec | `brainstorm` | 任何创造性工作（新功能、行为变更） |
 | 2a. UI 设计（如需要） | `design-workflow` | 新页面/新组件/新交互/视觉改动 |
 | 2b. 实现计划 | `writing-plans` | 有 spec 后，接触代码前 |
-| 3a. 工作区隔离 | `using-git-worktrees` | SDD Phase 0a 调用（建议，可拒绝） |
+| 3a. 工作区隔离 | `using-git-worktrees` | SDD Phase 0a 内部自动调用（用户可拒绝） |
 | 3b. 逐任务实现 | `subagent-driven-development` | 有计划后，逐任务执行 |
 | 4. 代码审查 | `code-review` | implementer 完成 + 质量门控通过后 |
 | 5. 反馈处理 | `review-handling` | code-review 返回 BLOCK 时 |
