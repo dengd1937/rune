@@ -80,7 +80,7 @@ description: Use when starting any conversation or after compact - establishes M
 | commit 前质量门 | `commit-quality` skill |
 | 任务后复盘 | `retro` skill |
 
-**常用 agent**（清单见 `.claude/agents/`）：planner / security-reviewer / python-reviewer / typescript-reviewer
+**常用 agent**（清单见 `.claude/agents/`）：security-reviewer / python-reviewer / typescript-reviewer
 
 ## §7 工程边界
 

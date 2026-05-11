@@ -24,7 +24,7 @@ docs/
 │   ├── adr/           # 架构决策记录（architect skill → doc-writer 写入）
 │   └── ADR-INDEX.md   # ADR 索引
 ├── modules/           # 模块文档（development → doc-writer 写入）
-├── plans/             # 实施方案（planner，临时的，开发完成后删除）
+├── plans/             # 实施方案（writing-plans skill，临时的，开发完成后删除）
 ├── FEATURE-CATALOG.md # feature 索引
 ├── COMPONENT-CATALOG.md # 组件索引
 ├── MODULE-INDEX.md    # 模块索引

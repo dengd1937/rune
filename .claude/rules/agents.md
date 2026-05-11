@@ -4,7 +4,7 @@
 
 | Agent | 用途 |
 |-------|------|
-| planner | 实现方案规划 |
+| planner | [已废弃] 由 writing-plans skill 替代 |
 | tdd-guide | [已废弃] 由 task-driven-development skill 内部 general-purpose + implementer-prompt.md 替代 |
 | code-reviewer | [已废弃] 由 task-driven-development skill 内部 general-purpose + code-quality-reviewer-prompt.md 替代 |
 | security-reviewer | 安全分析（auth/输入/支付相关强制） |
@@ -24,7 +24,7 @@
 |-------|------|---------|
 | investigate | 根因分析 | bug 修复前 |
 | brainstorm | 产品发现+技术设计+spec 输出 | `/brainstorm` |
-| design-review | 方案对抗性审查 | planner 之后、实现前 |
+| design-review | 方案对抗性审查 | writing-plans 之后、实现前 |
 | retro | 任务后复盘 | 功能/修复完成后 |
 | task-driven-development | 逐任务编排（implementer subagent + 并发审查 + 修复闭环） | 标准开发流程（默认） |
 

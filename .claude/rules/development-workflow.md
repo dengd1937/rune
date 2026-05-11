@@ -31,7 +31,7 @@
 1. **调研与复用** — 阅读已有产物（`docs/specs/`、`docs/designs/`）；搜索现有实现；优先成熟库
    - UI 任务必须额外读取：项目根目录 `DESIGN.md`（如存在）、`docs/designs/<feature>/review-verdict.md`、`docs/designs/<feature>/tokens/`、`docs/designs/<feature>/components/*.md`
    - 如果设计产物记录了 design identity gap，计划阶段必须说明采用“收敛设计”还是“等待用户更新 DESIGN.md”
-2. **规划** → planner agent → 输出任务级计划（每任务 1-3 文件）→ 保存至 `docs/plans/` → **用户批准前不写代码**
+2. **规划** → writing-plans skill → 输出任务级计划（每任务 1-3 文件）→ 保存至 `docs/plans/` → **用户批准前不写代码**
 
 ### 循环：逐任务执行
 

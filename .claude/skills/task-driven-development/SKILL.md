@@ -36,7 +36,7 @@ description: 标准开发流程的执行引擎。按任务粒度执行 TDD + 审
 
 ## Phase 1：加载与校验
 
-1. 读取计划文件（`docs/plans/`）
+1. 读取计划文件（`docs/plans/`，由 writing-plans skill 产出）
 2. 提取所有任务文本
 3. 检查粒度：每任务 1-3 文件，有独立 TDD 步骤和审查门控
 4. 如果任务涉及 UI，实现前确认计划已引用：

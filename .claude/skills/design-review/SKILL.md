@@ -6,13 +6,13 @@ origin: meridian
 
 # Design Review
 
-对 planner 输出的实施方案进行对抗性审查。**审查对象是方案文档，不是代码。**
+对 writing-plans skill 输出的实施方案进行对抗性审查。**审查对象是方案文档，不是代码。**
 
 在用户批准方案、开始编码之前，以怀疑者视角找出方案中不应被批准的理由。
 
 ## When to Activate
 
-- planner 输出方案后，用户审批前
+- writing-plans skill 输出方案后，用户审批前
 - 方案涉及架构变更、新技术引入、多模块改动
 - 用户主动调用
 
@@ -61,7 +61,7 @@ origin: meridian
 
 ## Review Packet
 
-审查开始前，必须构建标准化的 Review Packet。信息隔离是独立性的关键 — 审查者只看以下内容，不看 planner 的推理过程。
+审查开始前，必须构建标准化的 Review Packet。信息隔离是独立性的关键 — 审查者只看以下内容，不看 writing-plans 的推理过程。
 
 ```
 ## Review Packet
@@ -70,7 +70,7 @@ origin: meridian
 [用户最初要求什么 — 原文，不做解读]
 
 ### 方案摘要
-[planner 输出的方案，包括架构设计、技术选型、实施步骤]
+[writing-plans skill 输出的方案，包括架构设计、技术选型、实施步骤]
 
 ### 技术栈
 [项目使用的语言/框架/数据库/核心依赖]
