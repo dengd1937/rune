@@ -61,7 +61,16 @@ origin: meridian
 
 ## Phase 3 — 验证与模式对比（只读，不改）
 
-### 3a. 逐一验证
+### 调查范式选择
+
+| 范式 | 适用场景 | 主路径 |
+|---|---|---|
+| **Hypothesis-driven**（默认） | 业务逻辑 bug、中等深度问题、有清晰假设可静态验证 | 3a 逐一验证 |
+| **Trace-driven**（条件切换） | 栈深 ≥5 层 / 触发源不明 / 数据污染类（"为什么这个值会出现在这里"） | 3d backward tracing |
+
+两种范式可以串联：先 hypothesis-driven，发现假设无法静态收敛 → 切到 trace-driven 用运行时证据定位触发源。
+
+### 3a. 逐一验证（hypothesis-driven 主路径）
 
 对每个假设，找对应证据来证实或排除：
 
@@ -91,18 +100,97 @@ origin: meridian
 - 逐项对比差异（不假设"这不重要"）
 - 用发现更新假设清单
 
-### 3c. 多组件系统诊断（条件触发）
+### 3c. 多组件系统诊断
 
-当系统有多个组件（API → Service → DB，CI → Build → Deploy）时，逐层加诊断：
+**触发条件（满足任一即必走）：**
 
+- 系统涉及 ≥2 个组件边界（API → Service → DB，CI → Build → Deploy，Frontend → Worker → Storage 等）
+- 错误层与触发层之间隔 ≥3 个调用层级
+- hypothesis 排除法收敛失败（剩 ≥2 个假设无法靠静态阅读区分）
+
+**铁律：触发后必须先加 instrumentation 跑一次再分析，禁止跳过直接猜。**
+
+**操作步骤：**
+
+1. 在每个组件边界加诊断输出（log 入站数据 + log 出站数据 + 验证环境/配置传递）
+2. 跑一次，收集证据
+3. 分析证据 → 定位"断裂层"（哪一层入站正常但出站异常）
+4. 回到 3a，针对断裂层形成新假设
+
+**模板示例（多层 shell 链路）：**
+
+```bash
+# Layer 1: Workflow / 入口层
+echo "=== Layer 1: workflow env ==="
+echo "IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}"
+
+# Layer 2: 构建脚本
+echo "=== Layer 2: build script env ==="
+env | grep IDENTITY || echo "IDENTITY not propagated"
+
+# Layer 3: 业务操作前的状态
+echo "=== Layer 3: pre-operation state ==="
+security list-keychains
+
+# Layer 4: 操作本身
+codesign --sign "$IDENTITY" --verbose=4 "$APP"
 ```
-对每个组件边界：
-  - 检查数据进入时的状态
-  - 检查数据离开时的状态
-  - 验证环境/配置传递
 
-→ 定位断裂层，再深入调查
+**模板示例（应用层调用链）：**
+
+```typescript
+// 在关心的组件边界添加临时 instrumentation（修复后必须移除）
+async function gitInit(directory: string) {
+  console.error('[DEBUG] gitInit entry:', {
+    directory,
+    cwd: process.cwd(),
+    stack: new Error().stack,
+  });
+  await execFileAsync('git', ['init'], { cwd: directory });
+}
 ```
+
+**产物：** "断裂层"报告（哪一层入站 OK / 出站异常），作为 3a 新一轮假设的输入。
+
+**清理：** 诊断 instrumentation 是临时代码，根因确认后必须从代码中移除（不允许残留进 commit；`code-quality-gate` 会扫描 `console.log` / `debugger` 等残留）。
+
+### 3d. Backward Tracing（trace-driven 主路径）
+
+**触发条件：**
+
+- 错误深在调用栈底部（≥5 层）
+- "为什么这个值会出现在这里"类问题（数据污染、错误目录、错误参数）
+- hypothesis 列表无法静态收敛（缺少触发源信息）
+
+**操作步骤：**
+
+1. **观察症状**：错误信息 + 直接错误位置
+2. **找直接原因**：什么代码直接导致这个错误
+3. **追问：是谁调用的它？**（一层一层向上）
+4. **追到原始触发点**：bad value 第一次出现的位置
+5. **在源头修复，不在症状处修复**
+
+**示例：**
+
+```text
+症状：git init 在 packages/core 创建了 .git
+直接原因：execFileAsync('git', ['init'], { cwd: projectDir })
+↑ 谁调用？WorktreeManager.createSessionWorktree(projectDir='')
+↑ 谁传的空字符串？Session.create(name, context.tempDir)
+↑ tempDir 为什么是空？setupCoreTest() 在 beforeEach 之前被访问
+
+原始触发点：top-level 变量初始化访问了未初始化的 getter
+修复：把 tempDir 改成 getter，未初始化时抛错
+```
+
+**工具：**
+
+- `new Error().stack` 注入：在可疑函数前打印调用栈
+- `console.error` 注入：测试场景下用，不用 logger（可能被吞）
+- 二分定位：当某测试触发污染但不知是哪个时，用 bisection script 一个一个跑
+- git blame：当怀疑是近期改动引入时
+
+**追溯不下去时的回退：** 加 instrumentation（见 3c），让运行时证据告诉你"是谁"。
 
 ---
 
@@ -158,7 +246,7 @@ origin: meridian
 
 调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测。
 
-**通过** → Phase 6。
+**通过** → 评估 5f 触发条件 → 触发则走 5f 后回 5d / 未触发直接 Phase 6。
 **失败** → 修复 → 重跑 5d。
 
 ### 5e. 3 次失败熔断
@@ -181,6 +269,76 @@ origin: meridian
 ```
 
 **与用户讨论后再决定下一步。** 不允许第 4 次盲目修复。
+
+### 5f. 防御加固（条件触发，推荐）
+
+**触发条件（满足任一即推荐走）：**
+
+- 数据穿越 ≥2 层组件（与 3c 触发条件一致）
+- 之前已经在某层失败过（说明单点校验不足）
+- 涉及数据完整性 / 安全 / 生产事故根因
+- bug 类型：输入污染 / 状态泄漏 / 错误传播
+
+**核心理念：** "修了 bug" ≠ "bug 不会复发"。在数据流的每一层加防御，让 bug 在结构上不可能再次出现。
+
+**与"外科手术式修改"原则的边界：**
+
+| 范畴 | 是否属于本次修复范围 |
+|---|---|
+| 同一 bug 数据流上多层加校验 | ✅ 属于（不算 bundled refactoring） |
+| 同一 bug 引发的关联防御（mock 绕过、跨平台边界） | ✅ 属于 |
+| 顺手修复其他无关 bug | ❌ 不属于（外科手术原则适用） |
+| 借机重构无关代码 | ❌ 不属于 |
+
+**四层防御模板：**
+
+1. **L1 — 入口校验**：在 API/模块边界拒绝明显非法输入
+
+   ```typescript
+   function createProject(name: string, workingDir: string) {
+     if (!workingDir?.trim()) throw new Error('workingDir cannot be empty');
+     if (!existsSync(workingDir)) throw new Error(`workingDir not found: ${workingDir}`);
+   }
+   ```
+
+2. **L2 — 业务逻辑校验**：在业务操作前验证数据对本操作有意义
+
+   ```typescript
+   function initializeWorkspace(projectDir: string) {
+     if (!projectDir) throw new Error('projectDir required for workspace initialization');
+   }
+   ```
+
+3. **L3 — 环境守卫**：在特定上下文中拒绝危险操作
+
+   ```typescript
+   async function gitInit(directory: string) {
+     if (process.env.NODE_ENV === 'test' && !directory.startsWith(tmpdir())) {
+       throw new Error(`Refusing git init outside tmpdir in tests: ${directory}`);
+     }
+   }
+   ```
+
+4. **L4 — debug 仪表**（永久保留）：在危险操作前记录上下文供 forensics
+
+   ```typescript
+   logger.debug('About to git init', {
+     directory,
+     cwd: process.cwd(),
+     stack: new Error().stack,
+   });
+   ```
+
+**实施要求：**
+
+- 每层校验都要有独立测试（RED → GREEN）
+- 测试要验证"绕过 L1 时 L2 能拦住"——不同层互相独立
+- 不是所有 bug 都需要四层；按数据流实际穿越层数决定
+- L4 用 logger 不用 `console.log`，避免被 `code-quality-gate` 当作残留产物清除
+
+**完成判定：** 每层校验都有测试覆盖，所有测试 GREEN，回到 5d 重跑质量门控。
+
+→ 全部 GREEN → 继续 Phase 6。
 
 ---
 
@@ -213,6 +371,8 @@ origin: meridian
 | "一次改多个问题" | 无法隔离哪个改动修复了哪个问题 |
 | "3+ 次了再试一次" | 3 次失败 = 可能是架构问题，不是代码问题 |
 | "顺手把那个也改了" | 外科手术式修改：发现无关问题告知用户，不擅自动 |
+| "多组件 bug，凭感觉猜哪层断了" | 多组件场景必须先加 instrumentation 跑一次再分析（Phase 3c 铁律） |
+| "深栈 bug，在症状处修复就行" | 症状处只是错误显现点；trace 到原始触发点修复（Phase 3d） |
 
 ---
 
