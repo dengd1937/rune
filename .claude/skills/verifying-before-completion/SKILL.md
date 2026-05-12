@@ -1,6 +1,6 @@
 ---
 name: verifying-before-completion
-description: Use after implementation, fix, or quality-gate run — before claiming tests pass, build succeeds, lint clean, or bug fixed. Requires running a fresh verification command in the same conversation turn and reading its output before stating success. Invoked from investigate 5b/5c/5f, subagent DONE handling, and pre-commit/PR moments.
+description: Use after implementation, fix, or quality-gate run — before claiming tests pass, build succeeds, lint clean, or bug fixed. Requires running a fresh verification command in the same conversation turn and reading its output before stating success. Invoked from investigate 4b/4c/4f, subagent DONE handling, and pre-commit/PR moments.
 origin: meridian
 ---
 
@@ -40,9 +40,9 @@ origin: meridian
 
 | 节点 | 验证内容 |
 |---|---|
-| `investigate` 5b GREEN 后 | 当前消息内跑原复现测试，确认 PASS |
-| `investigate` 5c IMPROVE 后 | 当前消息内重跑 RED→GREEN 测试套件，确认未回归 |
-| `investigate` 5f 回 5d 之前 | 当前消息内跑复现测试 + 每层防御独立测试 |
+| `investigate` 4b GREEN 后 | 当前消息内跑原复现测试，确认 PASS |
+| `investigate` 4c IMPROVE 后 | 当前消息内重跑 RED→GREEN 测试套件，确认未回归 |
+| `investigate` 4f 回 4d 之前 | 当前消息内跑复现测试 + 每层防御独立测试 |
 | `code-quality-gate` 通过声明前 | 当前消息内有 lint/format/typecheck 完整输出 |
 | 接收 subagent DONE 报告时 | `git diff` 看实际改动 + 跑相关测试（详见下文 Subagent 场景） |
 | commit / push / PR 创建前 | 全量测试套件 + 覆盖率（与 `commit-quality` 串联，详见下文） |

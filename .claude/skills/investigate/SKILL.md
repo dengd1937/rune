@@ -252,10 +252,12 @@ async function gitInit(directory: string) {
 
 ### 4d. 质量门控
 
-调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测。
+调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测（含 `[TEMP-INSTR]` 临时诊断代码扫描）。
 
 **通过** → 评估 4f 触发条件 → 触发时**推荐**走 4f（完成后回 4d）/ 不触发或明确理由跳过则直接 Phase 5。
 **失败** → 修复 → 重跑 4d。
+
+**`[TEMP-INSTR]` 残留处理：** 如果 Phase 2c/2d 添加过临时诊断代码且 gate 报告残留，必须在此时清除（不允许带入 Phase 5）。
 
 ### 4e. 3 次失败熔断
 
@@ -364,6 +366,8 @@ async function gitInit(directory: string) {
 ---
 
 ## Phase 5 — 代码审查
+
+**前置条件：** 确认无 `[TEMP-INSTR]` 残留（4d 质量门控已扫过，此处为显式断言）。如有残留，回到 4d 清除后再进入。
 
 质量门控通过后，调用 `/code-review` (per-task)：
 

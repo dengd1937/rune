@@ -89,6 +89,7 @@ Scan modified files for debug statements that should not be committed.
 - `console.log(`, `console.debug(`, `console.warn(` (JS/TS)
 - `print(`, `pprint(`, `breakpoint()` (Python, unless in test files)
 - `debugger;` (JS/TS)
+- `[TEMP-INSTR]` (temporary diagnostic instrumentation from `investigate` Phase 2c/2d — must be removed before commit)
 - `TODO:`, `FIXME:`, `HACK:` (flag only, do not block)
 
 **Action:** Remove or replace with proper logging before proceeding.
@@ -102,7 +103,7 @@ All checks must pass before the quality gate is considered satisfied:
 | Format | No formatting changes remain after auto-fix |
 | Lint | Zero errors (warnings allowed) |
 | Typecheck | Zero type errors |
-| Debug artifacts | No `console.log` / `debugger` / `breakpoint()` in non-test files |
+| Debug artifacts | No `console.log` / `debugger` / `breakpoint()` / `[TEMP-INSTR]` in non-test files |
 
 ## Failure Handling
 
