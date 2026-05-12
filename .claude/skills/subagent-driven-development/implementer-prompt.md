@@ -18,6 +18,10 @@
 - 任务涉及超过 3 个文件 → 立即报告 BLOCKED，不要强行拆分
 - **禁止先写实现代码再补测试**，铁律：`NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST`
 - 完成实现和测试后，提交你的工作，commit message 必须符合 [Conventional Commits](https://www.conventionalcommits.org/)（`<type>(<scope>): <description>`，type 限 feat|fix|refactor|docs|test|chore|perf|ci）
+- **不主动创建 \*.md 文件** — 文档类产出由 doc-writer agent 负责
+- **临时测试脚本**（`test_*.py` / `verify_*.py`）执行后**立即删除**
+- **不可变性** — 永远创建新对象，禁止原地修改
+- **外科手术式修改** — 发现无关问题在报告中标记，不擅自动手
 
 ## 开始前：确认理解
 
