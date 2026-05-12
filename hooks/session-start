@@ -5,7 +5,7 @@
 set -euo pipefail
 
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
-SKILL_PATH="${PLUGIN_ROOT}/skills/using-meridian/SKILL.md"
+SKILL_PATH="${PLUGIN_ROOT}/skills/using-rune/SKILL.md"
 
 skill_content=$(cat "$SKILL_PATH" 2>&1 || echo "Error reading using-meridian skill at ${SKILL_PATH}")
 

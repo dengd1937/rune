@@ -1,28 +1,28 @@
-# meridian
+# rune
 
-Claude Code engineering discipline plugin — TDD, security review, quality gates enforced through iron laws and hook-based physical interception.
+Claude Code engineering discipline plugin — TDD, security review, quality gates enforced through iron laws and hook-based interception.
 
 ## 安装
 
 ```bash
 # 添加 marketplace
-claude plugin marketplace add sdeng079/meridian
+claude plugin marketplace add sdeng079/rune
 
 # 安装 plugin
-claude plugin install meridian@meridian
+claude plugin install rune@rune
 ```
 
 安装后自动激活：
 - SessionStart hook 注入铁律（startup / clear / compact）
 - PreToolUse hook 拦截危险命令和 secrets
 - PostToolUse hook 检测 debug 语句和代码质量
-- 21 个 skills（通过 `/meridian:<skill-name>` 调用）
+- 21 个 skills（通过 `/rune:<skill-name>` 调用）
 - 6 个 agents（含 reviewer、doc-writer 等）
 
 ## 目录结构
 
 ```text
-meridian/                              # Repo root = Plugin root
+rune/                                  # Repo root = Plugin root
 ├── .claude-plugin/
 │   ├── marketplace.json               # Marketplace catalog
 │   └── plugin.json                    # Plugin manifest
@@ -49,13 +49,13 @@ meridian/                              # Repo root = Plugin root
 从想法到代码，三条工作流按需串联：
 
 ```
-/meridian:brainstorm ─→ /meridian:design-workflow ─→ /meridian:subagent-driven-development
+/rune:brainstorm ─→ /rune:design-workflow ─→ /rune:subagent-driven-development
   产品+技术设计            UI 设计                      逐任务开发
 ```
 
 | 阶段 | 触发 | 做什么 | 产出 |
 |------|------|--------|------|
-| **Brainstorm** | `/meridian:brainstorm` | 产品发现、竞品调研、功能分析、技术设计、spec 输出 | `docs/specs/` |
+| **Brainstorm** | `/rune:brainstorm` | 产品发现、竞品调研、功能分析、技术设计、spec 输出 | `docs/specs/` |
 | **Design** | 新 UI 功能自动路由 L1/L2 | 意图 → wireframe → 高保真 → 审查门控 | `docs/designs/`（tokens、组件契约） |
 | **Development** | 实现阶段 | 调研 → 规划 → 逐任务 TDD → 质量门控 → 审查 → commit | 已提交代码（80%+ 覆盖率） |
 
@@ -84,8 +84,8 @@ meridian/                              # Repo root = Plugin root
 | [verifying-before-completion](skills/verifying-before-completion/SKILL.md) | 实现或修复后的验证门禁 — 运行新鲜命令确认成功 |
 | [subagent-driven-development](skills/subagent-driven-development/SKILL.md) | 多文件改动按任务编排 — 逐任务 TDD+审查循环 |
 | [writing-plans](skills/writing-plans/SKILL.md) | 实施方案规划 — 任务拆解、No Placeholders、自检+plan-reviewer 双重质量保障 |
-| [writing-skills](skills/writing-skills/SKILL.md) | 创建和维护 Meridian skills 的规范与模板 |
-| [using-meridian](skills/using-meridian/SKILL.md) | 铁律注入与 skill 路由 — SessionStart 自动加载，定义调用纪律和 red flags |
+| [writing-skills](skills/writing-skills/SKILL.md) | 创建和维护 Rune skills 的规范与模板 |
+| [using-rune](skills/using-rune/SKILL.md) | 铁律注入与 skill 路由 — SessionStart 自动加载，定义调用纪律和 red flags |
 
 ## Agents
 
@@ -124,9 +124,9 @@ doc-updater agent（独立上下文）
 
 ## 设计原则
 
-- Rules 已下放 — 铁律和行为护栏在 using-meridian（SessionStart hook 注入），具体规范在 skills（按需加载）和 reviewer agents（审查时强制），hooks 提供物理拦截
+- Rules 已下放 — 铁律和行为护栏在 using-rune（SessionStart hook 注入），具体规范在 skills（按需加载）和 reviewer agents（审查时强制），hooks 提供物理拦截
 - 文档模板集中管理（doc-writer agent），工作流不含内联模板
-- Hooks 提供确定性安全执行层（物理拦截），using-meridian 提供行为护栏
+- Hooks 提供确定性安全执行层（物理拦截），using-rune 提供行为护栏
 
 ## License
 

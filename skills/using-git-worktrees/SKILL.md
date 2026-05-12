@@ -1,7 +1,7 @@
 ---
 name: using-git-worktrees
 description: Use when starting subagent-driven-development (Phase 0a) or before executing implementation plans — ensures an isolated workspace exists. Detects existing isolation first, prefers native worktree tools, falls back to `git worktree add` under .claude/worktrees/.
-origin: meridian
+origin: rune
 ---
 
 # Using Git Worktrees
@@ -67,7 +67,7 @@ git rev-parse --show-superproject-working-tree 2>/dev/null
 
 #### 目录约定
 
-Meridian 统一使用：
+Rune 统一使用：
 
 ```
 <repo-root>/.claude/worktrees/<branch-name>/
@@ -114,7 +114,7 @@ cd "$WORKTREE_PATH"
 自动检测并运行对应 setup：
 
 ```bash
-# Python (Meridian 默认)
+# Python (Rune 默认)
 if [ -f pyproject.toml ]; then uv sync; fi
 
 # Node.js
@@ -188,7 +188,7 @@ Ready to execute plan: <plan-file-or-feature-name>
 ### 使用旧 sibling 约定
 
 - **问题：** 用 `../.worktrees/<repo>-<branch>` 这种 sibling 路径
-- **修复：** 已废弃。Meridian 统一用 `.claude/worktrees/<branch-name>/`（项目内 + 与 finishing skill 对齐）
+- **修复：** 已废弃。Rune 统一用 `.claude/worktrees/<branch-name>/`（项目内 + 与 finishing skill 对齐）
 
 ### Baseline 失败时继续
 

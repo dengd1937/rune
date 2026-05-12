@@ -1,7 +1,7 @@
 ---
 name: retro
 description: Post-task retrospective. Reflects on workflow adherence, decision quality, and AI behavior — then proposes targeted improvements to rules/skills/agents for user approval.
-origin: meridian
+origin: rune
 ---
 
 # Retro
@@ -35,7 +35,7 @@ origin: meridian
 
 ### Phase 2 — 流程审视
 
-对照 Meridian 开发工作流链，逐项检查是否被遵守：
+对照 Rune 开发工作流链，逐项检查是否被遵守：
 
 | 步骤 | Skill | 是否执行 | 备注 |
 |------|-------|----------|------|

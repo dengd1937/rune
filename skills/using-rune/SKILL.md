@@ -1,6 +1,6 @@
 ---
-name: using-meridian
-description: Use when starting any conversation or after compact - establishes Meridian iron laws, skill invocation rules, and red flags
+name: using-rune
+description: Use when starting any conversation or after compact - establishes Rune iron laws, skill invocation rules, and red flags
 ---
 
 <SUBAGENT-STOP>
@@ -8,7 +8,7 @@ description: Use when starting any conversation or after compact - establishes M
 </SUBAGENT-STOP>
 
 <EXTREMELY-IMPORTANT>
-你拥有 Meridian 工程基线。下列铁律不可绕过。
+你拥有 Rune 工程基线。下列铁律不可绕过。
 
 如果一个 skill 有 ≥1% 概率适用于当前任务，你**必须** invoke 它。
 
@@ -27,7 +27,7 @@ description: Use when starting any conversation or after compact - establishes M
 
 **调用规则**：用户消息进来 → 检查是否有 skill 适用 → 有 1% 可能 ⇒ invoke Skill 工具 → 公告"使用 [skill] 来 [目的]" → 严格按 skill 执行。Skill 调用**先于**阅读代码、**先于** clarifying questions。
 
-**优先级**：用户显式指令 > Meridian skill > 默认系统提示
+**优先级**：用户显式指令 > Rune skill > 默认系统提示
 
 **行为纪律**：不要默默选一种解释就开始执行。有歧义时，将其显式化：
 - **明确说明假设** — 对需求有疑问时，在继续之前说明你基于哪个假设

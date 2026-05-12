@@ -1,12 +1,12 @@
 {
-  "name": "meridian",
+  "name": "rune",
   "version": "0.2.0",
-  "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based physical interception",
+  "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based interception",
   "author": {
     "name": "Stephen D Deng",
     "url": "https://github.com/sdeng079"
   },
-  "repository": "https://github.com/sdeng079/meridian",
+  "repository": "https://github.com/sdeng079/rune",
   "license": "MIT",
   "keywords": [
     "tdd",

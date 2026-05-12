@@ -1,7 +1,7 @@
 ---
 name: investigate
 description: Root-cause investigation → TDD fix → code review for bugs. Complete bug fix workflow — no code changes until root cause is confirmed, then RED→GREEN→IMPROVE→review.
-origin: meridian
+origin: rune
 ---
 
 # Investigate

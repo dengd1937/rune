@@ -1,7 +1,7 @@
 ---
 name: verifying-before-completion
 description: Use after implementation, fix, or quality-gate run — before claiming tests pass, build succeeds, lint clean, or bug fixed. Requires running a fresh verification command in the same conversation turn and reading its output before stating success. Invoked from investigate 4b/4c/4f, subagent DONE handling, and pre-commit/PR moments.
-origin: meridian
+origin: rune
 ---
 
 # Verifying Before Completion

@@ -239,7 +239,7 @@ git worktree prune
 # 分支删除已在 Step 5 对应选项中执行
 ```
 
-**溯源判断：** 只移除由 Meridian 流程创建的 worktree（路径在 `.claude/worktrees/` 下）。外部管理的 workspace 不主动清理。
+**溯源判断：** 只移除由 Rune 流程创建的 worktree（路径在 `.claude/worktrees/` 下）。外部管理的 workspace 不主动清理。
 
 ---
 
@@ -276,7 +276,7 @@ git worktree prune
 - 未经确认丢弃工作
 - 未经请求 force-push
 - 合并成功前移除 worktree
-- 清理非 Meridian 创建的 worktree
+- 清理非 Rune 创建的 worktree
 - 从 worktree 内部执行 `git worktree remove`
 - 选项 1/3 清理 worktree
 

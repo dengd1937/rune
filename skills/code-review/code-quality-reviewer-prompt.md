@@ -191,9 +191,9 @@ const usersWithPosts = await db.query(`
 
 ## 项目特定检查（自动启用）
 
-如检测到 `CLAUDE.md` 或 `using-meridian` skill，额外检查项目规则：
+如检测到 `CLAUDE.md` 或 `using-rune` skill，额外检查项目规则：
 
-- **文件大小限制** — meridian: 200-400 行典型，800 max
+- **文件大小限制** — rune: 200-400 行典型，800 max
 - **不可变性强制** — spread 而非 mutation（CRITICAL 规则）
 - **环境变量验证** — 缺失必须抛 KeyError/异常，禁止静默默认值
 - **TypeScript 类型** — 避免 any，用 unknown 收窄

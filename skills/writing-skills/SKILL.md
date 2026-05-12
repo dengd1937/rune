@@ -1,11 +1,11 @@
 ---
 name: writing-skills
-description: Use when creating new skills or editing existing skills for the Meridian skill library — guides skill authoring with CSO optimization, TDD testing methodology, and anti-rationalization patterns
+description: Use when creating new skills or editing existing skills for the Rune skill library — guides skill authoring with CSO optimization, TDD testing methodology, and anti-rationalization patterns
 ---
 
 # Writing Skills
 
-为 Meridian skill 库创建和维护 skill 的元技能。
+为 Rune skill 库创建和维护 skill 的元技能。
 
 **核心方法论：** TDD applied to process documentation — 未观察到 agent 在无 skill 时失败，就不知道 skill 是否教了正确的东西。
 
@@ -104,11 +104,11 @@ Before/after 代码对比（内联或链接到单独文件）
 
 ## Token 效率
 
-using-meridian 始终加载，每个 token 都有成本。
+using-rune 始终加载，每个 token 都有成本。
 
 | Skill 类型 | 目标字数 |
 |-----------|---------|
-| 始终加载（using-meridian） | <300 词 |
+| 始终加载（using-rune） | <300 词 |
 | 其他 skill | <500 词 |
 
 **技巧：** 重参考移到单独文件，SKILL.md 只链接 | 交叉引用用 skill name 不重复内容 | 一个优质示例胜过多语言重复 | 消除与交叉引用 skill 的冗余

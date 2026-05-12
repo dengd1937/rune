@@ -1,12 +1,12 @@
 {
-  "name": "meridian",
-  "description": "Engineering discipline marketplace for Meridian — TDD, security review, quality gates",
+  "name": "rune",
+  "description": "Engineering discipline marketplace for Rune — TDD, security review, quality gates",
   "owner": {
     "name": "Stephen D Deng"
   },
   "plugins": [
     {
-      "name": "meridian",
+      "name": "rune",
       "source": "./",
       "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based physical interception",
       "version": "0.2.0",
