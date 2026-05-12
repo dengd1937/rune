@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Trigger:  PostToolUse — matcher: Write|Edit
 # Behavior: WARNS (never blocks) about file size and language anti-patterns.
-# Disable:  chmod -x .claude/hooks/post-write-quality.sh
+# Disable:  chmod -x hooks/post-write-quality.sh
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/utils.sh"
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Trigger:  PreToolUse — matcher: Write|Edit
 # Behavior: BLOCKS writes that contain secrets or private keys.
-# Disable:  chmod -x .claude/hooks/pre-write-secrets.sh
+# Disable:  chmod -x hooks/pre-write-secrets.sh
 
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/utils.sh"

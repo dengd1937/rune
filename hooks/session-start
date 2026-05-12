@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# SessionStart hook for Meridian plugin — inject using-meridian SKILL.md as context
-# Triggers on startup | clear | compact
+# SessionStart hook for Meridian — inject using-meridian SKILL.md as context
+# Triggers on startup | clear | compact (configured in hooks/hooks.json)
 
 set -euo pipefail
 
-SKILL_PATH="${CLAUDE_PLUGIN_ROOT}/skills/using-meridian/SKILL.md"
+PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+SKILL_PATH="${PLUGIN_ROOT}/skills/using-meridian/SKILL.md"
 
 skill_content=$(cat "$SKILL_PATH" 2>&1 || echo "Error reading using-meridian skill at ${SKILL_PATH}")
 

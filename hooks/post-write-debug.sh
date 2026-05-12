@@ -2,7 +2,7 @@
 # Trigger:  PostToolUse — matcher: Write|Edit
 # Behavior: WARNS (never blocks) when debug statements are added to source files.
 #           Claude sees the warning and removes them before committing.
-# Disable:  chmod -x .claude/hooks/post-write-debug.sh
+# Disable:  chmod -x hooks/post-write-debug.sh
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/utils.sh"
 

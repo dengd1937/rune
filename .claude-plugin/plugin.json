@@ -1,6 +1,6 @@
 {
   "name": "meridian",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based physical interception",
   "author": {
     "name": "Stephen D Deng",

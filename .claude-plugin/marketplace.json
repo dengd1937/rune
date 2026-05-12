@@ -1,15 +1,19 @@
 {
   "name": "meridian",
+  "description": "Engineering discipline marketplace for Meridian — TDD, security review, quality gates",
   "owner": {
     "name": "Stephen D Deng"
   },
   "plugins": [
     {
       "name": "meridian",
-      "source": "./plugins/meridian",
+      "source": "./",
       "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based physical interception",
-      "version": "0.1.0",
-      "author": "Stephen D Deng"
+      "version": "0.2.0",
+      "author": {
+        "name": "Stephen D Deng",
+        "url": "https://github.com/sdeng079"
+      }
     }
   ]
 }

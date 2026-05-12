@@ -1,5 +1,4 @@
 {
-  "description": "Meridian hook configuration — physical interception for engineering discipline",
   "hooks": {
     "SessionStart": [
       {

@@ -2,7 +2,7 @@
 # Trigger:  PreToolUse — matcher: Bash
 # Behavior: BLOCKS dangerous git commands, wrong package manager usage,
 #           and non-Conventional-Commit messages.
-# Disable:  chmod -x .claude/hooks/pre-bash-guard.sh
+# Disable:  chmod -x hooks/pre-bash-guard.sh
 
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/utils.sh"
