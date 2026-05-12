@@ -32,7 +32,7 @@ description: Use when starting any conversation or after compact - establishes M
 **规则**：用户消息进来 → 检查是否有 skill 适用 → 有 1% 可能 ⇒ invoke Skill 工具 → 公告"使用 [skill] 来 [目的]" → 严格按 skill 执行。
 
 **优先级**：
-1. 用户显式指令（CLAUDE.md / 直接请求）—— 最高
+1. 用户显式指令（直接请求）—— 最高
 2. Meridian skill —— 覆盖默认行为
 3. 默认系统提示 —— 最低
 
@@ -123,3 +123,9 @@ description: Use when starting any conversation or after compact - establishes M
 - **不确定就问，不要猜** — 有真正不清楚的地方，寻求澄清，而非基于猜测继续推进
 
 适用于所有交互阶段：创意探索、规划、调查、设计审查和实现。
+
+## §10 DESIGN.md 规则
+
+- 项目根目录存在 `DESIGN.md` 时，在开始任何设计工作及每个主要设计阶段前必须读取。其色彩、字体、组件样式、布局原则、层级规则、行为规范和响应式行为作为硬性约束 — 不是建议。
+- `DESIGN.md` 不存在时，无视觉约束地继续工作。
+- `DESIGN.md` 在工作流中只读：永远不要为迁就设计而修改它，应修改设计本身。
