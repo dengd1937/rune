@@ -92,7 +92,7 @@ meridian/
 | [verifying-before-completion](plugins/meridian/skills/verifying-before-completion/SKILL.md) | 实现或修复后的验证门禁 — 运行新鲜命令确认成功 |
 | [subagent-driven-development](plugins/meridian/skills/subagent-driven-development/SKILL.md) | 多文件改动按任务编排 — 逐任务 TDD+审查循环 |
 | [writing-plans](plugins/meridian/skills/writing-plans/SKILL.md) | 实施方案规划 — 任务拆解、No Placeholders、自检+plan-reviewer 双重质量保障 |
-| [writing-skills](plugins/meridian/skills/writing-skills/SKILL.md) | Skill 元技能 — CSO 优化、TDD 测试方法论、anti-rationalization 模式 |
+| [using-meridian](plugins/meridian/skills/using-meridian/SKILL.md) | 铁律注入与 skill 路由 — SessionStart 自动加载，定义调用纪律和 red flags |
 
 ## Agents
 
@@ -106,6 +106,8 @@ meridian/
 | [security-reviewer](plugins/meridian/agents/security-reviewer.md) | 安全漏洞检测 | 提交前、敏感代码 |
 | [refactor-cleaner](plugins/meridian/agents/refactor-cleaner.md) | 死代码清理 | 代码维护 |
 | [tdd-guide](plugins/meridian/agents/tdd-guide.md) | 测试驱动开发 | 新功能、bug 修复、行为调整 |
+| [code-reviewer](plugins/meridian/agents/code-reviewer.md) | 代码质量与可维护性审查 | 编写或修改代码后 |
+| [e2e-runner](plugins/meridian/agents/e2e-runner.md) | E2E 测试执行 | 集成测试阶段 |
 | [typescript-reviewer](plugins/meridian/agents/typescript-reviewer.md) | TypeScript / React / Next.js 代码审查 | TypeScript / Next.js 项目 |
 
 ## 三层文档架构
