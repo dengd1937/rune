@@ -1,495 +1,384 @@
 ---
 name: tdd-workflow
-description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
-origin: ECC
+description: Use when implementing any feature, bugfix, or refactoring, before writing implementation code
+origin: obra/superpowers
 ---
 
-# Test-Driven Development Workflow
+# Test-Driven Development (TDD)
 
-This skill ensures all code development follows TDD principles with comprehensive test coverage.
+## Overview
 
-## When to Activate
+Write the test first. Watch it fail. Write minimal code to pass.
 
-- Writing new features or functionality
-- Fixing bugs or issues
-- Refactoring existing code
-- Adding API endpoints
-- Creating new components
+**Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
 
-## Core Principles
+**Violating the letter of the rules is violating the spirit of the rules.**
 
-### 1. Tests BEFORE Code
-ALWAYS write tests first, then implement code to make tests pass.
+## When to Use
 
-### 2. Coverage Requirements
-- Minimum 80% coverage (unit + integration + E2E)
-- All edge cases covered
-- Error scenarios tested
-- Boundary conditions verified
+**Always:**
+- New features
+- Bug fixes
+- Refactoring
+- Behavior changes
 
-### 3. Test Types
+**Exceptions (ask the user):**
+- Throwaway prototypes
+- Generated code
+- Configuration files
 
-#### Unit Tests
-- Individual functions and utilities
-- Component logic
-- Pure functions
-- Helpers and utilities
+Thinking "skip TDD just this once"? Stop. That's rationalization.
 
-#### Integration Tests
-- API endpoints
-- Database operations
-- Service interactions
-- External API calls
+## The Iron Law
 
-#### E2E Tests (Playwright)
-- Critical user flows
-- Complete workflows
-- Browser automation
-- UI interactions
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
 
-### 4. Git Checkpoints
+Write code before the test? Delete it. Start over.
 
-## Common Rationalizations and Rebuttals
+**No exceptions:**
+- Don't keep it as "reference"
+- Don't "adapt" it while writing tests
+- Don't look at it
+- Delete means delete
+
+Implement fresh from tests. Period.
+
+## Red-Green-Refactor
+
+```dot
+digraph tdd_cycle {
+    rankdir=LR;
+    red [label="RED\nWrite failing test", shape=box, style=filled, fillcolor="#ffcccc"];
+    verify_red [label="Verify fails\ncorrectly", shape=diamond];
+    green [label="GREEN\nMinimal code", shape=box, style=filled, fillcolor="#ccffcc"];
+    verify_green [label="Verify passes\nAll green", shape=diamond];
+    refactor [label="REFACTOR\nClean up", shape=box, style=filled, fillcolor="#ccccff"];
+    next [label="Next", shape=ellipse];
+
+    red -> verify_red;
+    verify_red -> green [label="yes"];
+    verify_red -> red [label="wrong\nfailure"];
+    green -> verify_green;
+    verify_green -> refactor [label="yes"];
+    verify_green -> green [label="no"];
+    refactor -> verify_green [label="stay\ngreen"];
+    verify_green -> next;
+    next -> red;
+}
+```
+
+### RED - Write Failing Test
+
+Write one minimal test showing what should happen.
+
+<Good>
+```typescript
+test('retries failed operations 3 times', async () => {
+  let attempts = 0;
+  const operation = () => {
+    attempts++;
+    if (attempts < 3) throw new Error('fail');
+    return 'success';
+  };
+
+  const result = await retryOperation(operation);
+
+  expect(result).toBe('success');
+  expect(attempts).toBe(3);
+});
+```
+Clear name, tests real behavior, one thing
+</Good>
+
+<Bad>
+```typescript
+test('retry works', async () => {
+  const mock = jest.fn()
+    .mockRejectedValueOnce(new Error())
+    .mockRejectedValueOnce(new Error())
+    .mockResolvedValueOnce('success');
+  await retryOperation(mock);
+  expect(mock).toHaveBeenCalledTimes(3);
+});
+```
+Vague name, tests mock not code
+</Bad>
+
+**Requirements:**
+- One behavior
+- Clear name
+- Real code (no mocks unless unavoidable)
+
+### Verify RED - Watch It Fail
+
+**MANDATORY. Never skip.**
+
+```bash
+npm test path/to/test.test.ts
+```
+
+Confirm:
+- Test fails (not errors)
+- Failure message is expected
+- Fails because feature missing (not typos)
+
+**Test passes?** You're testing existing behavior. Fix test.
+
+**Test errors?** Fix error, re-run until it fails correctly.
+
+### GREEN - Minimal Code
+
+Write simplest code to pass the test.
+
+<Good>
+```typescript
+async function retryOperation<T>(fn: () => Promise<T>): Promise<T> {
+  for (let i = 0; i < 3; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i === 2) throw e;
+    }
+  }
+  throw new Error('unreachable');
+}
+```
+Just enough to pass
+</Good>
+
+<Bad>
+```typescript
+async function retryOperation<T>(
+  fn: () => Promise<T>,
+  options?: {
+    maxRetries?: number;
+    backoff?: 'linear' | 'exponential';
+    onRetry?: (attempt: number) => void;
+  }
+): Promise<T> {
+  // YAGNI
+}
+```
+Over-engineered
+</Bad>
+
+Don't add features, refactor other code, or "improve" beyond the test.
+
+### Verify GREEN - Watch It Pass
+
+**MANDATORY.**
+
+```bash
+npm test path/to/test.test.ts
+```
+
+Confirm:
+- Test passes
+- Other tests still pass
+- Output pristine (no errors, warnings)
+
+**Test fails?** Fix code, not test.
+
+**Other tests fail?** Fix now.
+
+### REFACTOR - Clean Up
+
+After green only:
+- Remove duplication
+- Improve names
+- Extract helpers
+
+Keep tests green. Don't add behavior.
+
+### Repeat
+
+Next failing test for next feature.
+
+## Good Tests
+
+| Quality | Good | Bad |
+|---------|------|-----|
+| **Minimal** | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
+| **Clear** | Name describes behavior | `test('test1')` |
+| **Shows intent** | Demonstrates desired API | Obscures what code should do |
+
+## Why Order Matters
+
+**"I'll write tests after to verify it works"**
+
+Tests written after code pass immediately. Passing immediately proves nothing:
+- Might test wrong thing
+- Might test implementation, not behavior
+- Might miss edge cases you forgot
+- You never saw it catch the bug
+
+Test-first forces you to see the test fail, proving it actually tests something.
+
+**"I already manually tested all the edge cases"**
+
+Manual testing is ad-hoc. You think you tested everything but:
+- No record of what you tested
+- Can't re-run when code changes
+- Easy to forget cases under pressure
+- "It worked when I tried it" ≠ comprehensive
+
+Automated tests are systematic. They run the same way every time.
+
+**"Deleting X hours of work is wasteful"**
+
+Sunk cost fallacy. The time is already gone. Your choice now:
+- Delete and rewrite with TDD (X more hours, high confidence)
+- Keep it and add tests after (30 min, low confidence, likely bugs)
+
+The "waste" is keeping code you can't trust. Working code without real tests is technical debt.
+
+**"TDD is dogmatic, being pragmatic means adapting"**
+
+TDD IS pragmatic:
+- Finds bugs before commit (faster than debugging after)
+- Prevents regressions (tests catch breaks immediately)
+- Documents behavior (tests show how to use code)
+- Enables refactoring (change freely, tests catch breaks)
+
+"Pragmatic" shortcuts = debugging in production = slower.
+
+**"Tests after achieve the same goals - it's spirit not ritual"**
+
+No. Tests-after answer "What does this do?" Tests-first answer "What should this do?"
+
+Tests-after are biased by your implementation. You test what you built, not what's required. You verify remembered edge cases, not discovered ones.
+
+Tests-first force edge case discovery before implementing. Tests-after verify you remembered everything (you didn't).
+
+30 minutes of tests after ≠ TDD. You get coverage, lose proof tests work.
+
+## Common Rationalizations
 
 | Excuse | Reality |
 |--------|---------|
-| "It's too simple to need tests" | Simple code breaks too. Writing a test takes 30 seconds. |
-| "I'll write all files first, then add tests" | Tests written after verify what you wrote, not what you should have written. |
-| "Implement first, test after — same result" | Writing tests first reveals design problems; tests after only verify boundaries you remember. |
-| "Tight deadline, skip it this time" | Time saved by skipping TDD < time spent debugging. Every time is "this time". |
-| "I already verified it manually" | Manual verification is not repeatable and cannot prevent regressions. |
-| "It's just a refactor, no new tests needed" | Refactoring without test protection is blind modification. |
-| "Tests are too complex to write" | Complex tests = complex design. Simplify the design first. |
+| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
+| "I'll test after" | Tests passing immediately prove nothing. |
+| "Tests after achieve same goals" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
+| "Already manually tested" | Ad-hoc ≠ systematic. No record, can't re-run. |
+| "Deleting X hours is wasteful" | Sunk cost fallacy. Keeping unverified code is technical debt. |
+| "Keep as reference, write tests first" | You'll adapt it. That's testing after. Delete means delete. |
+| "Need to explore first" | Fine. Throw away exploration, start with TDD. |
+| "Test hard = design unclear" | Listen to test. Hard to test = hard to use. |
+| "TDD will slow me down" | TDD faster than debugging. Pragmatic = test-first. |
+| "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
+| "Existing code has no tests" | You're improving it. Add tests for existing code. |
 
-## Red Flags
+## Red Flags - STOP and Start Over
 
-If any of these signals appear → stop current work and restart from the RED phase:
+- Code before test
+- Test after implementation
+- Test passes immediately
+- Can't explain why test failed
+- Tests added "later"
+- Rationalizing "just this once"
+- "I already manually tested it"
+- "Tests after achieve the same purpose"
+- "It's about spirit not ritual"
+- "Keep as reference" or "adapt existing code"
+- "Already spent X hours, deleting is wasteful"
+- "TDD is dogmatic, I'm being pragmatic"
+- "This is different because..."
 
-- Implementation code written before tests
-- Tests pass immediately (never saw RED)
-- Writing tests for multiple files then implementing all at once
-- Saying "skip TDD this time"
-- Skipping RED or GREEN verification
-- Merging tests from multiple tasks into one
+**All of these mean: Delete code. Start over with TDD.**
 
-## Multi-File TDD Execution Order
+## Example: Bug Fix
 
-When changes span multiple files:
+**Bug:** Empty email accepted
 
-- Split by task; each task runs its own RED→GREEN→IMPROVE cycle
-- Never batch-write tests or batch-implement
-- Run test verification immediately after each task completes; do not wait until all tasks are done
-- Follow the orchestration logic in the subagent-driven-development skill
-- If the repository is under Git, create a checkpoint commit after each TDD stage
-- Do not squash or rewrite these checkpoint commits until the workflow is complete
-- Each checkpoint commit message must describe the stage and the exact evidence captured
-- Count only commits created on the current active branch for the current task
-- Do not treat commits from other branches, earlier unrelated work, or distant branch history as valid checkpoint evidence
-- Before treating a checkpoint as satisfied, verify that the commit is reachable from the current `HEAD` on the active branch and belongs to the current task sequence
-- The preferred compact workflow is:
-  - one commit for failing test added and RED validated
-  - one commit for minimal fix applied and GREEN validated
-  - one optional commit for refactor complete
-- Separate evidence-only commits are not required if the test commit clearly corresponds to RED and the fix commit clearly corresponds to GREEN
-
-## TDD Workflow Steps
-
-### Step 1: Write User Journeys
-```
-As a [role], I want to [action], so that [benefit]
-
-Example:
-As a user, I want to search for markets semantically,
-so that I can find relevant markets even without exact keywords.
-```
-
-### Step 2: Generate Test Cases
-For each user journey, create comprehensive test cases:
-
+**RED**
 ```typescript
-describe('Semantic Search', () => {
-  it('returns relevant markets for query', async () => {
-    // Test implementation
-  })
-
-  it('handles empty query gracefully', async () => {
-    // Test edge case
-  })
-
-  it('falls back to substring search when Redis unavailable', async () => {
-    // Test fallback behavior
-  })
-
-  it('sorts results by similarity score', async () => {
-    // Test sorting logic
-  })
-})
+test('rejects empty email', async () => {
+  const result = await submitForm({ email: '' });
+  expect(result.error).toBe('Email required');
+});
 ```
 
-### Step 3: Run Tests (They Should Fail)
+**Verify RED**
 ```bash
-npm test
-# Tests should fail - we haven't implemented yet
+$ npm test
+FAIL: expected 'Email required', got undefined
 ```
 
-This step is mandatory and is the RED gate for all production changes.
-
-Before modifying business logic or other production code, you must verify a valid RED state via one of these paths:
-- Runtime RED:
-  - The relevant test target compiles successfully
-  - The new or changed test is actually executed
-  - The result is RED
-- Compile-time RED:
-  - The new test newly instantiates, references, or exercises the buggy code path
-  - The compile failure is itself the intended RED signal
-- In either case, the failure is caused by the intended business-logic bug, undefined behavior, or missing implementation
-- The failure is not caused only by unrelated syntax errors, broken test setup, missing dependencies, or unrelated regressions
-
-A test that was only written but not compiled and executed does not count as RED.
-
-Do not edit production code until this RED state is confirmed.
-
-If the repository is under Git, create a checkpoint commit immediately after this stage is validated.
-Recommended commit message format:
-- `test: add reproducer for <feature or bug>`
-- This commit may also serve as the RED validation checkpoint if the reproducer was compiled and executed and failed for the intended reason
-- Verify that this checkpoint commit is on the current active branch before continuing
-
-### Step 4: Implement Code
-Write minimal code to make tests pass:
-
+**GREEN**
 ```typescript
-// Implementation guided by tests
-export async function searchMarkets(query: string) {
-  // Implementation here
+function submitForm(data: FormData) {
+  if (!data.email?.trim()) {
+    return { error: 'Email required' };
+  }
+  // ...
 }
 ```
 
-If the repository is under Git, stage the minimal fix now but defer the checkpoint commit until GREEN is validated in Step 5.
-
-### Step 5: Run Tests Again
+**Verify GREEN**
 ```bash
-npm test
-# Tests should now pass
+$ npm test
+PASS
 ```
 
-Rerun the same relevant test target after the fix and confirm the previously failing test is now GREEN.
+**REFACTOR**
+Extract validation for multiple fields if needed.
 
-Only after a valid GREEN result may you proceed to refactor.
+## Verification Checklist
 
-If the repository is under Git, create a checkpoint commit immediately after GREEN is validated.
-Recommended commit message format:
-- `fix: <feature or bug>`
-- The fix commit may also serve as the GREEN validation checkpoint if the same relevant test target was rerun and passed
-- Verify that this checkpoint commit is on the current active branch before continuing
+Before marking work complete:
 
-### Step 6: Refactor
-Improve code quality while keeping tests green:
-- Remove duplication
-- Improve naming
-- Optimize performance
-- Enhance readability
+- [ ] Every new function/method has a test
+- [ ] Watched each test fail before implementing
+- [ ] Each test failed for expected reason (feature missing, not typo)
+- [ ] Wrote minimal code to pass each test
+- [ ] All tests pass
+- [ ] Output pristine (no errors, warnings)
+- [ ] Tests use real code (mocks only if unavoidable)
+- [ ] Edge cases and errors covered
 
-If the repository is under Git, create a checkpoint commit immediately after refactoring is complete and tests remain green.
-Recommended commit message format:
-- `refactor: clean up after <feature or bug> implementation`
-- Verify that this checkpoint commit is on the current active branch before considering the TDD cycle complete
+Can't check all boxes? You skipped TDD. Start over.
 
-### Step 7: Verify Coverage
-```bash
-npm run test:coverage
-# Verify 80%+ coverage achieved
-```
+## When Stuck
 
-## Testing Patterns
+| Problem | Solution |
+|---------|----------|
+| Don't know how to test | Write wished-for API. Write assertion first. Ask the user. |
+| Test too complicated | Design too complicated. Simplify interface. |
+| Must mock everything | Code too coupled. Use dependency injection. |
+| Test setup huge | Extract helpers. Still complex? Simplify design. |
 
-### Unit Test Pattern (Jest/Vitest)
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Button } from './Button'
+## Debugging Integration
 
-describe('Button Component', () => {
-  it('renders with correct text', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByText('Click me')).toBeInTheDocument()
-  })
+Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression.
 
-  it('calls onClick when clicked', () => {
-    const handleClick = jest.fn()
-    render(<Button onClick={handleClick}>Click</Button>)
+Never fix bugs without a test.
 
-    fireEvent.click(screen.getByRole('button'))
+## Testing Anti-Patterns
 
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
+When adding mocks or test utilities, read @testing-anti-patterns.md to avoid common pitfalls:
+- Testing mock behavior instead of real behavior
+- Adding test-only methods to production classes
+- Mocking without understanding dependencies
 
-  it('is disabled when disabled prop is true', () => {
-    render(<Button disabled>Click</Button>)
-    expect(screen.getByRole('button')).toBeDisabled()
-  })
-})
-```
-
-### API Integration Test Pattern
-```typescript
-import { NextRequest } from 'next/server'
-import { GET } from './route'
-
-describe('GET /api/markets', () => {
-  it('returns markets successfully', async () => {
-    const request = new NextRequest('http://localhost/api/markets')
-    const response = await GET(request)
-    const data = await response.json()
-
-    expect(response.status).toBe(200)
-    expect(data.success).toBe(true)
-    expect(Array.isArray(data.data)).toBe(true)
-  })
-
-  it('validates query parameters', async () => {
-    const request = new NextRequest('http://localhost/api/markets?limit=invalid')
-    const response = await GET(request)
-
-    expect(response.status).toBe(400)
-  })
-
-  it('handles database errors gracefully', async () => {
-    // Mock database failure
-    const request = new NextRequest('http://localhost/api/markets')
-    // Test error handling
-  })
-})
-```
-
-### E2E Test Pattern (Playwright)
-```typescript
-import { test, expect } from '@playwright/test'
-
-test('user can search and filter markets', async ({ page }) => {
-  // Navigate to markets page
-  await page.goto('/')
-  await page.click('a[href="/markets"]')
-
-  // Verify page loaded
-  await expect(page.locator('h1')).toContainText('Markets')
-
-  // Search for markets
-  await page.fill('input[placeholder="Search markets"]', 'election')
-
-  // Wait for debounce and results
-  await page.waitForTimeout(600)
-
-  // Verify search results displayed
-  const results = page.locator('[data-testid="market-card"]')
-  await expect(results).toHaveCount(5, { timeout: 5000 })
-
-  // Verify results contain search term
-  const firstResult = results.first()
-  await expect(firstResult).toContainText('election', { ignoreCase: true })
-
-  // Filter by status
-  await page.click('button:has-text("Active")')
-
-  // Verify filtered results
-  await expect(results).toHaveCount(3)
-})
-
-test('user can create a new market', async ({ page }) => {
-  // Login first
-  await page.goto('/creator-dashboard')
-
-  // Fill market creation form
-  await page.fill('input[name="name"]', 'Test Market')
-  await page.fill('textarea[name="description"]', 'Test description')
-  await page.fill('input[name="endDate"]', '2025-12-31')
-
-  // Submit form
-  await page.click('button[type="submit"]')
-
-  // Verify success message
-  await expect(page.locator('text=Market created successfully')).toBeVisible()
-
-  // Verify redirect to market page
-  await expect(page).toHaveURL(/\/markets\/test-market/)
-})
-```
-
-## Test File Organization
+## Final Rule
 
 ```
-src/
-├── components/
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   ├── Button.test.tsx          # Unit tests
-│   │   └── Button.stories.tsx       # Storybook
-│   └── MarketCard/
-│       ├── MarketCard.tsx
-│       └── MarketCard.test.tsx
-├── app/
-│   └── api/
-│       └── markets/
-│           ├── route.ts
-│           └── route.test.ts         # Integration tests
-└── e2e/
-    ├── markets.spec.ts               # E2E tests
-    ├── trading.spec.ts
-    └── auth.spec.ts
+Production code → test exists and failed first
+Otherwise → not TDD
 ```
 
-## Mocking External Services
-
-### Supabase Mock
-```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({
-          data: [{ id: 1, name: 'Test Market' }],
-          error: null
-        }))
-      }))
-    }))
-  }
-}))
-```
-
-### Redis Mock
-```typescript
-jest.mock('@/lib/redis', () => ({
-  searchMarketsByVector: jest.fn(() => Promise.resolve([
-    { slug: 'test-market', similarity_score: 0.95 }
-  ])),
-  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true }))
-}))
-```
-
-### OpenAI Mock
-```typescript
-jest.mock('@/lib/openai', () => ({
-  generateEmbedding: jest.fn(() => Promise.resolve(
-    new Array(1536).fill(0.1) // Mock 1536-dim embedding
-  ))
-}))
-```
-
-## Test Coverage Verification
-
-### Run Coverage Report
-```bash
-npm run test:coverage
-```
-
-### Coverage Thresholds
-```json
-{
-  "jest": {
-    "coverageThresholds": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  }
-}
-```
-
-## Common Testing Mistakes to Avoid
-
-### FAIL: WRONG: Testing Implementation Details
-```typescript
-// Don't test internal state
-expect(component.state.count).toBe(5)
-```
-
-### PASS: CORRECT: Test User-Visible Behavior
-```typescript
-// Test what users see
-expect(screen.getByText('Count: 5')).toBeInTheDocument()
-```
-
-### FAIL: WRONG: Brittle Selectors
-```typescript
-// Breaks easily
-await page.click('.css-class-xyz')
-```
-
-### PASS: CORRECT: Semantic Selectors
-```typescript
-// Resilient to changes
-await page.click('button:has-text("Submit")')
-await page.click('[data-testid="submit-button"]')
-```
-
-### FAIL: WRONG: No Test Isolation
-```typescript
-// Tests depend on each other
-test('creates user', () => { /* ... */ })
-test('updates same user', () => { /* depends on previous test */ })
-```
-
-### PASS: CORRECT: Independent Tests
-```typescript
-// Each test sets up its own data
-test('creates user', () => {
-  const user = createTestUser()
-  // Test logic
-})
-
-test('updates user', () => {
-  const user = createTestUser()
-  // Update logic
-})
-```
-
-## Continuous Testing
-
-### Watch Mode During Development
-```bash
-npm test -- --watch
-# Tests run automatically on file changes
-```
-
-### Pre-Commit Hook
-```bash
-# Runs before every commit
-npm test && npm run lint
-```
-
-### CI/CD Integration
-```yaml
-# GitHub Actions
-- name: Run Tests
-  run: npm test -- --coverage
-- name: Upload Coverage
-  uses: codecov/codecov-action@v3
-```
-
-## Best Practices
-
-1. **Write Tests First** - Always TDD
-2. **One Assert Per Test** - Focus on single behavior
-3. **Descriptive Test Names** - Explain what's tested
-4. **Arrange-Act-Assert** - Clear test structure
-5. **Mock External Dependencies** - Isolate unit tests
-6. **Test Edge Cases** - Null, undefined, empty, large
-7. **Test Error Paths** - Not just happy paths
-8. **Keep Tests Fast** - Unit tests < 50ms each
-9. **Clean Up After Tests** - No side effects
-10. **Review Coverage Reports** - Identify gaps
-
-## Success Metrics
-
-- 80%+ code coverage achieved
-- All tests passing (green)
-- No skipped or disabled tests
-- Fast test execution (< 30s for unit tests)
-- E2E tests cover critical user flows
-- Tests catch bugs before production
+No exceptions without the user's permission.
 
 ---
 
-**Remember**: Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.
+## Attribution
+
+Adapted from [obra/superpowers](https://github.com/obra/superpowers) (MIT License).
+Copyright (c) Jesse Vincent. Upstream path: `skills/test-driven-development/`.
+
+Local modifications:
+- Renamed `name: test-driven-development` → `name: tdd-workflow` for backward compatibility with existing Rune references.
+- Added `refactoring` to the `description` trigger surface.
+- Replaced "your human partner" → "the user" to align with Rune phrasing.
