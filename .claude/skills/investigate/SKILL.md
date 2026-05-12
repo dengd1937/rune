@@ -24,7 +24,7 @@ origin: meridian
 
 ---
 
-## Phase 1 — 症状描述
+## Phase 1 — 症状描述 & 假设清单（禁止修改代码）
 
 用自己的语言精确描述问题：
 
@@ -44,8 +44,6 @@ origin: meridian
 
 ---
 
-## Phase 2 — 假设清单（禁止修改代码）
-
 不看业务代码，仅凭对系统的理解，列出 3–5 个可能的根因假设：
 
 ```
@@ -59,7 +57,7 @@ origin: meridian
 
 ---
 
-## Phase 3 — 验证与模式对比（只读，不改）
+## Phase 2 — 验证与模式对比（只读，不改）
 
 ### 调查范式选择
 
@@ -78,7 +76,7 @@ origin: meridian
 | 不知触发源、数据污染类（"为什么这个值在这里"） | 走 **3d** backward tracing |
 | 两条都适用 | **先 3c 定断裂层 → 在断裂层内做 3d backward trace**（3c 提供层级定位，3d 在该层内做源头追溯） |
 
-### 3a. 逐一验证（hypothesis-driven 主路径）
+### 2a. 逐一验证（hypothesis-driven 主路径）
 
 对每个假设，找对应证据来证实或排除：
 
@@ -100,15 +98,15 @@ origin: meridian
 
 用排除法收敛，直到只剩一个假设未被排除。
 
-### 3b. 模式对比（条件触发）
+### 2b. 模式对比
 
-当假设收敛后，在代码库中找同类工作的代码，对比差异：
+在验证假设的同时，在代码库中找同类工作的代码，对比差异：
 
 - 找到功能相似但正常工作的代码
 - 逐项对比差异（不假设"这不重要"）
 - 用发现更新假设清单
 
-### 3c. 多组件系统诊断
+### 2c. 多组件系统诊断
 
 **触发条件（满足任一即必走）：**
 
@@ -123,7 +121,7 @@ origin: meridian
 1. 在每个组件边界加诊断输出（log 入站数据 + log 出站数据 + 验证环境/配置传递）
 2. 跑一次，收集证据
 3. 分析证据 → 定位"断裂层"（哪一层入站正常但出站异常）
-4. 回到 3a，针对断裂层形成新假设
+4. 回到 2a，针对断裂层形成新假设
 
 **模板示例（多层 shell 链路）—— 以下为 macOS CI codesign 场景示例，Layer 3/4 命令按实际技术栈替换：**
 
@@ -162,7 +160,7 @@ async function gitInit(directory: string) {
 
 **清理：** 诊断 instrumentation 是临时代码，根因确认后必须从代码中移除（不允许残留进 commit）。所有临时诊断输出**必须**带 `[TEMP-INSTR]` 前缀，便于 `code-quality-gate` 扫描（除既有的 `console.log` / `debugger` / `breakpoint()` 之外，gate 还应扫描 `[TEMP-INSTR]` 前缀字符串，无论用 `console.log` 还是 `console.error`）。
 
-### 3d. Backward Tracing（trace-driven 主路径）
+### 2d. Backward Tracing（trace-driven 主路径）
 
 **触发条件：**
 
@@ -204,7 +202,7 @@ async function gitInit(directory: string) {
 
 ---
 
-## Phase 4 — 根因确认报告
+## Phase 3 — 根因确认报告
 
 调查完成后，输出以下报告（在对话中，不写入文件）：
 
@@ -232,36 +230,36 @@ async function gitInit(directory: string) {
 
 ---
 
-## Phase 5 — TDD 修复
+## Phase 4 — TDD 修复
 
-### 5a. RED：写复现测试
+### 4a. RED：写复现测试
 
 - 最小复现，精确捕获 bug 症状
 - 参考 `tdd-workflow` skill 的 RED 阶段要求
 - 确认测试失败（RED 验证）
 
-### 5b. GREEN：修根因
+### 4b. GREEN：修根因
 
 - 单次改动，只修根因
 - 禁止 "顺手" 改别的
 - 禁止 bundled refactoring
 - 确认测试通过（GREEN 验证）—— **invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行测试命令并取得 fresh PASS 输出，输出读完后才允许进入 5c
 
-### 5c. IMPROVE：重构（如需要）
+### 4c. IMPROVE：重构（如需要）
 
 - 仅当有明确重构必要时执行
 - 测试保持 GREEN —— **invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内重跑 RED→GREEN 测试套件，禁止凭"应该没影响"放过
 
-### 5d. 质量门控
+### 4d. 质量门控
 
 调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测。
 
-**通过** → 评估 5f 触发条件 → 触发时**推荐**走 5f（完成后回 5d）/ 不触发或明确理由跳过则直接 Phase 6。
+**通过** → 评估 4f 触发条件 → 触发时**推荐**走 4f（完成后回 4d）/ 不触发或明确理由跳过则直接 Phase 5。
 **失败** → 修复 → 重跑 5d。
 
-### 5e. 3 次失败熔断
+### 4e. 3 次失败熔断
 
-**失败计数范围**（统一一个计数器，覆盖整个 Phase 5）：
+**失败计数范围**（统一一个计数器，覆盖整个 Phase 4）：
 
 - 5b GREEN 失败（测试一直不过）
 - 5d 质量门控反复失败
@@ -287,7 +285,7 @@ async function gitInit(directory: string) {
 
 **与用户讨论后再决定下一步。** 不允许第 4 次盲目修复。
 
-### 5f. 防御加固（条件触发，推荐）
+### 4f. 防御加固（条件触发，推荐）
 
 **触发条件（满足任一即推荐走）：**
 
@@ -359,17 +357,17 @@ async function gitInit(directory: string) {
 
 **完成判定：** 每层校验都有测试覆盖，所有测试 GREEN，回到 5d 重跑质量门控。
 
-**回 5d 前的硬步骤：invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行原复现测试 + 每层防御独立测试，取得 fresh PASS 输出（禁止复用 5f 加防御过程中的历史输出）。
+**回 4d 前的硬步骤：invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行原复现测试 + 每层防御独立测试，取得 fresh PASS 输出（禁止复用 4f 加防御过程中的历史输出）。
 
-→ 全部 GREEN → 继续 Phase 6。
+→ 全部 GREEN → 继续 Phase 5。
 
 ---
 
-## Phase 6 — 代码审查
+## Phase 5 — 代码审查
 
 质量门控通过后，调用 `/code-review` (per-task)：
 
-- `task_text` = Phase 4 调查报告（根因 + 触发条件 + 修复方向）
+- `task_text` = Phase 3 调查报告（根因 + 触发条件 + 修复方向）
 - `diff` = `git diff <base_SHA>..<head_SHA>`
 - 无 implementer_report（主会话直接修复，无 subagent 报告）
 
@@ -394,8 +392,8 @@ async function gitInit(directory: string) {
 | "一次改多个问题" | 无法隔离哪个改动修复了哪个问题 |
 | "3+ 次了再试一次" | 3 次失败 = 可能是架构问题，不是代码问题 |
 | "顺手把那个也改了" | 外科手术式修改：发现无关问题告知用户，不擅自动 |
-| "多组件 bug，凭感觉猜哪层断了" | 多组件场景必须先加 instrumentation 跑一次再分析（Phase 3c 铁律） |
-| "深栈 bug，在症状处修复就行" | 症状处只是错误显现点；trace 到原始触发点修复（Phase 3d） |
+| "多组件 bug，凭感觉猜哪层断了" | 多组件场景必须先加 instrumentation 跑一次再分析（Phase 2c 铁律） |
+| "深栈 bug，在症状处修复就行" | 症状处只是错误显现点；trace 到原始触发点修复（Phase 2d） |
 
 ---
 
