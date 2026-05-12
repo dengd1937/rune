@@ -1,0 +1,19 @@
+{
+  "name": "meridian",
+  "version": "0.1.0",
+  "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based physical interception",
+  "author": {
+    "name": "Stephen D Deng",
+    "url": "https://github.com/sdeng079"
+  },
+  "repository": "https://github.com/sdeng079/meridian",
+  "license": "MIT",
+  "keywords": [
+    "tdd",
+    "code-review",
+    "security",
+    "quality-gate",
+    "engineering-discipline",
+    "hooks"
+  ]
+}

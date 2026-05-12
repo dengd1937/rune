@@ -1,5 +1,53 @@
 # Meridian — Claude Code Agent Baseline
 
+## 目录结构
+
+```text
+meridian/
+├── .claude-plugin/
+│   └── marketplace.json               # Marketplace catalog
+├── plugins/
+│   └── meridian/                      # Plugin directory（分发包）
+│       ├── .claude-plugin/
+│       │   └── plugin.json            # Plugin manifest
+│       ├── skills/                    # 26 skills
+│       ├── agents/                    # 11 agents
+│       └── hooks/
+│           ├── hooks.json             # Hook configuration（CLAUDE_PLUGIN_ROOT）
+│           ├── session-start          # 铁律注入
+│           └── ...
+├── .claude/                           # 开发环境（settings.json hooks，CLAUDE_PROJECT_DIR）
+│   ├── skills/                        # 26 skills（开发用副本）
+│   ├── agents/                        # 11 agents（开发用副本）
+│   ├── hooks/                         # Hook 脚本（开发用副本）
+│   ├── settings.json
+│   └── settings.local.json
+├── CLAUDE.md
+├── README.md
+└── docs/
+```
+
+## 双源维护
+
+`.claude/`（开发）和 `plugins/meridian/`（分发）中的 skills/agents/hooks 是两份独立副本。唯一的差异在 `session-start` hook：
+- `.claude/hooks/session-start` 使用 `CLAUDE_PROJECT_DIR`
+- `plugins/meridian/hooks/session-start` 使用 `CLAUDE_PLUGIN_ROOT`
+
+修改任一侧的 skill/agent/hook 后，必须手动同步到另一侧。
+
+## 使用方式
+
+### Plugin Marketplace（推荐）
+
+```bash
+claude plugin marketplace add sdeng079/meridian
+claude plugin install meridian@meridian
+```
+
+### 开发环境
+
+本 repo 的 `.claude/` 目录用于开发。`settings.json` 中的 hooks 使用 `CLAUDE_PROJECT_DIR` 引用 `.claude/hooks/` 下的脚本。修改 skills/agents/hooks 后需同步到 `plugins/meridian/`。
+
 ## 核心原则
 
 1. **Agent 优先** — 将领域任务委托给专用 agent
