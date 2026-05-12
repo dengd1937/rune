@@ -69,8 +69,8 @@ if echo "$FIRST_LINE" | grep -qE "${INVOKE}git\s+commit\b"; then
 
     # Validate if a message was found (skip editor-mode commits with no -m)
     if [[ -n "$MSG_FIRST" ]]; then
-        if ! echo "$MSG_FIRST" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci)(\([^)]+\))?: .+'; then
-            log_block "Commit message must match '<type>(<scope>): <description>'. Types: feat|fix|refactor|docs|test|chore|perf|ci. Got: ${MSG_FIRST:0:80}"
+        if ! echo "$MSG_FIRST" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci|revert)(\([^)]+\))?!?: .+'; then
+            log_block "Commit message must match '<type>(<scope>)?!?: <description>'. Types: feat|fix|refactor|docs|test|chore|perf|ci|revert. Got: ${MSG_FIRST:0:80}"
             exit 2
         fi
     fi
