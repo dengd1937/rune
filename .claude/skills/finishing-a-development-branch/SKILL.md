@@ -62,14 +62,16 @@ rmdir docs/plans/  # 如果目录为空
 
 调用 doc-updater agent 更新模块索引和 codemap。
 
-### 2d. Commit 整理
+### 2d. Commit 验证
 
 ```bash
 # 查看当前分支的 commit history
 git log --oneline <base-branch>..HEAD
 ```
 
-如果 implementer 产出了碎片化 commit（如 "wip"、"fix lint"），交互式 squash 为有意义的 Conventional Commits。
+逐条检查 commit 是否符合 Conventional Commits（implementer 应在提交时已遵守，见 implementer-prompt.md）。
+
+**不符合时：** 报告问题 commit 列表给用户，由用户决定如何处理（手动 squash、保持原样等）。finishing skill 不重写 commit history。
 
 调用 commit-quality skill 验证最终 commit 质量。
 

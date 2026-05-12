@@ -76,6 +76,16 @@ All design artifacts live under `docs/designs/<feature>/`. See pencil-design ski
 
 Investigate requirements and establish design direction before editing the canvas.
 
+**前序产物验证：** 读取 brainstorm 产出的 spec 文件，提取 `feature` 字段作为本工作流的寻址锚点。spec 文件不存在 → 报告用户，不继续。
+
+```
+feature = spec 文件 metadata block 中的 feature 字段
+spec    = docs/specs/{feature}-design.md
+designs = docs/designs/{feature}/
+```
+
+后续所有 V2 阶段使用同一 `feature` 名称定位文件。
+
 **Actions:**
 
 - **If `DESIGN.md` exists**, read it first and run DESIGN.md preflight: complete sections become visual identity constraints; missing or ambiguous sections become design identity gaps that require user decision before they are treated as defaults

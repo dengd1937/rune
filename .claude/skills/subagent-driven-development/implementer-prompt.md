@@ -17,7 +17,7 @@
 - 所有实现所需信息均在本 prompt 中，不足时报告 NEEDS_CONTEXT
 - 任务涉及超过 3 个文件 → 立即报告 BLOCKED，不要强行拆分
 - **禁止先写实现代码再补测试**，铁律：`NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST`
-- 完成实现和测试后，提交你的工作
+- 完成实现和测试后，提交你的工作，commit message 必须符合 [Conventional Commits](https://www.conventionalcommits.org/)（`<type>(<scope>): <description>`，type 限 feat|fix|refactor|docs|test|chore|perf|ci）
 
 ## 开始前：确认理解
 

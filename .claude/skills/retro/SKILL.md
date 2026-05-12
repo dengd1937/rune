@@ -35,18 +35,26 @@ origin: meridian
 
 ### Phase 2 — 流程审视
 
-对照开发工作流的 8 个步骤，逐项检查是否被遵守：
+对照 Meridian 开发工作流链，逐项检查是否被遵守：
 
-| 步骤 | 是否执行 | 备注 |
-|------|----------|------|
-| 1. Research & Reuse | ✓ / ✗ / 不适用 | |
-| 2. Plan First | ✓ / ✗ / 不适用 | |
-| 3. TDD Approach | ✓ / ✗ / 不适用 | |
-| 4. Quality Gate | ✓ / ✗ / 不适用 | |
-| 5. Code Review | ✓ / ✗ / 不适用 | |
-| 6. Documentation Decision | ✓ / ✗ / 不适用 | |
-| 7. Commit & Push | ✓ / ✗ / 不适用 | |
-| 8. Pre-Review Checks | ✓ / ✗ / 不适用 | |
+| 步骤 | Skill | 是否执行 | 备注 |
+|------|-------|----------|------|
+| 1. 产品发现 + 技术设计 | brainstorm | ✓ / ✗ / 不适用 | |
+| 2a. UI 设计（如需要） | design-workflow | ✓ / ✗ / 不适用 | |
+| 2b. 实现计划 | writing-plans | ✓ / ✗ / 不适用 | |
+| 3a. 工作区隔离 | using-git-worktrees | ✓ / ✗ / 不适用 | |
+| 3b. 逐任务实现（TDD + 质量门控） | subagent-driven-development | ✓ / ✗ / 不适用 | |
+| 4. 代码审查 | code-review | ✓ / ✗ / 不适用 | |
+| 5. 反馈处理（如 BLOCK） | review-handling | ✓ / ✗ / 不适用 | |
+| 6. 收尾 | finishing-a-development-branch | ✓ / ✗ / 不适用 | |
+
+**横切检查：**
+
+| 横切项 | 是否执行 | 备注 |
+|--------|----------|------|
+| commit 前质量门 | commit-quality | |
+| 声明完成前验证 | verifying-before-completion | |
+| 编辑后质量门 | code-quality-gate | |
 
 **重点关注**：被跳过的步骤是合理豁免，还是规则执行不到位？
 

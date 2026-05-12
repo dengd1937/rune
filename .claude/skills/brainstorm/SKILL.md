@@ -346,6 +346,18 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 doc-writer 将格式化并写入 `docs/specs/<feature>-design.md`。
 
+**Spec 文件必须包含以下 metadata block（文件头部）：**
+
+```markdown
+---
+feature: <canonical-feature-name>
+spec: docs/specs/<canonical-feature-name>-design.md
+routing: [Design Workflow L2 | Development Workflow | L1 Lightweight Design]
+---
+```
+
+`feature` 字段是下游所有 skill 的寻址锚点——design-workflow 用它定位 `docs/designs/<feature>/`，writing-plans 用它定位 `docs/plans/<feature>.md`。命名必须在 Phase 5 首次写入时确定，后续不再更改。
+
 **写入后：**
 → doc-updater agent 更新 feature catalog
 

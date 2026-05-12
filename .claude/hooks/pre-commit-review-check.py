@@ -24,6 +24,7 @@ REVIEW_KEYWORD = "reviewer"
 GP_REVIEWER_PROMPTS = (
     "code-quality-reviewer-prompt.md",
     "spec-reviewer-prompt.md",
+    "global-reviewer-prompt.md",
 )
 
 SOURCE_EXTS = {

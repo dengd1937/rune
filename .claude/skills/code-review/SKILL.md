@@ -15,7 +15,7 @@ description: Use after implementation (bug fix or feature task) to dispatch appr
 
 ### 模式 A：per-task review
 
-逐任务审查。用于 SDD Phase 2 或 investigate Phase 6。
+逐任务审查。用于 SDD Phase 2 或 investigate Phase 5。
 
 **输入：**
 - `task_text` — 任务规格文本（可选；无 task_text 时跳过 spec review）
@@ -130,7 +130,7 @@ Phase 3: /code-review (global)
 ### investigate
 
 ```
-Phase 6: /code-review (per-task, task_text=根因报告)
+Phase 5: /code-review (per-task, task_text=根因报告)
   BLOCK → /review-handling → 修复 → 重跑质量门控 + /code-review
   APPROVE → finishing-a-development-branch
 ```

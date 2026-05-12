@@ -35,6 +35,15 @@ If the spec covers multiple independent subsystems, suggest breaking into separa
 
 ### 1. Requirement Analysis
 
+**前序产物验证：** 如果存在 spec 文件（`docs/specs/<feature>-design.md`）或设计产物目录（`docs/designs/<feature>/`），提取 `feature` 字段作为本计划的寻址锚点。确认以下文件存在：
+
+```
+spec    = docs/specs/{feature}-design.md（如存在）
+designs = docs/designs/{feature}/（如经过 design-workflow）
+```
+
+文件不存在 → 报告用户，不继续。feature 名称确定后，计划文件写入 `docs/plans/{feature}.md`。
+
 - Fully understand feature requirements from spec or user input
 - Ask clarifying questions when necessary
 - Identify success criteria
@@ -177,22 +186,41 @@ Before defining tasks, map out which files will be created or modified:
 
 ---
 
-## Plan Review (Subagent)
+## Plan Review (Dual Subagent)
 
-自检通过后，派发 plan-reviewer subagent 做独立质量审查：
+自检通过后，**在同一消息内并行派发**两个独立 reviewer：
+
+### Reviewer 1: Document Quality
 
 ```
 Agent tool (general-purpose):
-  description: "Review plan document"
+  description: "Review plan document quality"
   prompt: |
     [使用 plan-reviewer-prompt.md 模板]
     - Plan file: docs/plans/<feature>.md
     - Spec file: docs/specs/<feature>-design.md（如存在）
 ```
 
-**Reviewer 返回：** Status（Approved / Issues Found）、Issues 列表、Recommendations。
+检查文档完整性、spec 对齐、任务拆分、占位符、可构建性、类型一致性。
 
-**Issues Found →** 修复问题 → 重新运行自检清单 → 重新派发 reviewer。
+### Reviewer 2: Technical Risk
+
+```
+Agent tool (general-purpose, model="opus"):
+  description: "Technical risk review of plan"
+  prompt: |
+    [使用 technical-risk-reviewer-prompt.md 模板]
+    - Plan file: docs/plans/<feature>.md
+    - Spec file: docs/specs/<feature>-design.md（如存在）
+```
+
+对抗性技术风险分析：架构合理性、实现可行性、测试策略深度、性能风险、scope 挑战、失败模式。
+
+### 结果聚合
+
+**两个 reviewer 都 Approved →** 计划通过，进入 Execution Handoff。
+
+**任一 reviewer 发现 Issues →** 修复问题 → 重新运行自检清单 → 重新派发两个 reviewer。
 
 ---
 
