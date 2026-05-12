@@ -4,9 +4,9 @@
   "description": "Engineering discipline plugin for Claude Code — TDD, security review, quality gates enforced through iron laws and hook-based interception",
   "author": {
     "name": "Stephen D Deng",
-    "url": "https://github.com/sdeng079"
+    "url": "https://github.com/dengd1937"
   },
-  "repository": "https://github.com/sdeng079/rune",
+  "repository": "https://github.com/dengd1937/rune",
   "license": "MIT",
   "keywords": [
     "tdd",

@@ -8,7 +8,7 @@ Engineering discipline plugin for Claude Code — TDD, security review, and qual
 
 ```bash
 # Add marketplace
-claude plugin marketplace add sdeng079/rune
+claude plugin marketplace add dengd1937/rune
 
 # Install plugin
 claude plugin install rune@rune

@@ -34,7 +34,7 @@ Repo root 即 plugin root。所有 hooks 通过 `CLAUDE_PLUGIN_ROOT` 引用路�
 ## 安装
 
 ```bash
-claude plugin marketplace add sdeng079/rune
+claude plugin marketplace add dengd1937/rune
 claude plugin install rune@rune
 ```
 

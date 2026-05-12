@@ -8,7 +8,7 @@ Claude Code 工程纪律插件 — 通过铁律和 hook 物理拦截强制执行
 
 ```bash
 # 添加 marketplace
-claude plugin marketplace add sdeng079/rune
+claude plugin marketplace add dengd1937/rune
 
 # 安装 plugin
 claude plugin install rune@rune
