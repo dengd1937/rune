@@ -49,18 +49,18 @@ Chore-class changes (typos, hook regex tweaks, README edits) take a lightweight 
 
 | Phase | Trigger | What happens | Output |
 |-------|---------|-------------|--------|
-| **Brainstorm** | `/rune:brainstorm` | Product discovery, competitive research, feature analysis, technical design, spec | `docs/specs/` |
+| **Brainstorm** | `/rune:brainstorm` | Product discovery, competitive research, feature analysis, technical design, spec — or Scale Gate fast-path for chore-class changes | `docs/specs/` (or skipped for chore) |
 | **Design** | Auto-routes L1/L2 for UI features | Intent → wireframe → high-fidelity → review gate | `docs/designs/` |
 | **Development** | Implementation phase | Research → plan → per-task TDD → quality gate → review → commit | Committed code (80%+ coverage) |
 
-Each phase is independently usable — skip Design for backend-only work, skip both for non-UI refactors.
+Every change starts with `/rune:brainstorm` — backend-only work skips Design, and chore-class changes (typos, hook tweaks, doc edits) take the Scale Gate fast-path: edit → quality-gate → reviewer → commit, no spec/plan written.
 
 ## Skills
 
 | Skill | Purpose |
 |-------|---------|
 | [using-rune](skills/using-rune/SKILL.md) | Iron laws + skill routing — auto-loaded via SessionStart |
-| [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → feature spec |
+| [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → feature spec (or Scale Gate fast-path for chore) |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI design — L1 lightweight / L2 full wireframe → hi-fi → review |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP design + code generation |
 | [writing-plans](skills/writing-plans/SKILL.md) | Implementation plans — task breakdown, no-placeholders, dual quality check |

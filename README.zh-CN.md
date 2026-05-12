@@ -49,18 +49,18 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 
 | 阶段 | 触发 | 做什么 | 产出 |
 |------|------|--------|------|
-| **Brainstorm** | `/rune:brainstorm` | 产品发现、竞品调研、功能分析、技术设计、spec 输出 | `docs/specs/` |
+| **Brainstorm** | `/rune:brainstorm` | 产品发现、竞品调研、功能分析、技术设计、spec 输出 — chore 类改动走 Scale Gate 简化路径 | `docs/specs/`（chore 跳过） |
 | **Design** | 新 UI 功能自动路由 L1/L2 | 意图 → wireframe → 高保真 → 审查门控 | `docs/designs/` |
 | **Development** | 实现阶段 | 调研 → 规划 → 逐任务 TDD → 质量门控 → 审查 → commit | 已提交代码（80%+ 覆盖率） |
 
-各阶段独立可用 — 纯后端跳过 Design，无 UI 变更的重构跳过 Brainstorm 和 Design。
+任何改动都从 `/rune:brainstorm` 入口进入——纯后端跳过 Design；chore 类改动（typo、hook 调整、文档编辑）走 Scale Gate 简化路径：edit → quality-gate → reviewer → commit，不写 spec/plan。
 
 ## Skills
 
 | Skill | 用途 |
 |-------|------|
 | [using-rune](skills/using-rune/SKILL.md) | 铁律 + skill 路由 — SessionStart 自动加载 |
-| [brainstorm](skills/brainstorm/SKILL.md) | 产品发现 → feature spec |
+| [brainstorm](skills/brainstorm/SKILL.md) | 产品发现 → feature spec（chore 类走 Scale Gate 简化路径） |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI 设计 — L1 轻量 / L2 完整 wireframe → 高保真 → 审查 |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP 设计 + 代码生成 |
 | [writing-plans](skills/writing-plans/SKILL.md) | 实施方案 — 任务拆解、No Placeholders、双重质量检查 |
