@@ -20,7 +20,7 @@ origin: rune
 没有在当前消息内跑过验证命令 → 不许声称该项通过
 ```
 
-违反字面就是违反精神。这条不与 IRON LAW L1/L2/L3 并列，而是 L3 "未通过审查的代码不许 commit" 的**前置补强** —— L3 守 commit 时点，本 skill 守 commit 之前的每个 claim 时点。
+违反字面就是违反精神。这条不与 IRON LAW L1/L3 并列，而是 L3 "未通过审查的代码不许 commit" 的**前置补强** —— L3 守 commit 时点，本 skill 守 commit 之前的每个 claim 时点。
 
 ---
 

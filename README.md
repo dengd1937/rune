@@ -36,8 +36,9 @@ Layer 4  Physical Interception       6 hooks (block at write/commit time)
 **Iron Laws** (cannot be bypassed):
 
 - **L1** — Each task runs its own TDD → implementation → review cycle
-- **L2** — Downgrades require explicit user approval
 - **L3** — Unreviewed code cannot be committed (hook hard-block)
+
+Chore-class changes (typos, hook regex tweaks, README edits) take a lightweight path via the `brainstorm` skill's **Scale Gate** — quality-gate, reviewer, and the commit hook still apply.
 
 ## Workflow
 

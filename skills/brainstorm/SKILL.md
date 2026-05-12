@@ -11,12 +11,52 @@ origin: rune
 **Announce at start:** "I'm using the brainstorm skill to explore this idea and produce a feature spec."
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until Phase 5 spec is written and user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until either (a) Phase 5 spec is written and user has approved it, or (b) the **Scale Gate** (see below) has publicly classified the change as Truly Simple and the user has acknowledged. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
 
 Every project goes through this process. A config change, a single-function utility — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+
+---
+
+## Scale Gate（在 HARD-GATE 之后立即判定）
+
+启动 brainstorm 时**第一动作**就是对改动规模做公开判定。匹配 **Truly Simple** 时走简化路径，绕过 Phase 2/3/4/5/6 但保留质量门与审查闸。
+
+### Truly Simple 判定（必须全部满足）
+
+- 单文件改动，且实际变更 ≤30 行
+- 无新文件、无新依赖、无新模块、无新数据模型
+- 无新行为：不改业务逻辑、不改 API 契约、不改公开接口
+- 典型场景：修 typo / 改注释 / 调 hook regex / 调 README / 配置项调整 / skill 措辞调整
+
+任一不满足 → 走完整 6-Phase 流程。
+
+### Truly Simple 路径（chore-light）
+
+1. **公开判定**：在第一条消息中显式公告 "Scale Gate 判定为 Truly Simple：[一句话说明改什么]"
+2. **用户确认**：等用户明确认可（"go"/"ok"/"对"/"动手"等即可）
+3. **跳过** Phase 2/3/4/5/6 —— 不写 spec 文件、不进入 writing-plans、不进入 subagent-driven-development
+4. **执行链**：edit → `/code-quality-gate` → `/code-review` (per-task 模式，code-quality-reviewer-prompt) → commit（Conventional Commits）
+
+### 仍不可绕过
+
+- post-edit `/code-quality-gate`（format/lint/typecheck/debug 扫描）
+- `/code-review` per-task（hook `pre-commit-review-check.py` 物理强制）
+- commit 走 Conventional Commits（hook `pre-bash-guard.sh` 物理强制）
+- 涉及 secrets / 认证 / DB 查询 / 文件系统 / 加密 → 仍触发 `security-reviewer`
+
+### 用户随时可驳回
+
+用户回应 "走完整 brainstorm" 或 "这不算 chore" → 立即放弃 Truly Simple 判定，回到 Phase 1。
+
+### 反逃避
+
+- **NEVER** 自判 Truly Simple 直接 edit 而不公告判定
+- **NEVER** 把"≤30 行"作为唯一标准（行数小但改业务逻辑 = 不是 chore）
+- **NEVER** 把 reviewer/quality-gate 也跳过（这是 L3，不可绕）
+- **NEVER** 把多个 chore 攒一块跑（每个 chore 走自己的简化链）
 
 ---
 

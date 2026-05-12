@@ -36,8 +36,9 @@ claude plugin install rune@rune
 **铁律**（不可绕过）：
 
 - **L1** — 每个任务独立运行 TDD → 实现 → 审查循环
-- **L2** — 降级操作需用户明确批准
 - **L3** — 未经审查的代码无法提交（hook 硬拦截）
+
+chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的 **Scale Gate** 简化路径——quality-gate、reviewer、commit hook 仍不可绕。
 
 ## 工作流
 

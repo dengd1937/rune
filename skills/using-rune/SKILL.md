@@ -18,10 +18,11 @@ description: Use when starting any conversation or after compact - establishes R
 ## §1 铁律
 
 - **L1** — 每任务独立走 TDD→实现→审查循环，禁止跨任务合并审查
-- **L2** — 降级必须用户明确批准，模型不得自判"简单"跳过流程（仅限单文件改动 + 用户确认可降级）
 - **L3** — 未通过审查的代码不许 commit（hook 硬阻塞，禁止 --no-verify 等绕过）
 
 违反字面就是违反精神。任意一条被绕过即视为流程失败。
+
+**没有 L2 = "降级铁律"。** chore 类改动（修 typo、调 hook regex、改配置、改 README）不是绕过流程，而是由 `brainstorm` skill 的 **Scale Gate** 判定为 Truly Simple 后走简化路径——仍 invoke brainstorm 公告、仍跑 quality-gate、仍调 reviewer、仍走 commit 闸。**模型不得自判"简单"直接跳到 edit，必须先 invoke brainstorm 让 Scale Gate 公开判定。**
 
 ## §2 调用纪律与行为纪律
 
@@ -30,6 +31,7 @@ description: Use when starting any conversation or after compact - establishes R
 **优先级**：用户显式指令 > Rune skill > 默认系统提示
 
 **行为纪律**：不要默默选一种解释就开始执行。有歧义时，将其显式化：
+
 - **明确说明假设** — 对需求有疑问时，在继续之前说明你基于哪个假设
 - **呈现权衡，而非只给结论** — 存在多种有效方案时，列出各选项及其取舍
 - **该推回时推回** — 请求暗示了过于复杂的方案时，提出更简单的替代方案
@@ -39,15 +41,18 @@ description: Use when starting any conversation or after compact - establishes R
 
 这些念头出现 = 流程偏离信号，立即停下。
 
-| 借口 | 现实 |
-|---|---|
-| "这个简单，直接做不用 skill" | 简单事最容易踩未检验假设 |
+
+| 借口                   | 现实                      |
+| -------------------- | ----------------------- |
+| "这个简单，直接做不用 skill"   | 简单事最容易踩未检验假设            |
 | "我先看看代码再决定要不要 skill" | 看代码=已在脑补方案；skill 调用先于阅读 |
-| "我记得这个 skill 怎么用" | skill 会演化，每次按当前版本读 |
-| "用户没说要走流程" | 用户说 WHAT，规则定义 HOW |
-| "这次只改一行，跳过 TDD" | 一行也能引入回归，30 秒写测试 |
-| "几个任务一起审查更高效" | 跨任务合并审查不允许（L1） |
-| "改动很小，不需要审查" | 一行就能引入 SQL 注入、原型污染 |
-| "reviewer 误报了，跳过吧" | 误报需说明具体理由由用户确认 |
-| "先 commit 再说" | 没审查的代码不许 commit（L3） |
-| "我已经手动测过了" | 手动测试无记录、不可重放、不算覆盖率 |
+| "我记得这个 skill 怎么用"    | skill 会演化，每次按当前版本读      |
+| "用户没说要走流程"           | 用户说 WHAT，规则定义 HOW       |
+| "这次只改一行，跳过 TDD"      | 一行也能引入回归，30 秒写测试        |
+| "几个任务一起审查更高效"        | 跨任务合并审查不允许（L1）          |
+| "改动很小，不需要审查"         | 一行就能引入 SQL 注入、原型污染      |
+| "reviewer 误报了，跳过吧"   | 误报需说明具体理由由用户确认          |
+| "先 commit 再说"        | 没审查的代码不许 commit（L3）     |
+| "我已经手动测过了"           | 手动测试无记录、不可重放、不算覆盖率      |
+
+
