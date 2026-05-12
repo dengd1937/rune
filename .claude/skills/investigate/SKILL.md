@@ -63,18 +63,18 @@ origin: meridian
 
 | 范式 | 适用场景 | 主路径 |
 |---|---|---|
-| **Hypothesis-driven**（默认） | 业务逻辑 bug、中等深度问题、有清晰假设可静态验证 | 3a 逐一验证 |
-| **Trace-driven**（条件切换） | 栈深 ≥5 层 / 触发源不明 / 数据污染类（"为什么这个值会出现在这里"） | 3d backward tracing |
+| **Hypothesis-driven**（默认） | 业务逻辑 bug、中等深度问题、有清晰假设可静态验证 | 2a 逐一验证 |
+| **Trace-driven**（条件切换） | 栈深 ≥5 层 / 触发源不明 / 数据污染类（"为什么这个值会出现在这里"） | 2d backward tracing |
 
 两种范式可以串联：先 hypothesis-driven，发现假设无法静态收敛 → 切到 trace-driven 用运行时证据定位触发源。
 
-**3c 与 3d 的决策树**（两者触发条件存在重叠，按以下优先级判断）：
+**2c 与 2d 的决策树**（两者触发条件存在重叠，按以下优先级判断）：
 
 | 场景 | 选 |
 |---|---|
-| 已知组件边界、断裂位置不明（"哪一层挂了"） | 走 **3c** instrumentation 定断裂层 |
-| 不知触发源、数据污染类（"为什么这个值在这里"） | 走 **3d** backward tracing |
-| 两条都适用 | **先 3c 定断裂层 → 在断裂层内做 3d backward trace**（3c 提供层级定位，3d 在该层内做源头追溯） |
+| 已知组件边界、断裂位置不明（"哪一层挂了"） | 走 **2c** instrumentation 定断裂层 |
+| 不知触发源、数据污染类（"为什么这个值在这里"） | 走 **2d** backward tracing |
+| 两条都适用 | **先 2c 定断裂层 → 在断裂层内做 2d backward trace**（2c 提供层级定位，2d 在该层内做源头追溯） |
 
 ### 2a. 逐一验证（hypothesis-driven 主路径）
 
@@ -156,7 +156,7 @@ async function gitInit(directory: string) {
 }
 ```
 
-**产物：** "断裂层"报告（哪一层入站 OK / 出站异常），作为 3a 新一轮假设的输入。
+**产物：** "断裂层"报告（哪一层入站 OK / 出站异常），作为 2a 新一轮假设的输入。
 
 **清理：** 诊断 instrumentation 是临时代码，根因确认后必须从代码中移除（不允许残留进 commit）。所有临时诊断输出**必须**带 `[TEMP-INSTR]` 前缀，便于 `code-quality-gate` 扫描（除既有的 `console.log` / `debugger` / `breakpoint()` 之外，gate 还应扫描 `[TEMP-INSTR]` 前缀字符串，无论用 `console.log` 还是 `console.error`）。
 
@@ -196,9 +196,9 @@ async function gitInit(directory: string) {
 - 二分定位：当某测试触发污染但不知是哪个时，用 bisection script 一个一个跑
 - git blame：当怀疑是近期改动引入时
 
-**清理（同 3c）：** 3d 注入的所有诊断输出（包括 stack 打印、`console.error` 调用）**必须**带 `[TEMP-INSTR]` 前缀，根因确认后从代码移除，不允许残留进 commit。
+**清理（同 2c）：** 2d 注入的所有诊断输出（包括 stack 打印、`console.error` 调用）**必须**带 `[TEMP-INSTR]` 前缀，根因确认后从代码移除，不允许残留进 commit。
 
-**追溯不下去时的回退：** 加 instrumentation（见 3c），让运行时证据告诉你"是谁"。
+**追溯不下去时的回退：** 加 instrumentation（见 2c），让运行时证据告诉你"是谁"。
 
 ---
 
@@ -243,7 +243,7 @@ async function gitInit(directory: string) {
 - 单次改动，只修根因
 - 禁止 "顺手" 改别的
 - 禁止 bundled refactoring
-- 确认测试通过（GREEN 验证）—— **invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行测试命令并取得 fresh PASS 输出，输出读完后才允许进入 5c
+- 确认测试通过（GREEN 验证）—— **invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行测试命令并取得 fresh PASS 输出，输出读完后才允许进入 4c
 
 ### 4c. IMPROVE：重构（如需要）
 
@@ -255,16 +255,16 @@ async function gitInit(directory: string) {
 调用 `/code-quality-gate`：格式化 → lint → 类型检查 → 调试产物检测。
 
 **通过** → 评估 4f 触发条件 → 触发时**推荐**走 4f（完成后回 4d）/ 不触发或明确理由跳过则直接 Phase 5。
-**失败** → 修复 → 重跑 5d。
+**失败** → 修复 → 重跑 4d。
 
 ### 4e. 3 次失败熔断
 
 **失败计数范围**（统一一个计数器，覆盖整个 Phase 4）：
 
-- 5b GREEN 失败（测试一直不过）
-- 5d 质量门控反复失败
-- 5f 中单层防御校验测试 ≥3 次仍 RED
-- 5f 完成后回 5d 失败
+- 4b GREEN 失败（测试一直不过）
+- 4d 质量门控反复失败
+- 4f 中单层防御校验测试 ≥3 次仍 RED
+- 4f 完成后回 4d 失败
 
 任一路径上累计失败次数 ≥3 次：
 
@@ -289,7 +289,7 @@ async function gitInit(directory: string) {
 
 **触发条件（满足任一即推荐走）：**
 
-- 数据穿越 ≥2 层组件（与 3c 触发条件一致）
+- 数据穿越 ≥2 层组件（与 2c 触发条件一致）
 - 之前已经在某层失败过（说明单点校验不足）
 - 涉及数据完整性 / 安全 / 生产事故根因
 - bug 类型：输入污染 / 状态泄漏 / 错误传播
@@ -355,7 +355,7 @@ async function gitInit(directory: string) {
 - 不是所有 bug 都需要四层；按数据流实际穿越层数决定
 - L4 用 logger 不用 `console.log`，避免被 `code-quality-gate` 当作残留产物清除
 
-**完成判定：** 每层校验都有测试覆盖，所有测试 GREEN，回到 5d 重跑质量门控。
+**完成判定：** 每层校验都有测试覆盖，所有测试 GREEN，回到 4d 重跑质量门控。
 
 **回 4d 前的硬步骤：invoke `verifying-before-completion` skill**，按 skill 要求在同一 turn 内执行原复现测试 + 每层防御独立测试，取得 fresh PASS 输出（禁止复用 4f 加防御过程中的历史输出）。
 
