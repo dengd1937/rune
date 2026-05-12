@@ -27,7 +27,7 @@ npm test / pytest / go test ./... / cargo test
 - [ ] 测试覆盖率 >= 80%
 - [ ] 无残留调试产物（console.log、debugger、print 语句）
 - [ ] Phase 3 全局审查已 APPROVE
-- [ ] 每个 implementer 的 commit 符合 Conventional Commits
+- [ ] 每个任务的 commit 符合 Conventional Commits
 
 **测试失败：**
 
@@ -69,7 +69,7 @@ rmdir docs/plans/  # 如果目录为空
 git log --oneline <base-branch>..HEAD
 ```
 
-逐条检查 commit 是否符合 Conventional Commits（implementer 应在提交时已遵守，见 implementer-prompt.md）。
+逐条检查 commit 是否符合 Conventional Commits（SDD Step 4 提交时已遵守）。
 
 **不符合时：** 报告问题 commit 列表给用户，由用户决定如何处理（手动 squash、保持原样等）。finishing skill 不重写 commit history。
 

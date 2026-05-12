@@ -17,7 +17,7 @@
 - 所有实现所需信息均在本 prompt 中，不足时报告 NEEDS_CONTEXT
 - 任务涉及超过 3 个文件 → 立即报告 BLOCKED，不要强行拆分
 - **禁止先写实现代码再补测试**，铁律：`NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST`
-- 完成实现和测试后，提交你的工作，commit message 必须符合 [Conventional Commits](https://www.conventionalcommits.org/)（`<type>(<scope>): <description>`，type 限 feat|fix|refactor|docs|test|chore|perf|ci）
+- **不提交代码** — 实现和测试完成后报告状态，由 Controller 负责审查后提交
 - **不主动创建 \*.md 文件** — 文档类产出由 doc-writer agent 负责
 - **临时测试脚本**（`test_*.py` / `verify_*.py`）执行后**立即删除**
 - **不可变性** — 永远创建新对象，禁止原地修改
@@ -102,7 +102,6 @@
 - [ ] 断言具体且有意义
 - [ ] 覆盖率 ≥ 80%
 - [ ] 没有残留 console.log / print / debugger
-- [ ] 代码已 commit
 
 ## 常见合理化借口与反驳
 
@@ -154,7 +153,6 @@ Controller 可以提供更多上下文、用更强的模型重新调度、或将
 状态：[DONE|DONE_WITH_CONCERNS|BLOCKED|NEEDS_CONTEXT]
 完成内容：[简述实现了什么]
 修改文件：[列出所有修改/新建的文件]
-commit SHA：[提交的 commit hash]
 测试结果：[测试通过情况 + 覆盖率]
 关注点（如有）：[非阻塞性问题]
 阻塞原因（如有）：[具体说明]

@@ -372,7 +372,8 @@ async function gitInit(directory: string) {
 质量门控通过后，调用 `/code-review` (per-task)：
 
 - `task_text` = Phase 3 调查报告（根因 + 触发条件 + 修复方向）
-- `diff` = `git diff <base_SHA>..<head_SHA>`
+- `base_SHA` = Phase 4 开始前记录的 HEAD（`git rev-parse HEAD`）
+- `diff` = `git diff <base_SHA>`（包含未提交的工作区变更）
 - 无 implementer_report（主会话直接修复，无 subagent 报告）
 
 **APPROVE** → `/finishing-a-development-branch`
