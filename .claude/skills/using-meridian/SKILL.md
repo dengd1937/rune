@@ -91,6 +91,7 @@ description: Use when starting any conversation or after compact - establishes M
 | bug 修复（根因调查→TDD修复→审查） | `investigate` skill |
 | commit 前质量门 | `commit-quality` skill |
 | 任务后复盘 | `retro` skill |
+| 创建/修改 Meridian skill | `writing-skills` skill |
 | **任何 claim done / passing / 修好之前**（横切） | `verifying-before-completion` skill |
 
 ### 降级覆盖

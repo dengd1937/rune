@@ -31,6 +31,7 @@ meridian/
 │   │   ├── tdd-workflow/
 │   │   ├── typescript-patterns/
 │   │   ├── typescript-testing/
+│   │   ├── writing-skills/
 │   │   └── using-git-worktrees/
 │   ├── settings.json                # Hook 与权限配置
 │   └── settings.local.json          # 本地 MCP 权限
@@ -79,6 +80,7 @@ meridian/
 | [using-git-worktrees](.claude/skills/using-git-worktrees/SKILL.md) | Git worktree 并行开发，减少 stash 和上下文切换 |
 | [subagent-driven-development](.claude/skills/subagent-driven-development/SKILL.md) | 多文件改动按任务编排 — 逐任务 TDD+审查循环 |
 | [writing-plans](.claude/skills/writing-plans/SKILL.md) | 实施方案规划 — 任务拆解、No Placeholders、自检+plan-reviewer 双重质量保障 |
+| [writing-skills](.claude/skills/writing-skills/SKILL.md) | Skill 元技能 — CSO 优化、TDD 测试方法论、anti-rationalization 模式、token 效率 |
 
 ## Agents
 
