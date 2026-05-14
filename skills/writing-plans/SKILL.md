@@ -154,7 +154,7 @@ Before defining tasks, map out which files will be created or modified:
 **文件：** 新建/修改 + 测试路径
 **测试规格：** 需覆盖的场景和预期行为（由 implementer subagent 编写具体测试用例）
 **验证标准：** GREEN 条件（描述通过标准，非具体命令）
-**审查要求：** 需通过的审查类型（code-quality-reviewer / security-reviewer 等）
+**审查要求：** 需通过的审查类型（code-quality-reviewer / python-reviewer / typescript-reviewer 等 prompt 模板）
 ```
 
 ---

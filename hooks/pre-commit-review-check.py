@@ -6,11 +6,8 @@
 #
 # Detection (粗粒度兜底，不校验 verdict)：
 #   工具名匹配 "Task" 或 "Agent"（Claude Code 实际名为 Agent，
-#   "Task" 保留兼容其他 harness），并满足下列任一：
-#   1. Named reviewer agent: subagent_type 含 "reviewer"
-#      (code-reviewer / security-reviewer / python-reviewer / ...)
-#   2. 新流程 general-purpose + reviewer prompt 模板:
-#      subagent_type == "general-purpose" 且 prompt 含 GP_REVIEWER_PROMPTS 中任一文件名
+#   "Task" 保留兼容其他 harness），subagent_type == "general-purpose"
+#   且 prompt 含 GP_REVIEWER_PROMPTS 中任一文件名。
 #
 # 设计角色：仅检测"是否调用过 reviewer"。verdict / diff 一致性 / 时效性
 #           校验由 subagent-driven-development skill 的修复闭环兜底，hook 不做。
@@ -20,11 +17,12 @@ import os
 import re
 import sys
 
-REVIEW_KEYWORD = "reviewer"
 GP_REVIEWER_PROMPTS = (
     "code-quality-reviewer-prompt.md",
     "spec-reviewer-prompt.md",
     "global-reviewer-prompt.md",
+    "python-reviewer-prompt.md",
+    "typescript-reviewer-prompt.md",
 )
 
 SOURCE_EXTS = {
@@ -130,14 +128,10 @@ def main() -> None:
                     edited_files.append(fp)
 
             elif name in ("Task", "Agent"):
-                # Claude Code uses "Agent" as the actual tool name; "Task"
-                # kept for forward/backward compat with other harnesses.
                 sub: str = str(inp.get("subagent_type", "")).lower()
                 prompt_text: str = str(inp.get("prompt", ""))
 
-                if REVIEW_KEYWORD in sub:
-                    saw_reviewer = True
-                elif "general-purpose" in sub and any(
+                if "general-purpose" in sub and any(
                     p in prompt_text for p in GP_REVIEWER_PROMPTS
                 ):
                     saw_reviewer = True
@@ -164,10 +158,12 @@ def _emit(files: list[str], saw_reviewer: bool) -> None:
         "[hook] BLOCKED: no reviewer was invoked since last commit.\n"
         f"Modified source files:\n"
         f"  - {listed}{suffix}\n"
-        "合规路径任选其一：\n"
-        "  (A) Task(subagent_type=\"general-purpose\") + code-quality-reviewer-prompt.md\n"
-        "      （subagent-driven-development skill 的标准 Step 4 通用质量审查）\n"
-        "  (B) 调用 named reviewer：security-reviewer / python-reviewer / typescript-reviewer\n"
+        "合规路径：\n"
+        "  调用 Task(subagent_type=\"general-purpose\") + 以下任一 prompt 模板：\n"
+        "    - code-quality-reviewer-prompt.md（必选，含安全审查）\n"
+        "    - spec-reviewer-prompt.md（有 task_text 时）\n"
+        "    - python-reviewer-prompt.md（diff 含 .py 时）\n"
+        "    - typescript-reviewer-prompt.md（diff 含 .ts/.tsx 时）\n"
         "Emergency override: export SKIP_REVIEW_CHECK=1",
         file=sys.stderr,
     )

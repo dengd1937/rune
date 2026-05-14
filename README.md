@@ -20,7 +20,7 @@ After installation, the following activate automatically:
 - **PreToolUse** hooks block dangerous commands and secret writes
 - **PostToolUse** hooks detect debug statements and quality issues
 - **21 skills** — invoke with `/rune:<skill-name>`
-- **6 agents** — reviewers, doc writers
+- **3 agents** — design reviewer, doc writers
 
 ## How It Works
 
@@ -29,7 +29,7 @@ Four enforcement layers, each with a distinct role:
 ```
 Layer 1  Iron Laws + Routing         using-rune skill (always loaded)
 Layer 2  On-Demand Guidance          21 skills (invoked when ≥1% relevant)
-Layer 3  Review Enforcement          6 reviewer agents (during review)
+Layer 3  Review Enforcement          code-review skill prompt templates (during review)
 Layer 4  Physical Interception       6 hooks (block at write/commit time)
 ```
 
@@ -88,9 +88,6 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [design-reviewer](agents/design-reviewer.md) | Design artifact review | Design workflow steps |
 | [doc-writer](agents/doc-writer.md) | Format and write workflow docs from templates | After workflow produces structured data |
 | [doc-updater](agents/doc-updater.md) | Maintain catalogs, indexes, codemaps | After workflow completes |
-| [python-reviewer](agents/python-reviewer.md) | Python code review | Python projects |
-| [typescript-reviewer](agents/typescript-reviewer.md) | TypeScript / React / Next.js code review | TypeScript / Next.js projects |
-| [security-reviewer](agents/security-reviewer.md) | Security vulnerability detection | Pre-commit, sensitive code |
 
 ## Hooks
 
@@ -110,7 +107,7 @@ rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace entry
 ├── hooks/                 # Physical enforcement layer
 ├── skills/                # 21 auto-discovered skills
-├── agents/                # 6 auto-discovered agents
+├── agents/                # 3 auto-discovered agents
 ├── CLAUDE.md              # Project instructions
 ├── README.md              # This file
 └── LICENSE                # MIT

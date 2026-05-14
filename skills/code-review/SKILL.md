@@ -29,9 +29,10 @@ description: Use after implementation (bug fix or feature task) to dispatch appr
 |------|------|
 | 必选（每次） | `Task(general-purpose, model="opus")` + `code-quality-reviewer-prompt.md` |
 | 有 task_text | `Task(general-purpose, model="sonnet")` + `spec-reviewer-prompt.md` |
-| diff 含 `.py` 文件 | `Task(python-reviewer)` named agent |
-| diff 含 `.ts` / `.tsx` 文件 | `Task(typescript-reviewer)` named agent |
-| 涉及认证/用户输入/支付/DB 查询/文件系统/加密 | `Task(security-reviewer)` named agent |
+| diff 含 `.py` 文件 | `Task(general-purpose, model="sonnet")` + `python-reviewer-prompt.md` |
+| diff 含 `.ts` / `.tsx` 文件 | `Task(general-purpose, model="sonnet")` + `typescript-reviewer-prompt.md` |
+
+**注意：** 安全审查已合并进 `code-quality-reviewer-prompt.md`（OWASP Top 10 + 安全模式表），不再单独派发。
 
 **所有 reviewer 在同一消息内并发派发。** 互不依赖（只读），收集所有结果后统一判定。
 
@@ -44,6 +45,14 @@ spec-reviewer-prompt.md：
 
 code-quality-reviewer-prompt.md：
 - `{{TASK_TEXT}}` → task_text
+- `{{DIFF}}` → diff
+- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → base_SHA / head_SHA
+
+python-reviewer-prompt.md：
+- `{{DIFF}}` → diff
+- `{{BASE_SHA}}` / `{{HEAD_SHA}}` → base_SHA / head_SHA
+
+typescript-reviewer-prompt.md：
 - `{{DIFF}}` → diff
 - `{{BASE_SHA}}` / `{{HEAD_SHA}}` → base_SHA / head_SHA
 
@@ -141,11 +150,10 @@ Phase 5: /code-review (per-task, task_text=根因报告)
 
 | 派发 | 模型 | 备注 |
 |------|------|------|
-| code-quality-reviewer | opus | general-purpose |
+| code-quality-reviewer | opus | general-purpose，含安全审查 |
 | spec-reviewer | sonnet | general-purpose |
-| python-reviewer | sonnet | named agent |
-| typescript-reviewer | sonnet | named agent |
-| security-reviewer | sonnet | named agent |
+| python-reviewer | sonnet | general-purpose + prompt 模板 |
+| typescript-reviewer | sonnet | general-purpose + prompt 模板 |
 | global-reviewer | opus | general-purpose |
 
 ---

@@ -17,7 +17,7 @@ rune/                                  # Repo root = Plugin root
 │   ├── pre-commit-review-check.py
 │   └── lib/utils.sh
 ├── skills/                            # 21 skills（auto-discovered by Claude Code）
-├── agents/                            # 6 agents（auto-discovered by Claude Code）
+├── agents/                            # 3 agents（auto-discovered by Claude Code）
 ├── .claude/
 │   └── settings.local.json            # Dev environment MCP permissions only
 ├── CLAUDE.md
@@ -44,5 +44,5 @@ claude plugin install rune@rune
 |---|---|---|
 | **铁律 + 路由 + 行为护栏** | using-rune skill（SessionStart hook 注入） | 始终 |
 | **Skill 按需指导** | 各 skill（brainstorm、python-patterns、typescript-patterns 等） | 调用时 |
-| **Agent 审查强制** | reviewer agents（python-reviewer、typescript-reviewer、security-reviewer） | 审查时 |
+| **Agent 审查强制** | code-review skill 内置 prompt 模板（python/typescript/security） | 审查时 |
 | **Hook 物理拦截** | pre-write-secrets.sh、pre-bash-guard.sh、post-write-quality.sh、pre-commit-review-check.py | 写/提交时 |

@@ -45,7 +45,7 @@ Every project goes through this process. A config change, a single-function util
 - post-edit `/code-quality-gate`（format/lint/typecheck/debug 扫描）
 - `/code-review` per-task（hook `pre-commit-review-check.py` 物理强制）
 - commit 走 Conventional Commits（hook `pre-bash-guard.sh` 物理强制）
-- 涉及 secrets / 认证 / DB 查询 / 文件系统 / 加密 → 仍触发 `security-reviewer`
+- 涉及 secrets / 认证 / DB 查询 / 文件系统 / 加密 → 仍触发安全审查（code-quality-reviewer-prompt.md 内置 OWASP Top 10）
 
 ### 用户随时可驳回
 

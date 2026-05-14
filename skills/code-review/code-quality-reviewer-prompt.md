@@ -44,16 +44,43 @@ HEAD_SHA: {{HEAD_SHA}}
 
 ### 安全（CRITICAL — 必须 flag）
 
-可能造成真实损害的问题：
+可能造成真实损害的问题。按 OWASP Top 10 逐项检查：
 
-- **硬编码凭证** — API key、密码、token、连接字符串在源码中
-- **SQL 注入** — 字符串拼接查询而非参数化
-- **XSS 漏洞** — 未消毒的用户输入渲染到 HTML/JSX
-- **路径遍历** — 用户控制的文件路径未消毒
-- **CSRF 漏洞** — 状态变更端点缺少 CSRF 保护
-- **认证绕过** — 受保护路由缺少鉴权检查
-- **不安全依赖** — 已知漏洞的 package
-- **日志泄露 secrets** — 日志中含 token、密码、PII
+| OWASP 类别 | 检查项 |
+|------------|--------|
+| **A01 注入** | SQL 是否参数化？用户输入是否消毒？ORM 使用是否安全？Shell 命令是否用 `execFile` / list args？ |
+| **A02 认证失效** | 密码是否用 bcrypt/argon2 哈希？JWT 是否验证？Session 是否安全？ |
+| **A03 敏感数据暴露** | HTTPS 是否强制？Secrets 是否在 env vars？PII 是否加密？日志是否消毒？ |
+| **A04 XXE** | XML 解析器是否安全配置？外部实体是否禁用？ |
+| **A05 访问控制失效** | 每个路由是否检查认证？CORS 是否正确配置？ |
+| **A06 安全配置错误** | 默认凭证是否更改？生产环境 debug 是否关闭？安全头是否设置？ |
+| **A07 XSS** | 输出是否转义？CSP 是否设置？框架是否自动转义？`dangerouslySetInnerHTML` 是否消毒？ |
+| **A08 不安全反序列化** | 用户输入的反序列化是否安全？`pickle.loads` / `yaml.load` 是否有保护？ |
+| **A09 已知漏洞组件** | 依赖是否更新？`npm audit` / `pip audit` 是否干净？ |
+| **A10 日志与监控不足** | 安全事件是否记录？告警是否配置？ |
+
+**立即 flag 的安全模式：**
+
+| 模式 | 严重程度 | 修复 |
+|------|---------|------|
+| 硬编码 secrets（API key、密码、token） | CRITICAL | 用 `process.env` / `os.environ` |
+| Shell 命令拼接用户输入 | CRITICAL | 用 `execFile` / `subprocess` list args |
+| 字符串拼接 SQL | CRITICAL | 参数化查询 |
+| `innerHTML = userInput` | HIGH | `textContent` 或 DOMPurify |
+| `fetch(userProvidedUrl)` | HIGH | 白名单域名 |
+| 明文密码比较 | CRITICAL | `bcrypt.compare()` |
+| 路由无认证检查 | CRITICAL | 添加认证中间件 |
+| 余额检查无锁 | CRITICAL | 事务中 `FOR UPDATE` |
+| 无限流 | HIGH | 添加 `express-rate-limit` |
+| 日志中含密码/secrets | MEDIUM | 消毒日志输出 |
+
+**常见误报（不要 flag）：**
+- `.env.example` 中的环境变量（不是真实 secrets）
+- 测试文件中明确标注的测试凭证
+- 实际设计为公开的 API key（如 `NEXT_PUBLIC_` 前缀中不含敏感数据的）
+- SHA256/MD5 用于校验和（非密码哈希）
+
+**始终验证上下文后再 flag。**
 
 ```typescript
 // BAD: 字符串拼接 SQL
@@ -203,6 +230,17 @@ const usersWithPosts = await db.query(`
 - **emoji 政策** — 项目禁止 emoji 时不得引入
 
 适配项目已建立的模式。有疑问时，匹配代码库其他地方的做法。
+
+## 安全诊断命令
+
+在安全审查阶段运行（如项目有对应工具）：
+
+```bash
+npm audit --audit-level=high              # Node.js 依赖漏洞
+npx eslint . --plugin security            # ESLint 安全规则
+pip audit                                 # Python 依赖漏洞
+bandit -r .                               # Python 安全扫描
+```
 
 ## AI 生成代码审查关注点
 
