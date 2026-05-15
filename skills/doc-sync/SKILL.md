@@ -11,16 +11,45 @@ description: "Use during finishing phase to sync documentation with implementati
 
 ## 输入
 
-由 finishing skill 传入：
+由调用方（finishing / brainstorm Abandoned）传入：
 
 - **feature**：feature 名称（kebab-case）
-- **base_SHA**：实现前的 HEAD
-- **changed_files**：本次变更的文件列表
+- **base_SHA**：实现前的 HEAD（abandoned 上下文可空）
+- **changed_files**：本次变更的文件列表（abandoned 上下文可空）
 - **context**：`new-feature` / `bug-fix` / `abandoned`
+
+## Context 路由
+
+不同 context 走不同 Step 组合，避免在无意义的 Step 上空转：
+
+| context | Step 1 Spec 对账 | Step 2 Module Doc | Step 3 Catalog | Step 4 Design |
+|---------|------------------|-------------------|----------------|---------------|
+| `new-feature` | 执行（spec 不存在则跳过） | 执行 | Status → Done | 存在则 → Implemented |
+| `bug-fix` | 执行（spec 不存在则跳过） | 执行 | 不改 feature status | 跳过 |
+| `abandoned` | 跳过 | 跳过 | Status → Abandoned | 存在则 → Abandoned |
 
 ## 执行步骤
 
 ### Step 1: Spec 对账
+
+**前置判断（spec 不存在则跳过本步）：**
+
+```bash
+test -f docs/specs/<feature>-design.md
+```
+
+| 条件 | 行为 |
+|------|------|
+| spec 文件不存在 | 跳过 Step 1，直接进 Step 2 |
+| spec 文件存在 | 继续以下流程 |
+
+跳过场景：
+
+- `context=bug-fix` 且 feature 是 Pre-Rune（onboard 标记的已有功能）
+- `context=bug-fix` 且 feature 从未走过 brainstorm 完整流程
+- 用户主动绕过 brainstorm 直接修改代码（Truly Simple 路径误升级到完整流程的兜底）
+
+**spec 存在时的对账流程：**
 
 1. 读取 spec 文件（`docs/specs/<feature>-design.md`）
 2. 计算 diff：`git diff <base_SHA>..HEAD`
@@ -42,6 +71,8 @@ description: "Use during finishing phase to sync documentation with implementati
 不重写 spec，只追加偏离记录。保留原始决策上下文。
 
 ### Step 2: Module Doc 对账
+
+**前置判断**：`context=abandoned` 或 `changed_files` 为空 → 跳过本步。
 
 1. 从 changed_files 提取涉及的模块列表
 2. 对每个模块：
@@ -89,3 +120,4 @@ description: "Use during finishing phase to sync documentation with implementati
 - 不引入新的 delta spec 文档格式
 - 不自动删除任何文件
 - 不自动更新 README
+- **不自行 commit** —— 产出留在工作树，由调用方（finishing Step 2c）统一提交

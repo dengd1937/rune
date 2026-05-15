@@ -77,14 +77,43 @@ rmdir docs/plans/  # 如果目录为空
 
 doc-sync 内部处理 spec 对账、module doc 对账、catalog 状态推进、design artifact 状态更新。
 
-### 2c. Commit 验证
+doc-sync 不自行 commit；其产出由 Step 2c 统一提交。
+
+### 2c. Doc Commit
+
+将 Step 2a 的计划文件清理与 Step 2b 的 doc-sync 产物打包成独立 docs commit：
+
+```bash
+git status --porcelain docs/
+```
+
+**有变更 → 提交：**
+
+```bash
+git add docs/
+git commit -m "docs(<feature>): <message>"
+```
+
+message 由 Step 1.5 的 context 决定：
+
+| context | message |
+|---------|---------|
+| `new-feature` | `sync docs with implementation` |
+| `bug-fix` | `sync module docs and catalog after fix` |
+| `abandoned` | `mark <feature> as abandoned` |
+
+commit 仅含 `docs/` 下的 `.md` 文件，不触发 `pre-commit-review-check.py`（hook 只对源码扩展名生效）；Conventional Commits 仍由 `pre-bash-guard.sh` 物理强制。
+
+**无变更 → 跳过此步**（doc-sync 判定完全对齐 + Step 2a 无计划文件时合法）。
+
+### 2d. Commit 验证
 
 ```bash
 # 查看当前分支的 commit history
 git log --oneline <base-branch>..HEAD
 ```
 
-逐条检查 commit 是否符合 Conventional Commits（SDD Step 4 提交时已遵守）。
+逐条检查 commit 是否符合 Conventional Commits（SDD Step 4 与 Step 2c 提交时已遵守）。
 
 **不符合时：** 报告问题 commit 列表给用户，由用户决定如何处理（手动 squash、保持原样等）。finishing skill 不重写 commit history。
 
@@ -274,6 +303,8 @@ git worktree prune
 | 错误 | 后果 | 预防 |
 |------|------|------|
 | 跳过测试验证 | 合并破坏的代码 / 创建失败的 PR | 始终在选项前验证测试 |
+| Step 2b 后未跑 Step 2c | PR 缺失文档同步 / 合并污染工作树 | doc-sync 后强制 docs commit |
+| 把 doc commit 与代码 commit 合并 | 审查 hook 误拦 / commit 责任混淆 | docs 单独成 commit |
 | 开放式提问 | "接下来做什么？" 含义不明 | 呈现恰好 4 个结构化选项 |
 | PR 后清理 worktree | 用户无法迭代 PR 反馈 | 仅选项 2/4 清理 |
 | 删分支前未移 worktree | `git branch -d` 失败 | 先移 worktree，再删分支 |
@@ -287,6 +318,8 @@ git worktree prune
 
 **NEVER：**
 - 测试未通过时继续
+- 跳过 Step 2c 进入选项呈现（doc-sync 产物必须落盘成 commit）
+- 把 doc commit 与代码 commit 合并提交
 - 未验证合并结果就删除分支
 - 未经确认丢弃工作
 - 未经请求 force-push

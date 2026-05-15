@@ -64,8 +64,22 @@ Every project goes through this process. A config change, a single-function util
 
 1. **公告**：在消息中显式说明 "Feature [name] 标记为 Abandoned"
 2. **检查已有产物**：`docs/specs/<feature>-design.md` 或 `docs/designs/<feature>/` 是否已存在
-3. **已有产物** → 调用 `/doc-sync`（`context=abandoned`）标记状态
-4. **无产物** → 仅更新 catalog（如已在 Phase 5 写入了 spec，走 3；如仍在 Phase 1-4，无产物需处理）
+3. **按产物分支处理：**
+
+   | 状态 | 处理 |
+   |------|------|
+   | 有产物（spec 或 design 目录任一存在） | 调用 `/doc-sync`（`context=abandoned`）追加 abandoned 标记 → 提交 docs commit（见下） |
+   | 无产物（Phase 1-4 中止，未写入任何文件） | 仅对话确认放弃，不调任何 skill，不写文件，不 commit |
+
+4. **有产物时提交 docs commit：**
+
+   ```bash
+   git add docs/
+   git commit -m "docs(<feature>): mark as abandoned"
+   ```
+
+   brainstorm Abandoned 不经过 finishing，doc-sync 产出由本步骤直接提交（与 finishing Step 2c 同等职责）。
+
 5. **用户确认**
 
 不走完整的 Scale Gate 或 Phase 流程。
