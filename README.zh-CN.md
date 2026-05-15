@@ -19,7 +19,7 @@ claude plugin install rune@rune
 - **SessionStart** hook 在启动、clear、compact 时注入铁律
 - **PreToolUse** hook 拦截危险命令和 secrets 写入
 - **PostToolUse** hook 检测 debug 语句和质量问题
-- **23 个 skills** — 通过 `/rune:<skill-name>` 调用
+- **Skills** — 通过 `/rune:<skill-name>` 调用（完整列表见下方表格）
 - **3 个 agents** — design-reviewer、doc-writer 等
 
 ## 工作原理
@@ -28,7 +28,7 @@ claude plugin install rune@rune
 
 ```
 第一层  铁律 + 路由              using-rune skill（始终加载）
-第二层  按需指导                23 个 skills（≥1% 相关时调用）
+第二层  按需指导                Skills（≥1% 相关时调用）
 第三层  审查强制                code-review skill 内置 prompt 模板（审查时）
 第四层  物理拦截                6 个 hooks（写/提交时阻断）
 ```
@@ -108,7 +108,7 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace 入口
 ├── hooks/                 # 物理拦截层
-├── skills/                # 23 个自动发现的 skills
+├── skills/                # 自动发现的 skills
 ├── agents/                # 3 个自动发现的 agents
 ├── CLAUDE.md              # 项目指令
 ├── README.md              # 英文文档

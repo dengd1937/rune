@@ -125,7 +125,11 @@ mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules
 
 ## Step 9: 验证 + 报告
 
-验证所有文件存在，向用户展示创建的文件树和后续步骤。
+1. 验证 Step 4-8 产生的所有文件存在（`docs/specs/`、`docs/product/`、`docs/designs/`、`docs/architecture/adr/`、`docs/modules/`、`docs/plans/` 及 CODEMAP / MODULE-INDEX / FEATURE-CATALOG / ADR 0001）
+2. 调用 doc-updater agent 做 README 同步评估（参考 `agents/doc-updater.md` 的"项目 README 评估"职责）—— agent 仅返回建议清单，不直接修改 README
+3. 向用户展示：创建的文件树 + README 同步建议清单 + 后续步骤
+
+不自动修改 README —— 与本 skill"不做什么"中"不修改项目根目录的 README.md"一致，由用户决定是否采纳 doc-updater 的建议。
 
 ---
 

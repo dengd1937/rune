@@ -19,7 +19,7 @@ After installation, the following activate automatically:
 - **SessionStart** hook injects iron laws on startup, clear, and compact
 - **PreToolUse** hooks block dangerous commands and secret writes
 - **PostToolUse** hooks detect debug statements and quality issues
-- **23 skills** — invoke with `/rune:<skill-name>`
+- **Skills** — invoke with `/rune:<skill-name>` (full set in the table below)
 - **3 agents** — design reviewer, doc writers
 
 ## How It Works
@@ -28,7 +28,7 @@ Four enforcement layers, each with a distinct role:
 
 ```
 Layer 1  Iron Laws + Routing         using-rune skill (always loaded)
-Layer 2  On-Demand Guidance          23 skills (invoked when ≥1% relevant)
+Layer 2  On-Demand Guidance          Skills (invoked when ≥1% relevant)
 Layer 3  Review Enforcement          code-review skill prompt templates (during review)
 Layer 4  Physical Interception       6 hooks (block at write/commit time)
 ```
@@ -108,7 +108,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace entry
 ├── hooks/                 # Physical enforcement layer
-├── skills/                # 23 auto-discovered skills
+├── skills/                # auto-discovered skills
 ├── agents/                # 3 auto-discovered agents
 ├── CLAUDE.md              # Project instructions
 ├── README.md              # This file
