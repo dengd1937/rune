@@ -44,7 +44,7 @@ docs/
 
 | Feature | Status | Product Doc | Design Status | Implementation Status |
 |---------|--------|-------------|---------------|----------------------|
-| [name] | Active/Draft/Deprecated/Implemented/Abandoned | [link] | Done/In Progress/None | Done/In Progress/None |
+| [name] | Active/Draft/Deprecated/Implemented/Abandoned/Pre-Rune | [link] | Done/In Progress/None | Done/In Progress/None |
 ```
 
 更新时机：brainstorm 完成、design-workflow 完成、development 完成。
@@ -159,6 +159,7 @@ docs/
 - subagent-driven-development 完成 → 更新 module index + codemap + feature catalog（实现状态） + 评估 README
 - brainstorm Phase 4 完成（跨项目级决策）→ 更新 ADR Index + 评估 README
 - finishing (doc-sync) → 更新 feature status (Implemented/Abandoned) + module index + codemap
+- onboard 完成 → 初始化 feature catalog (Pre-Rune) + codemap + module index
 
 ## 原则
 

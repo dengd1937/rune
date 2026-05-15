@@ -16,7 +16,7 @@ rune/                                  # Repo root = Plugin root
 │   ├── post-write-quality.sh
 │   ├── pre-commit-review-check.py
 │   └── lib/utils.sh
-├── skills/                            # 22 skills（auto-discovered by Claude Code）
+├── skills/                            # 23 skills（auto-discovered by Claude Code）
 ├── agents/                            # 3 agents（auto-discovered by Claude Code）
 ├── .claude/
 │   └── settings.local.json            # Dev environment MCP permissions only
