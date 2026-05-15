@@ -41,7 +41,24 @@ npm test / pytest / go test ./... / cargo test
 
 **停。不进入 Step 2。**
 
-**测试通过** → 继续 Step 2。
+**测试通过** → 继续 Step 1.5。
+
+---
+
+## Step 1.5：上下文收集（为 doc-sync 准备）
+
+确定以下信息，传给 Step 2b 的 doc-sync 调用：
+
+- **feature**：feature 名称。来源：
+  - SDD 流程 → 从 SDD Phase 1 读取的计划文件名提取
+  - investigate 流程 → 从 Phase 3 调查报告中的修复方向提取模块名
+  - 无法确定 → 询问用户
+- **base_SHA**：`git merge-base HEAD <base-branch>` 或 SDD 记录的 first base SHA
+- **changed_files**：`git diff --name-only <base_SHA>..HEAD`
+- **context**：
+  - 来源于 SDD（subagent-driven-development Phase 4 调用 finishing）→ `new-feature`
+  - 来源于 investigate（Phase 5 调用 finishing）→ `bug-fix`
+  - 无法确定 → `new-feature`
 
 ---
 
@@ -54,15 +71,13 @@ rm docs/plans/<plan-file>
 rmdir docs/plans/  # 如果目录为空
 ```
 
-### 2b. 模块文档
+### 2b. Doc Sync
 
-调用 doc-writer agent（模板：`module-doc`）为新模块生成文档。
+调用 `/doc-sync` skill，传入 Step 1.5 收集的 feature、base_SHA、changed_files、context。
 
-### 2c. 索引更新
+doc-sync 内部处理 spec 对账、module doc 对账、catalog 状态推进、design artifact 状态更新。
 
-调用 doc-updater agent 更新模块索引和 codemap。
-
-### 2d. Commit 验证
+### 2c. Commit 验证
 
 ```bash
 # 查看当前分支的 commit history

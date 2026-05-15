@@ -58,6 +58,18 @@ Every project goes through this process. A config change, a single-function util
 - **NEVER** 把 reviewer/quality-gate 也跳过（这是 L3，不可绕）
 - **NEVER** 把多个 chore 攒一块跑（每个 chore 走自己的简化链）
 
+### Abandoned 判定
+
+用户明确表示"不做了"/"取消"/"放弃"时：
+
+1. **公告**：在消息中显式说明 "Feature [name] 标记为 Abandoned"
+2. **检查已有产物**：`docs/specs/<feature>-design.md` 或 `docs/designs/<feature>/` 是否已存在
+3. **已有产物** → 调用 `/doc-sync`（`context=abandoned`）标记状态
+4. **无产物** → 仅更新 catalog（如已在 Phase 5 写入了 spec，走 3；如仍在 Phase 1-4，无产物需处理）
+5. **用户确认**
+
+不走完整的 Scale Gate 或 Phase 流程。
+
 ---
 
 ## 核心原则

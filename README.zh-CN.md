@@ -19,7 +19,7 @@ claude plugin install rune@rune
 - **SessionStart** hook 在启动、clear、compact 时注入铁律
 - **PreToolUse** hook 拦截危险命令和 secrets 写入
 - **PostToolUse** hook 检测 debug 语句和质量问题
-- **21 个 skills** — 通过 `/rune:<skill-name>` 调用
+- **22 个 skills** — 通过 `/rune:<skill-name>` 调用
 - **3 个 agents** — design-reviewer、doc-writer 等
 
 ## 工作原理
@@ -28,7 +28,7 @@ claude plugin install rune@rune
 
 ```
 第一层  铁律 + 路由              using-rune skill（始终加载）
-第二层  按需指导                21 个 skills（≥1% 相关时调用）
+第二层  按需指导                22 个 skills（≥1% 相关时调用）
 第三层  审查强制                code-review skill 内置 prompt 模板（审查时）
 第四层  物理拦截                6 个 hooks（写/提交时阻断）
 ```
@@ -80,6 +80,7 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 | [security-reviewer](skills/security-reviewer/SKILL.md) | 敏感功能开发与提交前的安全审查清单 |
 | [retro](skills/retro/SKILL.md) | 任务复盘 — 流程遵守、决策质量、改进建议 |
 | [writing-skills](skills/writing-skills/SKILL.md) | 创建和维护 Rune skills |
+| [doc-sync](skills/doc-sync/SKILL.md) | 实现后文档对账 — 更新 spec、module doc、catalog、design artifact 状态 |
 
 ## Agents
 
@@ -106,7 +107,7 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace 入口
 ├── hooks/                 # 物理拦截层
-├── skills/                # 21 个自动发现的 skills
+├── skills/                # 22 个自动发现的 skills
 ├── agents/                # 3 个自动发现的 agents
 ├── CLAUDE.md              # 项目指令
 ├── README.md              # 英文文档
