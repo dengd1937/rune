@@ -34,6 +34,7 @@ Task tool (general-purpose):
 
     - Are responsibilities clearly divided with explicit module boundaries?
     - Are dependency directions reasonable? Any circular dependency risk?
+    - Is the public API surface minimized? High cohesion, low coupling?
     - Extensibility: will future requirement changes require major rework?
     - Over-engineering: does plan complexity exceed requirement complexity?
     - Reversibility: can decisions be rolled back, or are they locked in?
@@ -43,6 +44,7 @@ Task tool (general-purpose):
     ### 2. Implementation Feasibility
 
     - Are technology choices validated? Any unfamiliar tech where mature alternatives exist?
+    - Stack alignment: compatible with existing tech stack? License compliance? Long-term maintenance cost (upgrades, security patches)?
     - Dependency risk: are third-party libraries actively maintained? Known pitfalls?
     - Edge cases: does the plan only cover the happy path?
     - Data consistency: are concurrency, transactions, idempotency considered?
@@ -78,6 +80,33 @@ Task tool (general-purpose):
     - Can phases be delivered independently, or must everything complete before value is delivered?
 
     Probe: "What can be removed from this plan while still meeting requirements?"
+
+    ---
+
+    ## Domain-Specific Plan Checks
+
+    Activate the matching block only when the plan touches that domain. Skip irrelevant blocks.
+
+    ### When the plan defines or modifies data models
+
+    - Entity relationships and normalization level appropriate?
+    - Extensibility for foreseeable future requirements?
+    - Query patterns and indexing strategy considered?
+    - Migration strategy and data integrity preserved?
+
+    ### When the plan defines or modifies API contracts
+
+    - REST/RPC conventions followed (or explicit rationale to deviate)?
+    - Versioning strategy explicit (URL/header/body)?
+    - Error response shape consistent across endpoints?
+    - Auth/authorization model explicit (not "TBD")?
+
+    ### When the plan integrates external systems
+
+    - Boundary clearly drawn (who owns what)?
+    - Communication mode chosen (sync/async) with explicit rationale?
+    - Data sync strategy (eventual consistency / strong consistency)?
+    - Failure isolation and fallback (timeout / retry / circuit breaker)?
 
     ---
 

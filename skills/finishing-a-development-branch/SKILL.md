@@ -298,28 +298,13 @@ git worktree prune
 
 ---
 
-## 常见错误
-
-| 错误 | 后果 | 预防 |
-|------|------|------|
-| 跳过测试验证 | 合并破坏的代码 / 创建失败的 PR | 始终在选项前验证测试 |
-| Step 2b 后未跑 Step 2c | PR 缺失文档同步 / 合并污染工作树 | doc-sync 后强制 docs commit |
-| 把 doc commit 与代码 commit 合并 | 审查 hook 误拦 / commit 责任混淆 | docs 单独成 commit |
-| 开放式提问 | "接下来做什么？" 含义不明 | 呈现恰好 4 个结构化选项 |
-| PR 后清理 worktree | 用户无法迭代 PR 反馈 | 仅选项 2/4 清理 |
-| 删分支前未移 worktree | `git branch -d` 失败 | 先移 worktree，再删分支 |
-| 在 worktree 内部执行 remove | 命令静默失败 | 始终先 `cd` 到主仓库根 |
-| 清理外部 workspace | 破坏宿主环境状态 | 只清理 `.claude/worktrees/` 下的路径 |
-| 丢弃无需确认 | 误删工作 | 要求输入 "discard" |
-
----
-
 ## Red Flags
 
 **NEVER：**
 - 测试未通过时继续
 - 跳过 Step 2c 进入选项呈现（doc-sync 产物必须落盘成 commit）
 - 把 doc commit 与代码 commit 合并提交
+- 未呈现结构化选项就开放式询问"接下来做什么"
 - 未验证合并结果就删除分支
 - 未经确认丢弃工作
 - 未经请求 force-push
