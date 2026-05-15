@@ -45,26 +45,28 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 
 ---
 
-## Step 3: 创建目录结构
+## Step 3: 评估已有文档
+
+先盘点用户现有的文档结构，**不移动任何已有文件**：
+
+- README.md → 保留根目录，CODEMAP 中引用
+- 已有架构文档 → 保留原位，CODEMAP 中引用，告知用户可手动移入 `docs/architecture/`
+- 外部 wiki → 不迁移，CODEMAP 中列出链接
+- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / product / designs / architecture/adr / modules / plans）对比，标记缺失项
+
+向用户报告评估结果与待补缺失子目录列表。
+
+---
+
+## Step 4: 创建缺失目录
+
+基于 Step 3 评估结果，仅创建缺失的 Rune 子目录：
 
 ```bash
 mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules docs/plans
 ```
 
-已存在的目录跳过不覆盖。
-
----
-
-## Step 4: 迁移已有文档
-
-分类处理，**不移动任何已有文件**：
-
-- README.md → 保留根目录，CODEMAP 中引用
-- 已有架构文档 → 保留原位，CODEMAP 中引用，告知用户可手动移入 `docs/architecture/`
-- 外部 wiki → 不迁移，CODEMAP 中列出链接
-- 已有 `docs/` 但结构不同 → 不覆盖，只补缺失子目录
-
-向用户报告处理结果。
+`mkdir -p` 对已存在的目录是 no-op，但 Step 3 评估结果必须作为前置——避免在用户已有自定义 `docs/` 结构（如 `docs/api/`、`docs/guides/`）时无差别注入 6 个空目录而无告知。
 
 ---
 
@@ -97,6 +99,14 @@ mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules
 ```markdown
 | feature-name | Pre-Rune | — | — | Done |
 ```
+
+字段语义（Pre-Rune 行所有字段都由 "Pre-Rune" 隐含，按 schema 占位）：
+
+- **Status: Pre-Rune** — 表示未走过 brainstorm/design 流程的存量功能
+- **Product Doc / Design Status：—** — 定义性空值（Pre-Rune 必无 spec、必无 design 流程产物）
+- **Implementation Status: Done** — 定义性已实现（Pre-Rune 意味着代码已在仓库）
+
+不要试图给 Pre-Rune 行填其他值；后 3 列存在仅为对齐 doc-updater agent 的 catalog schema。
 
 用户可跳过（直接回车），catalog 留空。
 

@@ -92,8 +92,17 @@ test -f docs/specs/<feature>-design.md
 
 ### Step 4: Design Artifact 状态
 
-1. 检查 `docs/designs/<feature>/` 是否存在
-2. 存在且 `context=new-feature` → 在 `review-verdict.md` 末尾追加：
+1. 检查 `docs/designs/<feature>/` 是否存在；不存在 → 跳过本步
+2. 确定追加目标文件（按存在性 fallback）：
+
+   | 优先级 | 文件 | 出现场景 |
+   |--------|------|---------|
+   | 1 | `docs/designs/<feature>/review-verdict.md` | design-workflow V2 完整路径产物 |
+   | 2 | `docs/designs/<feature>/intent.md` | design-workflow L1 轻量路径产物（无 review-verdict.md） |
+
+   两个都不存在 → 跳过本步并向调用方报告。
+
+3. `context=new-feature` → 在目标文件末尾追加：
 
 ```markdown
 ## Implementation Status
@@ -102,7 +111,7 @@ test -f docs/specs/<feature>-design.md
 **日期**：YYYY-MM-DD
 ```
 
-3. 存在且 `context=abandoned` → 追加：
+4. `context=abandoned` → 在目标文件末尾追加：
 
 ```markdown
 ## Implementation Status
@@ -111,8 +120,6 @@ test -f docs/specs/<feature>-design.md
 **日期**：YYYY-MM-DD
 **原因**：[由 finishing 传入]
 ```
-
-4. 不存在 → 跳过
 
 ## 不做什么
 
