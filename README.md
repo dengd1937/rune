@@ -78,7 +78,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [typescript-patterns](skills/typescript-patterns/SKILL.md) | TypeScript/React patterns, shadcn/ui, Tailwind v4 |
 | [django-security](skills/django-security/SKILL.md) | Django auth, CSRF/XSS/SQLi, production hardening |
 | [security-reviewer](skills/security-reviewer/SKILL.md) | Security review checklist for sensitive features and pre-commit |
-| [retro](skills/retro/SKILL.md) | Post-task retrospective — workflow adherence, decision quality |
+| [feedback](skills/feedback/SKILL.md) | Turn a rune pain point into a GitHub issue draft — dialog-driven, never auto-submits |
 | [writing-skills](skills/writing-skills/SKILL.md) | Author and maintain Rune skills |
 | [doc-sync](skills/doc-sync/SKILL.md) | Post-implementation doc sync — updates specs, module docs, catalogs, and design artifact status |
 | [onboard](skills/onboard/SKILL.md) | Scaffold Rune docs topology for existing projects — generates codemap, module index, catalogs, and adoption ADR |
