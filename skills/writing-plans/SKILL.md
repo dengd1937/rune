@@ -142,6 +142,14 @@ Before defining tasks, map out which files will be created or modified:
 ## 验收标准
 - [ ] 标准 1
 - [ ] 标准 2
+
+## 已审定决策（可选）
+
+仅当 Plan Review dual-review 确认了"有意偏离"时，由 writing-plans 写入此段（见「结果聚合」——此段是唯一合法写入点）。每条只记决策与理由，**不写**"因此 reviewer 不要报 X"式免责措辞。
+
+- **决策点**：[具体决策，如"依赖 X 锁 ≤2.1，不升级"]
+  - 审定结论：[dual-review 确认这是有意选择]
+  - 有意理由：[为什么这样选]
 ```
 
 ### Task Template
@@ -218,7 +226,7 @@ Agent tool (general-purpose, model="opus"):
 
 ### 结果聚合
 
-**两个 reviewer 都 Approved →** 计划通过，进入 Execution Handoff。
+**两个 reviewer 都 Approved →** 计划通过；若 review 过程中 reviewer 提出某决策但经判定为**有意保留**，由 writing-plans 将其写入 plan 的「已审定决策」段——**此段唯一合法写入点；controller / implementer / 运行时一律不得追加**。然后进入 Execution Handoff。
 
 **任一 reviewer 发现 Issues →** 修复问题 → 重新运行自检清单 → 重新派发两个 reviewer。
 

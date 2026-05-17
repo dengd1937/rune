@@ -87,6 +87,10 @@ SDD 精确约束了 implementer 能做什么（见 implementer-prompt），但 c
 
 per-task code-review 的 reviewer 派发集合由 diff 特征决定，不因任务序号、不为"提速 / 避免 cold-start"在长任务序列中段简并或合并。每个任务独立按规则推导派发集合，前一任务的派发方式不构成本任务的依据。执行机制见 code-review skill「派发自检」段。
 
+### 不变量：带上已审定决策
+
+调用 per-task code-review 时，传入 plan「已审定决策」段原文作为 `ratified_decisions`。**来源唯一**：该清单只能从 plan 文件读取原样传入，controller **不得**运行时构造、改写或追加——否则它退化为"想绕过的审查塞进清单即免责"的后门。无该段则传空。reviewer 据此只降级"如实落实已审定决策的实现"，偏离清单或清单外的问题照常按 severity 判定。
+
 ---
 
 ## Phase 2：逐任务执行循环
