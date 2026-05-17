@@ -15,6 +15,7 @@
 
 - **只实现上述一个任务**，不读计划文件（上下文隔离）
 - 所有实现所需信息均在本 prompt 中，不足时报告 NEEDS_CONTEXT
+- **本 prompt 应只含规格，不含完整实现** — 若发现 prompt 中已有可直接誊抄的完整函数体，说明 controller 违约；按规格通过 RED→GREEN 重新设计，不誊抄现成代码
 - 任务涉及超过 3 个文件 → 立即报告 BLOCKED，不要强行拆分
 - **禁止先写实现代码再补测试**，铁律：`NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST`
 - **不提交代码** — 实现和测试完成后报告状态，由 Controller 负责审查后提交
