@@ -5,6 +5,7 @@
 - `{{TASK_TEXT}}` → 当前任务完整文本
 - `{{IMPLEMENTER_REPORT}}` → implementer 的状态报告
 - `{{DIFF}}` → implementer 已 commit，使用 `git diff <base_SHA>..<implementer_SHA>` 输出
+- `{{RATIFIED_DECISIONS}}` → plan「已审定决策」段原文（无则留空）
 
 ---
 
@@ -24,6 +25,18 @@
 ```diff
 {{DIFF}}
 ```
+
+## 已审定决策（plan dual-review 确认的有意选择）
+
+{{RATIFIED_DECISIONS}}
+
+**如何使用本段：**
+
+- 上述决策已由 plan 的双 reviewer 确认为**有意选择**，不是规格遗漏或越界。
+- 你的职责是判断**实现是否如实落实了这些决策**，不是评判决策本身对错。
+- 实现与某条已审定决策一致 → **不报**为类型 3（静默扩展）/ 类型 4（理解偏差）冲突。
+- 实现**偏离**已审定决策（未按审定结论做，或借"已审定"之名夹带清单外改动）→ 照常按 severity 判定，偏离本身即 HIGH。
+- 本段为空 → 无已审定决策，全部按常规判定。
 
 ## 审查流程（5 步）
 

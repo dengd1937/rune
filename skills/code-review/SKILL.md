@@ -22,6 +22,7 @@ description: Use after implementation (bug fix or feature task) to dispatch appr
 - `diff` — `git diff <base_SHA>..<head_SHA>` 输出
 - `base_SHA` / `head_SHA` — 审查范围
 - `implementer_report` — implementer 的状态报告（可选，传给 spec-reviewer）
+- `ratified_decisions` — plan「已审定决策」段原文（可选）。**来源唯一**：只能取自 plan 文件该段，由调用方原样读取传入；controller 不得运行时构造或追加。无该段则留空
 
 **派发规则：**
 
@@ -42,6 +43,7 @@ spec-reviewer-prompt.md：
 - `{{TASK_TEXT}}` → task_text
 - `{{IMPLEMENTER_REPORT}}` → implementer_report
 - `{{DIFF}}` → diff
+- `{{RATIFIED_DECISIONS}}` → ratified_decisions（无则留空）
 
 code-quality-reviewer-prompt.md：
 - `{{TASK_TEXT}}` → task_text
