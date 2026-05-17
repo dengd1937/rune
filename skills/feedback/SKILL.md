@@ -1,12 +1,12 @@
 ---
 name: feedback
-description: "Use when you hit a rune problem worth reporting — a hook false-positive, a skill behaving against its docs, a confusing or bloated workflow step, a misleading doc. Walks through structuring the report and produces a GitHub issue draft for the rune repo. Never submits automatically; you review and run gh issue create yourself."
+description: "Use when you hit a rune problem worth reporting — a hook false-positive, a skill behaving against its docs, a confusing or bloated workflow step, a misleading doc. Walks through structuring the report, shows each draft for review, and submits via gh issue create only after you explicitly approve that draft. Never auto-submits, never reads session transcript."
 origin: rune
 ---
 
 # Feedback
 
-把使用 rune 过程中遇到的问题整理成 GitHub issue 草稿。对话驱动，不读会话历史，不自动提交。
+把使用 rune 过程中遇到的问题整理成 GitHub issue。对话驱动，不读会话历史；每条草稿经用户明确同意后由本 skill 代为提交，不批量、不自动。
 
 **启动时公告：** "使用 feedback skill 整理 rune 反馈草稿。"
 
@@ -14,7 +14,8 @@ origin: rune
 
 - 读取会话 transcript / git log / 用户项目代码
 - 在草稿中夹带用户业务代码、文件路径、内部需求、密钥
-- 自动执行 `gh issue create` / `git push` / 任何网络写操作
+- 未经用户对该条草稿明确同意就提交 issue（不批量、不静默）
+- `git push` 及其它网络写操作（提交 issue 仅限 `gh issue create`，无其它远程写）
 - 默认目标仓库（`dengd1937/rune`）以外的仓库
 
 ## 工作流
@@ -71,25 +72,24 @@ origin: rune
 **Labels**: <bug|enhancement|docs>
 ```
 
-### Step 4: 用户审阅 + 自提
+### Step 4: 逐条审阅 + 提交
 
-展示完整草稿，要求用户逐条审阅：
+对每个 issue 草稿**逐个**处理（多个反馈不合并写入单一文件）：
 
-- 删掉任何涉及内部信息的句子
-- 合并重复建议
-- 必要时补复现步骤
+1. 展示该条完整草稿
+2. 询问用户选择：
+   - **提交** → 代执行 `gh issue create --repo dengd1937/rune --title "..." --body "..."`，回报 issue URL
+   - **改** → 按用户反馈修订，重新展示，回到本步
+   - **暂存** → 写入用户项目本地 `docs/feedback/<date>-<slug>.md`（不是 rune 仓库），由用户日后自行提交
+   - **丢弃** → 跳过此条
+3. 处理完一条再进入下一条
 
-可选：草稿暂存到**用户项目本地** `docs/feedback/<date>-<slug>.md`（不是 rune 仓库，由用户决定是否保留）。
-
-告知用户：
-
-> 审阅无误后自行执行：
-> `gh issue create --repo dengd1937/rune --title "..." --body-file <file>`
-> rune 不会代你提交。
+每条提交前最后核对：草稿不含用户业务代码 / 路径 / 密钥；目标仓库为 `dengd1937/rune`。用户未明确选「提交」不得调用 `gh`。
 
 ## 不做什么
 
-- 不自动提交 issue
+- 不未经确认提交 issue（每条都需用户明确选「提交」）
+- 不批量提交（逐条确认逐条提交）
 - 不读会话 transcript
 - 不夹带用户代码
 - 不修改任何代码或配置
@@ -97,12 +97,13 @@ origin: rune
 ## Red Flags
 
 **NEVER：**
-- 自动执行 `gh issue create` 或任何网络写操作
+- 未经用户对该条明确选「提交」就执行 `gh issue create`
+- 执行 `git push` 或 `gh issue create` 以外的网络写操作
 - 读取会话 transcript / 用户项目代码塞进草稿
 - 在草稿中保留用户业务上下文、路径、密钥
 - 向 `dengd1937/rune` 以外的仓库定向
 
 **ALWAYS：**
 - 草稿用抽象场景描述，剥离用户业务内容
-- 生成后停下让用户逐条审阅
-- 由用户自行 `gh issue create` 提交
+- 逐条展示、逐条征求用户选择
+- 仅在用户对该条明确选「提交」后才 `gh issue create`
