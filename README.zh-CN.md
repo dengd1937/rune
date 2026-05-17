@@ -78,7 +78,8 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 | [typescript-patterns](skills/typescript-patterns/SKILL.md) | TypeScript/React 模式、shadcn/ui、Tailwind v4 |
 | [django-security](skills/django-security/SKILL.md) | Django 认证鉴权、CSRF/XSS/SQLi、生产安全配置 |
 | [security-reviewer](skills/security-reviewer/SKILL.md) | 敏感功能开发与提交前的安全审查清单 |
-| [feedback](skills/feedback/SKILL.md) | 把 rune 使用痛点整理成 GitHub issue 草稿 — 对话驱动，不自动提交 |
+| [feedback](skills/feedback/SKILL.md) | 把 rune 使用痛点整理成 GitHub issue — 对话驱动，逐条确认后提交 |
+| [resolving-issues](skills/resolving-issues/SKILL.md) | 把已有 GitHub issue 驱动到实现并 merge、自动关闭 — 核实/决策/委托/PR Closes |
 | [writing-skills](skills/writing-skills/SKILL.md) | 创建和维护 Rune skills |
 | [doc-sync](skills/doc-sync/SKILL.md) | 实现后文档对账 — 更新 spec、module doc、catalog、design artifact 状态 |
 | [onboard](skills/onboard/SKILL.md) | 为已有项目搭建 Rune 文档拓扑 — 生成 codemap、模块索引、catalog 和接入 ADR |

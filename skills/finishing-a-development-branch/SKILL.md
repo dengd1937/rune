@@ -59,6 +59,10 @@ npm test / pytest / go test ./... / cargo test
   - 来源于 SDD（subagent-driven-development Phase 4 调用 finishing）→ `new-feature`
   - 来源于 investigate（Phase 5 调用 finishing）→ `bug-fix`
   - 无法确定 → `new-feature`
+- **linked_issues**：本次工作解决的 GitHub issue 编号列表。来源：
+  - resolving-issues 流程调用 → 由其传入
+  - 用户主动提供 → 记录
+  - 无关联 issue → 空（选项 1 PR body 不加 Closes 段）
 
 ---
 
@@ -193,9 +197,13 @@ gh pr create --title "<title>" --body "$(cat <<'EOF'
 
 ## Test plan
 - [ ] <verification steps>
+
+<若 Step 1.5 linked_issues 非空，每个 issue 一行 Closes #N；为空则省略本段>
 EOF
 )"
 ```
+
+`Closes #N`（每个关联 issue 一行）使 PR merge 后对应 issue 自动关闭。linked_issues 为空时不加此段。
 
 **不清理 worktree。** 用户可能需要迭代 PR 反馈。
 
