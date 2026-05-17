@@ -78,6 +78,22 @@ global-reviewer-prompt.md：
 
 ---
 
+## 派发自检（聚合判定前必做）
+
+收齐 reviewer 结果、进入「判定规则」之前，核对实际派发是否符合派发规则：
+
+1. 按本次 diff 特征推导**应派发集合**：
+   - `code-quality-reviewer`（必选）
+   - 有 task_text → + `spec-reviewer`
+   - diff 含 `.py` → + `python-reviewer`
+   - diff 含 `.ts` / `.tsx` → + `typescript-reviewer`
+2. 与**实际派发集合**比对
+3. 不一致 → 列出缺失 reviewer + 缺失理由，**不得静默进入聚合**；补齐派发，或由用户显式确认降级后方可继续
+
+**长任务序列专项**：应派发集合只由 diff 特征决定，**不随任务序号变化，不因"提速 / 避免 cold-start"在中段把多个 reviewer 简并为单个"综合 reviewer"**。每个 per-task review 独立推导，前一任务怎么派发不构成本任务的依据。这是 SDD「Controller 传递契约 · 派发集合不随序列漂移」的执行机制。
+
+---
+
 ## 判定规则
 
 **模板负责检查清单**（什么是好代码、什么是坏代码）。
@@ -164,11 +180,13 @@ Phase 5: /code-review (per-task, task_text=根因报告)
 - 跳过审查因为"改动小"
 - 合并多任务审查
 - reviewer 结果未到就判定
-- 只跑部分 reviewer 因为"其他的不适用"（按派发规则全跑）
+- 只跑部分 reviewer 或把多个 reviewer 简并为单个"综合 reviewer"（按派发规则全跑，不简并）
+- 长任务序列中段改变派发策略
 - 忽略 HIGH 问题标记为"可以接受"
 
 **ALWAYS：**
 - 按派发规则检查所有条件
 - 同一消息内并发派发
 - 等所有 reviewer 返回后聚合
+- 聚合判定前做派发自检
 - 严格按 severity→verdict 映射判定
