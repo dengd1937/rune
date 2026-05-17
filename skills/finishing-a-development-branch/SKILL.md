@@ -60,7 +60,7 @@ npm test / pytest / go test ./... / cargo test
   - 来源于 investigate（Phase 5 调用 finishing）→ `bug-fix`
   - 无法确定 → `new-feature`
 - **linked_issues**：本次工作解决的 GitHub issue 编号列表。来源：
-  - resolving-issues 流程调用 → 由其传入
+  - resolve 流程调用 → 由其传入
   - 用户主动提供 → 记录
   - 无关联 issue → 空（选项 1 PR body 不加 Closes 段）
 

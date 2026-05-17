@@ -1,14 +1,14 @@
 ---
-name: resolving-issues
+name: resolve
 description: "Use when you have one or more existing GitHub issues to resolve — whether collected via the feedback skill from external users or filed by a maintainer. Verifies each issue against the codebase's actual state, decides whether it is worth fixing, routes implementation to existing workflows, and closes the loop via PR with Closes #N. A thin orchestrator: it delegates design/implementation to existing skills and only owns issue verification, the worth-fixing decision, and PR/merge wiring."
 origin: rune
 ---
 
-# Resolving Issues
+# Resolve
 
 把"已存在的 GitHub issue"驱动到"实现并 merge、issue 自动关闭"。**薄编排层**——核实与决策自己做，设计/实现全委托现有 skill。
 
-**启动时公告：** "使用 resolving-issues skill 处理 issue [#N...]。"
+**启动时公告：** "使用 resolve skill 处理 issue [#N...]。"
 
 ## 适用边界
 
