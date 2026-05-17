@@ -55,6 +55,7 @@ designs = docs/designs/{feature}/（如经过 design-workflow）
 - Identify affected components
 - Review patterns in similar implementations
 - Consider reusable solutions
+- Locked-version API check — for every third-party API the plan references, read the project's lock/manifest (uv.lock / package-lock / go.mod etc.) and confirm the symbol exists in the **locked** version, not the latest. If absent, switch to an approach available in the locked version; never carry a version assumption into implementation
 
 ### 3. File Structure
 

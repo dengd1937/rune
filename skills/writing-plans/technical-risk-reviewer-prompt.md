@@ -46,6 +46,7 @@ Task tool (general-purpose):
     - Are technology choices validated? Any unfamiliar tech where mature alternatives exist?
     - Stack alignment: compatible with existing tech stack? License compliance? Long-term maintenance cost (upgrades, security patches)?
     - Dependency risk: are third-party libraries actively maintained? Known pitfalls?
+    - Locked-version API: do third-party APIs the plan references actually exist in the project's *locked* dependency version (not latest)?
     - Edge cases: does the plan only cover the happy path?
     - Data consistency: are concurrency, transactions, idempotency considered?
     - Integration points: any compatibility risks with existing systems?
