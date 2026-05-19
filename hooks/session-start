@@ -28,4 +28,45 @@ session_context="<EXTREMELY_IMPORTANT>\nYou have Rune baseline.\n\n**Below is th
 # Uses printf instead of heredoc to avoid bash 5.3+ heredoc hang.
 printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
 
+# Deploy git commit-msg hook to silently strip Co-authored-by lines.
+_deploy_commit_msg_hook() {
+    local project_dir="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+    local git_dir
+    git_dir=$(git -C "$project_dir" rev-parse --git-dir 2>/dev/null) || return 0
+    local git_hooks="${git_dir}/hooks"
+    local target="${git_hooks}/commit-msg"
+    local strip_script="${PLUGIN_ROOT}/hooks/commit-msg-strip-coauthor"
+
+    [ -d "$git_hooks" ] || return 0
+
+    # Already deployed by Rune — update path in case plugin moved
+    if [ -f "$target" ] && grep -q 'Auto-deployed by Rune' "$target" 2>/dev/null; then
+        cat > "$target" <<WRAPPER
+#!/usr/bin/env bash
+# Auto-deployed by Rune plugin
+if [ -x "${strip_script}" ]; then
+    "${strip_script}" "\$1"
+fi
+exit 0
+WRAPPER
+        chmod +x "$target"
+        return 0
+    fi
+
+    # Non-Rune commit-msg hook exists — don't touch
+    [ -e "$target" ] && return 0
+
+    # No existing hook — deploy
+    cat > "$target" <<WRAPPER
+#!/usr/bin/env bash
+# Auto-deployed by Rune plugin
+if [ -x "${strip_script}" ]; then
+    "${strip_script}" "\$1"
+fi
+exit 0
+WRAPPER
+    chmod +x "$target"
+}
+_deploy_commit_msg_hook 2>/dev/null || true
+
 exit 0

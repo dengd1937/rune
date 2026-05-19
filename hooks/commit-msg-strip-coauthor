@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Git commit-msg hook — silently strips Co-authored-by lines.
+# Called by wrapper deployed to .git/hooks/commit-msg by session-start.
+
+commit_msg_file="$1"
+if [ -f "$commit_msg_file" ]; then
+    if [[ "$(uname)" == "Darwin" ]]; then
+        sed -i '' '/^Co-[aA]uthored-[bB]y:/d' "$commit_msg_file"
+    else
+        sed -i '/^Co-[aA]uthored-[bB]y:/d' "$commit_msg_file"
+    fi
+fi
+exit 0
