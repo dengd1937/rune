@@ -337,6 +337,21 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 **完成门槛：** 用户明确选择了技术方案。
 
+### 4e. ADR（条件 — 跨项目级架构决策）
+
+仅当选定方案是**跨项目级架构决策**时写 ADR；feature-local 决策不写。判据（满足任一即跨项目级，复用 Phase 4 L1/L2 路由信号）：
+
+- 引入新框架 / 新依赖 / 新数据模型
+- 跨系统集成 / 跨 ≥2 模块的基础设施变更
+- 无现有 ADR 先例的技术选型
+
+命中判据：
+
+1. 调 doc-writer agent（模板：`adr`）写入 `docs/architecture/adr/<NNNN>-<slug>.md`（编号扫描 `docs/architecture/adr/` 取下一个）
+2. 调 doc-updater agent 把该 ADR 加入 `docs/FEATURE-CATALOG.md` 的 **Decisions 段**（ADR | 标题 | 状态=已批准 | 日期 | 关联 Feature）
+
+未命中判据 → 跳过本步，不写 ADR。
+
 ---
 
 ## Phase 5 — Spec

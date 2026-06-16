@@ -89,7 +89,7 @@ designs = docs/designs/{feature}/
 **Actions:**
 
 - **If `DESIGN.md` exists**, read it first and run DESIGN.md preflight: complete sections become visual identity constraints; missing or ambiguous sections become design identity gaps that require user decision before they are treated as defaults
-- **If `docs/specs/<feature>-design.md` exists**, read it as the functional requirements input: UI scope, user flows, feature list, competitor references, and design constraints come from the brainstorm stage. **If `docs/product/<feature>.md` exists** (legacy), read it instead.
+- **If `docs/specs/<feature>-design.md` exists**, read it as the functional requirements input: UI scope, user flows, feature list, competitor references, and design constraints come from the brainstorm stage.
 - Analyze the UI scope: pages, components, interactions, and constraints
 - **If `DESIGN.md` exists**, classify components into "matches existing DESIGN.md component styles", "requires documented identity gap", or "requires user-approved DESIGN.md update"
 - Search the project for reusable design assets and existing `docs/designs/` directories
@@ -204,6 +204,11 @@ Run the `design-reviewer` agent against `docs/designs/<feature>/`. The agent che
 ### V2-5. Handoff to Development Workflow
 
 After Gate 3, design artifacts become inputs to the `writing-plans` skill, which produces the plan consumed by `subagent-driven-development`.
+
+**同步设计产物到 FEATURE-CATALOG**（handoff 前必做）：调 doc-updater agent，scope 限定本 feature：
+
+- 该 feature 的 `Design Status` → `Done`
+- 扫描 `docs/designs/<feature>/components/*.md`，写入 FEATURE-CATALOG 的 **Components 段**（Component | Feature | Base Component | Status）
 
 **If `DESIGN.md` exists**, all handoff artifacts already comply with it (enforced in V2-3 and V2-4). Ensure `intent.md` references DESIGN.md as the visual authority so `writing-plans` and `subagent-driven-development` maintain the same constraints.
 

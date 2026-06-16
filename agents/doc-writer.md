@@ -23,7 +23,6 @@ model: haiku
 | 模板 ID | 目标路径 | 来源工作流 |
 |---------|---------|-----------|
 | `feature-spec` | `docs/specs/<feature>-design.md` | brainstorm Phase 5 |
-| `product-brief` | `docs/product/<feature>.md` | [legacy] ideate Phase 4 |
 | `design-intent` | `docs/designs/<feature>/intent.md` | design-workflow V2-1 |
 | `component-contract` | `docs/designs/<feature>/components/<Name>.md` | design-workflow V2-3 |
 | `token-source-map` | `docs/designs/<feature>/tokens/source-map.md` | design-workflow V2-2 / V2-3 |
@@ -34,83 +33,6 @@ model: haiku
 | `adr` | `docs/architecture/adr/<NNNN>-<slug>.md` | brainstorm Phase 4（跨项目级） |
 
 ## 模板定义
-
-### product-brief
-
-`docs/product/<feature>.md` — 合并产品定义与工程消费视图。
-
-```markdown
-# [Feature Name]
-
-## 产品定义
-
-**一句话描述**：[产品是什么，给谁，解决什么问题]
-
-**目标用户**：[用户画像]
-
-**产品形态**：[Web / App / 平台 / 工具]
-
-**核心场景**：
-1. [场景描述]
-2. [场景描述]
-
-## UI 范围
-
-**涉及页面**：
-- [页面 1]：[描述]
-
-**涉及组件**：
-- [组件 1]：[描述]
-
-**关键交互**：
-- [交互 1]：[用户操作 → 系统响应]
-
-## 用户流程
-
-[核心用户流程的文字描述]
-
-## 功能清单
-
-| 功能 | 优先级 | 简要描述 |
-|------|--------|----------|
-| [功能] | P0/P1/P2 | [描述] |
-
-## 竞品参考
-
-[值得参考的竞品设计]
-
-## 设计约束
-
-[技术约束、品牌要求、已有设计规范]
-
-## MVP 范围
-
-[P0 功能清单]
-
-## 功能优先级
-
-| 功能 | 优先级 | 描述 | 依赖 |
-|------|--------|------|------|
-| [功能] | P0/P1/P2 | [描述] | [依赖] |
-
-## 竞品分析摘要
-
-| 竞品 | 核心功能 | 我们的差异化 |
-|------|----------|-------------|
-| [竞品] | [功能] | [差异化] |
-
-## 技术约束与风险
-
-- [约束/风险]
-
-## 成功指标
-
-- [指标]：[目标值]
-
-## 后续工作流
-
-[路由决策结果]
-```
 
 ### feature-spec
 

@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: "Use when adopting Rune for an existing project — scaffolds docs/ topology, generates codemap and module index, creates feature catalog with Pre-Rune entries, writes adoption ADR. One-time setup for brownfield projects."
+description: "Use when adopting Rune for an existing project — scaffolds docs/ topology, generates codemap (incl. module index), creates feature catalog (incl. component/decision sections) with Pre-Rune entries, writes adoption ADR. One-time setup for brownfield projects."
 ---
 
 # Brownfield Onboard
@@ -52,7 +52,7 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 - README.md → 保留根目录，CODEMAP 中引用
 - 已有架构文档 → 保留原位，CODEMAP 中引用，告知用户可手动移入 `docs/architecture/`
 - 外部 wiki → 不迁移，CODEMAP 中列出链接
-- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / product / designs / architecture/adr / modules / plans）对比，标记缺失项
+- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / designs / architecture/adr / modules / plans）对比，标记缺失项
 
 向用户报告评估结果与待补缺失子目录列表。
 
@@ -63,10 +63,10 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 基于 Step 3 评估结果，仅创建缺失的 Rune 子目录：
 
 ```bash
-mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules docs/plans
+mkdir -p docs/specs docs/designs docs/architecture/adr docs/modules docs/plans
 ```
 
-`mkdir -p` 对已存在的目录是 no-op，但 Step 3 评估结果必须作为前置——避免在用户已有自定义 `docs/` 结构（如 `docs/api/`、`docs/guides/`）时无差别注入 6 个空目录而无告知。
+`mkdir -p` 对已存在的目录是 no-op，但 Step 3 评估结果必须作为前置——避免在用户已有自定义 `docs/` 结构（如 `docs/api/`、`docs/guides/`）时无差别注入空目录而无告知。
 
 ---
 
@@ -75,44 +75,18 @@ mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules
 按 doc-updater agent 的 codemap 格式（`docs/CODEMAP.md`）生成。从源码结构机械提取：
 
 - 目录结构（find 结果）
-- 模块列表（Step 2 确认的）
+- 关键模块表（Step 2 确认的模块：模块 | 职责 | 入口文件 | 主要依赖 | Module Doc）
 - 入口文件（从框架约定推断）
 - 外部依赖（从 `package.json` / `requirements.txt` / `go.mod` 解析）
 - 数据流（从框架类型推断通用模式）
+
+「Module Doc」列指向 `docs/modules/<m>.md`。onboard 阶段 module docs 尚未生成（见「不做什么」），该列填 `[待补充]`，后续由 doc-sync 在开发时填充。
 
 无法机械推断的字段填 `[待补充]`，不猜测。
 
 ---
 
-## Step 6: 生成 MODULE-INDEX
-
-按 doc-updater agent 的 module-index 格式（`docs/MODULE-INDEX.md`）生成。从源码扫描每个模块的导出/公共函数签名。无法提取的填 `[待补充]`。
-
----
-
-## Step 7: 创建 FEATURE-CATALOG
-
-创建带状态说明的空 catalog（`docs/FEATURE-CATALOG.md`）。然后询问用户列出主要已有功能（3-10 个）。
-
-用户提供的功能以 Pre-Rune 状态写入：
-
-```markdown
-| feature-name | Pre-Rune | — | — | Done |
-```
-
-字段语义（Pre-Rune 行所有字段都由 "Pre-Rune" 隐含，按 schema 占位）：
-
-- **Status: Pre-Rune** — 表示未走过 brainstorm/design 流程的存量功能
-- **Product Doc / Design Status：—** — 定义性空值（Pre-Rune 必无 spec、必无 design 流程产物）
-- **Implementation Status: Done** — 定义性已实现（Pre-Rune 意味着代码已在仓库）
-
-不要试图给 Pre-Rune 行填其他值；后 3 列存在仅为对齐 doc-updater agent 的 catalog schema。
-
-用户可跳过（直接回车），catalog 留空。
-
----
-
-## Step 8: 写入 ADR 0001
+## Step 6: 写入 ADR 0001
 
 调用 doc-writer agent（模板：`adr`）写入：
 
@@ -121,15 +95,51 @@ mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules
 - 决策：建立文档拓扑，已有功能标记 Pre-Rune，新功能走完整 Rune 流程
 - 备选：A) 反推所有 spec（否决：高成本低价值）B) 不引入 Rune（否决：新功能无法走工作流）
 
+此 ADR 在 Step 7 注册进 FEATURE-CATALOG 的 Decisions 段。
+
 ---
 
-## Step 9: 验证 + 报告
+## Step 7: 创建 FEATURE-CATALOG
 
-1. 验证 Step 4-8 产生的所有文件存在（`docs/specs/`、`docs/product/`、`docs/designs/`、`docs/architecture/adr/`、`docs/modules/`、`docs/plans/` 及 CODEMAP / MODULE-INDEX / FEATURE-CATALOG / ADR 0001）
-2. 调用 doc-updater agent 做 README 同步评估（参考 `agents/doc-updater.md` 的"项目 README 评估"职责）—— agent 仅返回建议清单，不直接修改 README
+按 doc-updater agent 的格式创建 `docs/FEATURE-CATALOG.md`，含三段：
+
+### Features 段
+
+询问用户列出主要已有功能（3-10 个），以 Pre-Rune 状态写入：
+
+```markdown
+| feature-name | Pre-Rune | — | — | Done |
+```
+
+字段语义（Pre-Rune 行所有字段都由 "Pre-Rune" 隐含，按 schema 占位）：
+
+- **Status: Pre-Rune** — 表示未走过 brainstorm/design 流程的存量功能
+- **Spec / Design Status：—** — 定义性空值（Pre-Rune 必无 spec、必无 design 流程产物）
+- **Implementation Status: Done** — 定义性已实现（Pre-Rune 意味着代码已在仓库）
+
+不要试图给 Pre-Rune 行填其他值。用户可跳过（直接回车），Features 段留空。
+
+### Components 段
+
+非 UI 项目省略本段。UI 项目留空表头，后续由 design-workflow 填充。
+
+### Decisions 段
+
+预填 Step 6 写入的 ADR-0001：
+
+```markdown
+| 0001 | Adopt Rune for Development Workflow | 已批准 | YYYY-MM-DD | — |
+```
+
+---
+
+## Step 8: 验证 + 报告
+
+1. 验证 Step 4-7 产生的所有文件存在（`docs/specs/`、`docs/designs/`、`docs/architecture/adr/`、`docs/modules/`、`docs/plans/` 及 CODEMAP / FEATURE-CATALOG / ADR-0001）
+2. 调用 doc-updater agent 做 README 同步评估（参考 `agents/doc-updater.md` 的「项目 README 评估」职责）—— agent 仅返回建议清单，不直接修改 README
 3. 向用户展示：创建的文件树 + README 同步建议清单 + 后续步骤
 
-不自动修改 README —— 与本 skill"不做什么"中"不修改项目根目录的 README.md"一致，由用户决定是否采纳 doc-updater 的建议。
+不自动修改 README —— 与本 skill「不做什么」中「不修改项目根目录的 README.md」一致，由用户决定是否采纳 doc-updater 的建议。
 
 ---
 
@@ -138,9 +148,9 @@ mkdir -p docs/specs docs/product docs/designs docs/architecture/adr docs/modules
 - 不反推已有功能的 spec
 - 不迁移外部 wiki 内容（只引用链接）
 - 不移动或修改已有文档文件
-- 不生成 module docs（留空，由 doc-sync 在开发时逐步生成）
+- 不生成 module docs（留空，由 doc-sync 在开发时逐步生成；CODEMAP 的 Module Doc 列相应留 `[待补充]`）
 - 不修改项目根目录的 README.md
-- 不创建 COMPONENT-CATALOG.md（UI 项目由 design-workflow 生成）
+- 不为存量功能反推 Components 段（UI 项目由 design-workflow 在新设计时填充）
 
 ## Red Flags
 

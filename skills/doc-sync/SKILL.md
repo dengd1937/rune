@@ -22,11 +22,11 @@ description: "Use during finishing phase to sync documentation with implementati
 
 不同 context 走不同 Step 组合，避免在无意义的 Step 上空转：
 
-| context | Step 1 Spec 对账 | Step 2 Module Doc | Step 3 Catalog | Step 4 Design |
-|---------|------------------|-------------------|----------------|---------------|
-| `new-feature` | 执行（spec 不存在则跳过） | 执行 | Status → Done | 存在则 → Implemented |
-| `bug-fix` | 执行（spec 不存在则跳过） | 执行 | 不改 feature status | 跳过 |
-| `abandoned` | 跳过 | 跳过 | Status → Abandoned | 存在则 → Abandoned |
+| context | Step 1 Spec 对账 | Step 2 Module Doc | Step 3 索引（FEATURE-CATALOG + CODEMAP） | Step 4 Design |
+|---------|------------------|-------------------|------------------------------------------|---------------|
+| `new-feature` | 执行（spec 不存在则跳过） | 执行 | CODEMAP 重扫；FEATURE-CATALOG Status=Implemented + Impl=Done | 存在则 → Implemented |
+| `bug-fix` | 执行（spec 不存在则跳过） | 执行 | CODEMAP 重扫；不改 feature status | 跳过 |
+| `abandoned` | 跳过 | 跳过 | FEATURE-CATALOG Status=Abandoned（CODEMAP 不变） | 存在则 → Abandoned |
 
 ## 执行步骤
 
@@ -80,15 +80,15 @@ test -f docs/specs/<feature>-design.md
    - `docs/modules/<module>.md` 不存在 → 创建新 module doc（读源码提取公共 API）
 3. 模块判断标准：changed_files 中的文件按目录层级归组
 
-### Step 3: Catalog 状态推进
+### Step 3: 索引推进（FEATURE-CATALOG + CODEMAP）
 
-根据 context 参数：
+调用 doc-updater agent，scope 同时覆盖 FEATURE-CATALOG 与 CODEMAP：
 
-- `new-feature` → FEATURE-CATALOG 中该 feature 的 Implementation Status 改为 Done
-- `bug-fix` → 不改 feature status，但更新 MODULE-INDEX（Step 2 已更新 module doc）
-- `abandoned` → FEATURE-CATALOG 中该 feature 的 Status 改为 Abandoned
-
-调用 doc-updater agent 执行 catalog 更新。
+- **CODEMAP**（`new-feature` / `bug-fix`，即代码有变更时）：重扫 changed_files 的目录与模块结构，更新「目录结构」与「关键模块」表；若 Step 2 已生成 module doc，补上 Module Doc 链接
+- **FEATURE-CATALOG**，按 context：
+  - `new-feature` → 该 feature 的 Status=Implemented **且** Implementation Status=Done（同时设两列，修复原仅设子列的不对称）
+  - `bug-fix` → 不改 feature status（仅 CODEMAP 与 Step 2 的 module doc 反映修复）
+  - `abandoned` → 该 feature 的 Status=Abandoned
 
 ### Step 4: Design Artifact 状态
 
