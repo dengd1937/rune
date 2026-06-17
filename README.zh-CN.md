@@ -60,7 +60,7 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 | Skill | 用途 |
 |-------|------|
 | [using-rune](skills/using-rune/SKILL.md) | 铁律 + skill 路由 — SessionStart 自动加载 |
-| [brainstorm](skills/brainstorm/SKILL.md) | 产品发现 → feature spec（chore 类走 Scale Gate 简化路径） |
+| [brainstorm](skills/brainstorm/SKILL.md) | 产品发现 → capability spec(s)（chore 类走 Scale Gate 简化路径） |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI 设计 — L1 轻量 / L2 完整 wireframe → 高保真 → 审查 |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP 设计 + 代码生成 |
 | [writing-plans](skills/writing-plans/SKILL.md) | 实施方案 — 任务拆解、No Placeholders、双重质量检查 |

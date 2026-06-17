@@ -60,7 +60,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | Skill | Purpose |
 |-------|---------|
 | [using-rune](skills/using-rune/SKILL.md) | Iron laws + skill routing — auto-loaded via SessionStart |
-| [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → feature spec (or Scale Gate fast-path for chore) |
+| [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → capability spec(s) (or Scale Gate fast-path for chore) |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI design — L1 lightweight / L2 full wireframe → hi-fi → review |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP design + code generation |
 | [writing-plans](skills/writing-plans/SKILL.md) | Implementation plans — task breakdown, no-placeholders, dual quality check |

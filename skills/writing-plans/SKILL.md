@@ -17,7 +17,7 @@ Create task-level implementation plans for multi-step development work. Plans ar
 
 ## Scope Check
 
-If the work involves any of the following, stop and suggest the user run `/brainstorm` first to produce a feature spec:
+If the work involves any of the following, stop and suggest the user run `/brainstorm` first to produce capability spec(s):
 
 - New modules / new dependencies / new database tables
 - Data model changes or migrations
@@ -25,7 +25,7 @@ If the work involves any of the following, stop and suggest the user run `/brain
 - Technical selection with no precedent in existing ADRs
 - Module boundary issues emerging during refactoring
 
-Feature spec produced, writing-plans treats spec's "Selected Approach" and "Routing Decision" as input constraints. It focuses on **how to implement**, not **which path to choose**.
+Capability spec(s) produced, writing-plans treats brainstorm Phase 4 的技术设计（方案选择 / 架构 / 数据模型 / API）与 capability spec 的行为作为输入约束。It focuses on **how to implement**, not **which path to choose**.
 
 If the spec covers multiple independent subsystems, suggest breaking into separate plans — one per subsystem.
 
@@ -35,14 +35,14 @@ If the spec covers multiple independent subsystems, suggest breaking into separa
 
 ### 1. Requirement Analysis
 
-**前序产物验证：** 如果存在 spec 文件（`docs/specs/<feature>-design.md`）或设计产物目录（`docs/designs/<feature>/`），提取 `feature` 字段作为本计划的寻址锚点。确认以下文件存在：
+**前序产物验证：** brainstorm 的 capability mapping 指明本 feature 触及哪些 capability spec（`docs/specs/<capability>-spec.md`）。确认以下产物存在：
 
 ```
-spec    = docs/specs/{feature}-design.md（如存在）
-designs = docs/designs/{feature}/（如经过 design-workflow）
+capability specs = docs/specs/<capability>-spec.md（brainstorm 写/改的，≥1 个）
+designs          = docs/designs/{feature}/（如经过 design-workflow）
 ```
 
-文件不存在 → 报告用户，不继续。feature 名称确定后，计划文件写入 `docs/plans/{feature}.md`。
+capability spec 不存在 → 报告用户（应先跑 brainstorm），不继续。feature 名称确定后，计划文件写入 `docs/plans/{feature}.md`。**本计划吸收 brainstorm Phase 4 的技术设计**（方案/架构/数据模型/API）到「架构变更」段；行为真相引用相关 capability specs。
 
 - Fully understand feature requirements from spec or user input
 - Ask clarifying questions when necessary
@@ -185,7 +185,7 @@ Before defining tasks, map out which files will be created or modified:
 
 完成完整计划后，运行以下自检清单——这不是 subagent 派发，而是自身校验：
 
-**1. Spec coverage（规格覆盖）**：浏览 spec（如存在）中的每个章节/需求。能找到实现它的任务吗？列出任何缺口。
+**1. Spec coverage（规格覆盖）**：浏览相关 capability spec(s) 中的每个 Requirement / Scenario。能找到实现它的任务吗？列出任何缺口。
 
 **2. Placeholder scan（占位符扫描）**：搜索计划中的 red flags——"No Placeholders" 一节中列出的任何模式。发现就修复。
 
@@ -207,7 +207,7 @@ Agent tool (general-purpose):
   prompt: |
     [使用 plan-reviewer-prompt.md 模板]
     - Plan file: docs/plans/<feature>.md
-    - Spec file: docs/specs/<feature>-design.md（如存在）
+    - Capability specs: docs/specs/<capability>-spec.md（brainstorm mapping 指明的，如存在）
 ```
 
 检查文档完整性、spec 对齐、任务拆分、占位符、可构建性、类型一致性。
@@ -220,7 +220,7 @@ Agent tool (general-purpose, model="opus"):
   prompt: |
     [使用 technical-risk-reviewer-prompt.md 模板]
     - Plan file: docs/plans/<feature>.md
-    - Spec file: docs/specs/<feature>-design.md（如存在）
+    - Capability specs: docs/specs/<capability>-spec.md（brainstorm mapping 指明的，如存在）
 ```
 
 对抗性技术风险分析：架构合理性、实现可行性、测试策略深度、性能风险、scope 挑战、失败模式。

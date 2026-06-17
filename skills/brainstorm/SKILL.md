@@ -1,14 +1,14 @@
 ---
 name: brainstorm
-description: "You MUST use this before any creative work — creating features, building components, adding functionality, modifying behavior, or solving ambiguous problems. Guides from vague idea through product discovery, competitive research, feature analysis, technical design, and spec writing, producing a unified feature spec. Terminal state: invokes writing-plans skill (non-UI) or design-workflow skill (UI tasks). This applies to EVERY project regardless of perceived simplicity."
+description: "You MUST use this before any creative work — creating features, building components, adding functionality, modifying behavior, or solving ambiguous problems. Guides from vague idea through product discovery, competitive research, feature analysis, technical design, and capability spec writing, producing behavior contracts organized by capability. Terminal state: invokes writing-plans skill (non-UI) or design-workflow skill (UI tasks). This applies to EVERY project regardless of perceived simplicity."
 origin: rune
 ---
 
 # Brainstorm
 
-将模糊的产品想法精炼为包含产品定义和技术设计的统一 feature spec，输出可直接对接 Design Workflow 和 Development Workflow 的文档。
+将模糊的产品想法精炼为按 capability 组织的**行为契约**（`docs/specs/<capability>-spec.md`）；技术设计产物交 writing-plans（plan）。spec 纯行为，排除实现。
 
-**Announce at start:** "I'm using the brainstorm skill to explore this idea and produce a feature spec."
+**Announce at start:** "I'm using the brainstorm skill to explore this idea and produce capability spec(s)."
 
 <HARD-GATE>
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until either (a) Phase 5 spec is written and user has approved it, or (b) the **Scale Gate** (see below) has publicly classified the change as Truly Simple and the user has acknowledged. This applies to EVERY project regardless of perceived simplicity.
@@ -63,7 +63,7 @@ Every project goes through this process. A config change, a single-function util
 用户明确表示"不做了"/"取消"/"放弃"时：
 
 1. **公告**：在消息中显式说明 "Feature [name] 标记为 Abandoned"
-2. **检查已有产物**：`docs/specs/<feature>-design.md` 或 `docs/designs/<feature>/` 是否已存在
+2. **检查已有产物**：相关 capability spec（`docs/specs/<capability>-spec.md`）或 `docs/designs/<feature>/` 是否已存在
 3. **按产物分支处理：**
 
    | 状态 | 处理 |
@@ -352,55 +352,43 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 未命中判据 → 跳过本步，不写 ADR。
 
+> **Phase 4 产物去向**：技术设计（方案选择、架构、数据模型、API 决策）**不进 spec**——交给 writing-plans 写入 `docs/plans/<feature>.md` 的技术设计段。spec 只收行为契约（见 Phase 5）。
+
 ---
 
-## Phase 5 — Spec
+## Phase 5 — Capability Spec（行为契约）
 
-将 Phase 1-4 的所有决策写入统一的 feature spec。
+把 Phase 1-3 确定的**行为**写成/改进 capability spec(s)。**只写行为，不写实现**——技术设计已在 Phase 4 交 writing-plans（→ plan）；竞品/产品框架/指标是对话级上下文，不入耐久文档。
 
-### 5a. Write Spec
+### 5a. Capability Mapping
 
-调 doc-writer agent 写入 spec：
+先定位本 feature 触及哪些 capability（决定写哪些 spec）：
 
-→ doc-writer agent 模板：`feature-spec`
-  feature: `<feature-name>`
-  data: Phase 1 产品轮廓 + Phase 2 竞品分析 + Phase 3 功能分析 + Phase 4 技术设计 + 路由决策
+1. 读现有 capability 库 `docs/specs/*-spec.md` + `docs/CODEMAP.md`，了解已有行为域
+2. 判断对每个相关 capability 是 `new`（建新 spec）还是 `modify`（改现有）
+3. 输出清单：`[(<capability>, new|modify), ...]`
 
-doc-writer 将格式化并写入 `docs/specs/<feature>-design.md`。
+一个 feature 可能触及多个 capability；也可能引入全新 capability。
 
-**Spec 文件必须包含以下 metadata block（文件头部）：**
+### 5b. 写/改 Capability Spec
 
-```markdown
----
-feature: <canonical-feature-name>
-spec: docs/specs/<canonical-feature-name>-design.md
-routing: [Design Workflow L2 | Development Workflow | L1 Lightweight Design]
----
-```
+按 5a 清单，调 doc-writer agent（模板 `capability-spec`）：
 
-`feature` 字段是下游所有 skill 的寻址锚点——design-workflow 用它定位 `docs/designs/<feature>/`，writing-plans 用它定位 `docs/plans/<feature>.md`。命名必须在 Phase 5 首次写入时确定，后续不再更改。
+- **new** → 创建 `docs/specs/<capability>-spec.md`：Purpose + Requirements[SHALL] + Scenarios[GIVEN/WHEN/THEN]。行为来自 Phase 1 核心场景 + Phase 3 功能分析。
+- **modify** → **原地改**现有 spec 到新契约：增/改/删 Requirements 与 Scenarios。spec 是权威，改到本次决定的新行为。
+
+**纪律**：只写行为（含错误行为）；不写 Architecture / Data Model / API 结构 / 技术选型。文件名（capability 名）即锚点。
 
 **写入后：**
-→ doc-updater agent 更新 feature catalog
+→ doc-updater agent 更新 FEATURE-CATALOG（Features 段：Status=Draft；Spec 列填触及的 capability spec(s)）
 
-### 5b. Spec Self-Review
+> **寻址锚点变化**：feature 名现在锚定在 `docs/plans/<feature>.md`（writing-plans 写入）；capability spec 按 capability 名寻址。design-workflow / writing-plans 通过本 Phase 的 mapping 知道该读哪些 capability spec。
 
-写完 spec 文件后，用 fresh eyes 做四项检查：
+### 5c. Self-Review + 用户审阅
 
-1. **Placeholder scan** — 搜索 TBD、TODO、不完整章节、模糊需求。发现问题立即修复。
-2. **Internal consistency** — 各章节是否矛盾？架构描述是否与功能描述一致？
-3. **Scope check** — 是否聚焦到单个实现计划？覆盖多个独立子系统则需拆分。
-4. **Ambiguity check** — 是否存在两种解读的需求？如有，选一种并显式说明。
+用 fresh eyes 做四项检查：① **Placeholder 扫描**（TBD/TODO/模糊需求）；② **内部一致**（Requirements 与 Scenarios 不矛盾）；③ **行为可验证**（每个 Scenario 能测）；④ **行为/实现分离**（无架构/数据模型等技术内容混入）。发现问题 inline 修复。
 
-发现问题 inline 修复，不需要 re-review 循环。
-
-### 5c. User File-Level Review Gate
-
-Self-review 通过后，**请用户审阅 spec 文件**：
-
-> "Spec written to `docs/specs/<feature>-design.md`. Please review it and let me know if you want to make any changes before we proceed to implementation planning."
-
-等待用户确认。如果用户要求修改，修改后重新执行 5b self-review。只有用户批准后才进入 Phase 6。
+然后**请用户审阅写/改后的 capability spec(s)**，等待确认后才进入 Phase 6。
 
 ---
 
@@ -499,10 +487,9 @@ Self-review 通过后，**请用户审阅 spec 文件**：
 ```
 /brainstorm
   │
-  ├─ Phase 1-4 → doc-writer agent template: feature-spec → docs/specs/<feature>-design.md
-  │                                                                     │
-  │              design-workflow V2-1 消费此文件
-  │              writing-plans skill 消费此文件
+  ├─ Phase 1-3 + capability mapping → doc-writer: capability-spec → docs/specs/<capability>-spec.md
+  │     (Phase 4 技术设计 → writing-plans → docs/plans/<feature>.md)
+  │     design-workflow V2-1 / writing-plans 读相关 capability specs
   │
-  └─ doc-updater agent 更新 feature catalog
+  └─ doc-updater agent 更新 feature catalog（Spec 列 = 触及的 capability specs）
 ```

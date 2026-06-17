@@ -22,7 +22,7 @@ description: "Use during finishing phase to sync documentation with implementati
 
 不同 context 走不同 Step 组合，避免在无意义的 Step 上空转：
 
-| context | Step 1 Spec 对账 | Step 2 索引（FEATURE-CATALOG + CODEMAP） | Step 3 Design |
+| context | Step 1 Capability Spec 对账 | Step 2 索引（FEATURE-CATALOG + CODEMAP） | Step 3 Design |
 |---------|------------------|------------------------------------------|---------------|
 | `new-feature` | 执行（spec 不存在则跳过） | CODEMAP 重扫；FEATURE-CATALOG Status=Implemented + Impl=Done | 存在则 → Implemented |
 | `bug-fix` | 执行（spec 不存在则跳过） | CODEMAP 重扫；不改 feature status | 跳过 |
@@ -30,45 +30,37 @@ description: "Use during finishing phase to sync documentation with implementati
 
 ## 执行步骤
 
-### Step 1: Spec 对账
+### Step 1: Capability Spec 对账
 
-**前置判断（spec 不存在则跳过本步）：**
+spec 是权威行为契约，代码 conform 它。**不追加 deviation record**——契约变了就原地改正文到新契约，契约没变就不动。
 
-```bash
-test -f docs/specs/<feature>-design.md
-```
+**前置判断：定位受影响的 capability spec**
 
-| 条件 | 行为 |
-|------|------|
-| spec 文件不存在 | 跳过 Step 1，直接进 Step 2 |
-| spec 文件存在 | 继续以下流程 |
+- 优先用 brainstorm 的 capability mapping（`docs/FEATURE-CATALOG.md` 该 feature 的 Spec 列）
+- 无 mapping 时：从 `changed_files` → 模块（CODEMAP）→ 该模块的 capability spec 反推
+- 无 capability spec 可定位 → 跳过本步（Pre-Rune 未 specced 的 capability，或 Truly Simple 误升级兜底）
 
-跳过场景：
+**按 context 对账每个受影响 capability spec（`docs/specs/<capability>-spec.md`）：**
 
-- `context=bug-fix` 且 feature 是 Pre-Rune（onboard 标记的已有功能）
-- `context=bug-fix` 且 feature 从未走过 brainstorm 完整流程
-- 用户主动绕过 brainstorm 直接修改代码（Truly Simple 路径误升级到完整流程的兜底）
+| context | spec 动作 |
+|---|---|
+| `new-feature` | brainstorm 已把 spec 写/改到**新契约**。校验代码 conform 新契约；代码偏离新契约 = 实现 bug，标记给调用方（**不改 spec**——契约是 brainstorm 定的意图）|
+| `bug-fix` **Case A**（spec 对，代码错）| 校验代码 conform；**spec 不动** |
+| `bug-fix` **Case B**（spec 错 / 缺 / 歧义）| **原地改 spec** 到正确契约（增/改/删 Requirements、Scenarios）+ 代码已修 |
+| `abandoned` | 跳过（Step 2 标 Abandoned）|
+| refactor | spec **必须不动**；若发现需改 spec = 该"refactor"偷改了行为，升级为 feature 或上报 |
 
-**spec 存在时的对账流程：**
+**对账方法（每个受影响 spec）：**
 
-1. 读取 spec 文件（`docs/specs/<feature>-design.md`）
-2. 计算 diff：`git diff <base_SHA>..HEAD`
-3. 比对 spec 的 Technical Design 各子章节（Architecture / Data Model / API Contract / Error Handling）与 diff 实际变更
-4. 有偏离 → 在 spec 的 Technical Design 章节末尾追加 deviation record：
+1. 读 capability spec 的 Requirements / Scenarios
+2. `git diff <base_SHA>..HEAD` 看实际行为变更
+3. 判断实现行为是否符合 spec 契约：
+   - 符合 → 不动 spec
+   - 契约需变（new-feature 新行为 / Case B 契约错）→ **原地改 spec 正文**到新/正确契约
+   - 代码偏离正确契约（Case A）→ 不动 spec，标记代码 bug
+4. refactor 场景：spec 有任何改动冲动 → 停，上报"疑似行为变更"
 
-```markdown
-### Implementation Deviations
-
-#### [YYYY-MM-DD] — [feature/fix description]
-**偏差章节**：Architecture
-**原方案**：[spec 中的描述]
-**实际实现**：[diff 中的实现]
-**原因**：[为什么偏离]
-```
-
-5. 无偏离 → 不改 spec
-
-不重写 spec，只追加偏离记录。保留原始决策上下文。
+**核心**：spec 正文只在"契约本身变了"时改（brainstorm 决策 / Case B），不为"代码变了"就抄。deviation-append 机制已废除。
 
 ### Step 2: 索引推进（FEATURE-CATALOG + CODEMAP）
 
@@ -113,7 +105,7 @@ test -f docs/specs/<feature>-design.md
 
 ## 不做什么
 
-- 不重写 spec 全文
+- 不重写 spec 全文，也不追加 deviation record——契约变了对具体 Requirements/Scenarios 原地改
 - 不引入新的 delta spec 文档格式
 - 不自动删除任何文件
 - 不自动更新 README

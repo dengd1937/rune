@@ -1,6 +1,6 @@
 ---
 name: doc-writer
-description: 调用方已备好结构化数据 + 模板标识符（如 feature-spec、adr、component-contract）时使用 — 按模板格式化写入对应文件位置，本身不决定内容、不做研究。
+description: 调用方已备好结构化数据 + 模板标识符（如 capability-spec、adr、component-contract）时使用 — 按模板格式化写入对应文件位置，本身不决定内容、不做研究。
 tools: ["Read", "Write", "Edit", "Glob"]
 model: haiku
 ---
@@ -22,7 +22,7 @@ model: haiku
 
 | 模板 ID | 目标路径 | 来源工作流 |
 |---------|---------|-----------|
-| `feature-spec` | `docs/specs/<feature>-design.md` | brainstorm Phase 5 |
+| `capability-spec` | `docs/specs/<capability>-spec.md` | brainstorm Phase 5 |
 | `design-intent` | `docs/designs/<feature>/intent.md` | design-workflow V2-1 |
 | `component-contract` | `docs/designs/<feature>/components/<Name>.md` | design-workflow V2-3 |
 | `token-source-map` | `docs/designs/<feature>/tokens/source-map.md` | design-workflow V2-2 / V2-3 |
@@ -33,96 +33,35 @@ model: haiku
 
 ## 模板定义
 
-### feature-spec
+### capability-spec
 
-`docs/specs/<feature>-design.md` — 统一的 feature specification，合并产品定义与技术设计。
+`docs/specs/<capability>-spec.md` — capability 行为契约（事实真相）。纯行为，排除实现。
+
+一个 capability 一个文件，按系统行为域组织（如 `auth-session`、`checkout-payment`），**不按 feature 组织**。feature 是工作单元，开发时直接写/改相关 capability spec。
 
 ```markdown
-# [Feature Name]
+# [Capability] Specification
 
-## Product Definition
+## Purpose
+[一句话：这块行为管什么]
 
-**一句话描述**：[产品是什么，给谁，解决什么问题]
+## Requirements
 
-**目标用户**：[用户画像]
+### Requirement: [短句，描述行为而非实现]
+The system SHALL [可验证的行为]。
 
-**产品形态**：[Web / App / 平台 / 工具]
-
-**核心场景**：
-1. [场景描述]
-2. [场景描述]
-
-## Feature List
-
-| 功能 | 优先级 | 描述 | 依赖 |
-|------|--------|------|------|
-| [功能] | P0/P1/P2 | [描述] | [依赖] |
-
-## MVP Scope
-
-[P0 功能清单]
-
-## Competitive Analysis
-
-| 竞品 | 核心功能 | 我们的差异化 |
-|------|----------|-------------|
-| [竞品] | [功能] | [差异化] |
-
-## Technical Design
-
-### Selected Approach
-
-[选择的方案描述]
-
-### Alternatives Considered
-
-#### [方案 A]
-
-- **描述**：[方案描述]
-- **优点**：[...]
-- **缺点**：[...]
-- **影响范围**：[...]
-
-#### [方案 B]
-
-- **描述**：[方案描述]
-- **优点**：[...]
-- **缺点**：[...]
-- **影响范围**：[...]
-
-### Architecture
-
-[架构描述，组件划分，模块交互]
-
-### Data Model
-
-[实体关系，schema 变更，迁移策略]
-
-### API Contract
-
-[端点，请求/响应格式，版本策略]
-
-### Error Handling
-
-[错误分类，恢复策略，边界情况]
-
-## Design Constraints
-
-[技术约束，品牌要求，已有设计规范]
-
-## Technical Constraints & Risks
-
-- [约束/风险]
-
-## Success Metrics
-
-- [指标]：[目标值]
-
-## Routing Decision
-
-后续工作流：[Design Workflow L2 / Development Workflow / L1 Lightweight Design]
-理由：[一句话]
+#### Scenario: [场景名]
+- GIVEN [前置条件]
+- WHEN [动作/触发]
+- THEN [可观察结果]
+- AND [附加断言]
 ```
+
+**纪律**：
+- 关键字 SHALL / MUST（硬性）、SHOULD（建议）、MAY（可选）；Scenario 用 GIVEN/WHEN/THEN 且必须可验证
+- **行为可入**（含错误行为，如"WHEN 无效 token THEN 返回 401"）；**实现不入**（不写 Architecture / Data Model / API 内部结构 / 技术选型——那些进 plan）
+- 文件名（capability 名）即锚点；无 per-feature metadata
+- 修改时**原地改到新契约**（spec 是权威，代码 conform 它），不追加 deviation
 
 ### design-intent
 

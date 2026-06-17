@@ -76,20 +76,19 @@ All design artifacts live under `docs/designs/<feature>/`. See pencil-design ski
 
 Investigate requirements and establish design direction before editing the canvas.
 
-**前序产物验证：** 读取 brainstorm 产出的 spec 文件，提取 `feature` 字段作为本工作流的寻址锚点。spec 文件不存在 → 报告用户，不继续。
+**前序产物验证：** 读取 brainstorm 的 capability mapping，确定本 feature 触及的 capability spec（`docs/specs/<capability>-spec.md`）。capability spec 不存在 → 报告用户，不继续。
 
 ```
-feature = spec 文件 metadata block 中的 feature 字段
-spec    = docs/specs/{feature}-design.md
-designs = docs/designs/{feature}/
+capability specs = docs/specs/<capability>-spec.md（brainstorm mapping 指明）
+designs          = docs/designs/{feature}/
 ```
 
-后续所有 V2 阶段使用同一 `feature` 名称定位文件。
+后续所有 V2 阶段用 `feature` 名称定位 `docs/designs/{feature}/`；行为需求从相关 capability specs 读。
 
 **Actions:**
 
 - **If `DESIGN.md` exists**, read it first and run DESIGN.md preflight: complete sections become visual identity constraints; missing or ambiguous sections become design identity gaps that require user decision before they are treated as defaults
-- **If `docs/specs/<feature>-design.md` exists**, read it as the functional requirements input: UI scope, user flows, feature list, competitor references, and design constraints come from the brainstorm stage.
+- **Read the relevant capability spec(s)** (`docs/specs/<capability>-spec.md`) as the functional requirements input: UI scope, user flows, behavior scenarios, and design constraints come from the brainstorm stage. Behavior truth lives in capability specs; product framing / competitor analysis are conversation-level context, not durable docs.
 - Analyze the UI scope: pages, components, interactions, and constraints
 - **If `DESIGN.md` exists**, classify components into "matches existing DESIGN.md component styles", "requires documented identity gap", or "requires user-approved DESIGN.md update"
 - Search the project for reusable design assets and existing `docs/designs/` directories

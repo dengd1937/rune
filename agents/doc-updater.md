@@ -13,7 +13,7 @@ model: haiku
 
 ```
 docs/
-├── specs/             # Feature specifications（brainstorm → doc-writer 写入）
+├── specs/<capability>-spec.md  # capability 行为契约（事实真相；brainstorm → doc-writer 写入）
 ├── designs/<feature>/ # 设计产物（design-workflow → doc-writer 写入）
 │   ├── intent.md
 │   ├── components/*.md
@@ -45,7 +45,7 @@ docs/
 ## Features
 | Feature | Status | Spec | Design Status | Implementation Status |
 |---------|--------|------|---------------|----------------------|
-| [name] | Draft/Active/Implemented/Abandoned/Pre-Rune | [link] | None/In Progress/Done | None/In Progress/Done |
+| [name] | Draft/Active/Implemented/Abandoned/Pre-Rune | [capability spec link(s)] | None/In Progress/Done | None/In Progress/Done |
 
 ## Components
 （UI 项目；非 UI 项目省略本段）
@@ -58,6 +58,8 @@ docs/
 |-----|------|------|------|-------------|
 | [NNNN] | [标题] | 已批准/提议中/已废弃/已替代 | YYYY-MM-DD | [feature] |
 ```
+
+**Spec 列**指向该 feature 触及的 capability spec(s)（`docs/specs/<capability>-spec.md`）——spec 按 capability 组织、不按 feature，一个 feature 可能触及多个 capability spec。
 
 **Status 状态机（单一权威列，5 值不重叠）**：
 
@@ -141,7 +143,7 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 
 | 触发 | 维护内容 |
 |------|---------|
-| brainstorm Phase 5 完成 | FEATURE-CATALOG Features 段新增条目（Status=Draft）+ 评估 README |
+| brainstorm Phase 5 完成 | FEATURE-CATALOG Features 段新增条目（Status=Draft，Spec 列填触及的 capability spec(s)）+ 评估 README |
 | brainstorm Phase 4（跨项目级 ADR）| FEATURE-CATALOG Decisions 段新增 + 评估 README |
 | design-workflow 完成 | FEATURE-CATALOG：该 feature Design Status=Done + Components 段 + 评估 README |
 | subagent-driven-development 完成 | 不直接调；由 finishing/doc-sync 统一处理 |

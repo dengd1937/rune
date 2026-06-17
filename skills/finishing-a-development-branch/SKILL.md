@@ -79,7 +79,7 @@ rmdir docs/plans/  # 如果目录为空
 
 调用 `/doc-sync` skill，传入 Step 1.5 收集的 feature、base_SHA、changed_files、context。
 
-doc-sync 内部处理 spec 对账、catalog 状态推进、design artifact 状态更新。
+doc-sync 内部处理 capability spec 对账（Step 1：定位受影响 capability specs，按 context 原地改/校验）、catalog 状态推进、design artifact 状态更新。
 
 doc-sync 不自行 commit；其产出由 Step 2c 统一提交。
 

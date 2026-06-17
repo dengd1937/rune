@@ -112,7 +112,8 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/plans
 字段语义（Pre-Rune 行所有字段都由 "Pre-Rune" 隐含，按 schema 占位）：
 
 - **Status: Pre-Rune** — 表示未走过 brainstorm/design 流程的存量功能
-- **Spec / Design Status：—** — 定义性空值（Pre-Rune 必无 spec、必无 design 流程产物）
+- **Spec：—** — 该 feature 的行为尚无 capability spec（Pre-Rune = 未 specced 的 capability；后续被 feature/bug 触及时由 brainstorm 补建 `docs/specs/<capability>-spec.md`）
+- **Design Status：—** — 定义性空值（Pre-Rune 必无 design 流程产物）
 - **Implementation Status: Done** — 定义性已实现（Pre-Rune 意味着代码已在仓库）
 
 不要试图给 Pre-Rune 行填其他值。用户可跳过（直接回车），Features 段留空。
@@ -143,7 +144,7 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/plans
 
 ## 不做什么
 
-- 不反推已有功能的 spec
+- 不反推已有功能的 capability spec —— `specs/` 按 capability 组织（`<capability>-spec.md`），随 feature/bug 触及时由 brainstorm 逐步补建，不在 onboard 批量生成
 - 不迁移外部 wiki 内容（只引用链接）
 - 不移动或修改已有文档文件
 - 不修改项目根目录的 README.md
