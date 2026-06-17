@@ -1,6 +1,6 @@
 ---
 name: doc-writer
-description: 调用方已备好结构化数据 + 模板标识符（如 module-doc、adr、design-spec）时使用 — 按模板格式化写入对应文件位置，本身不决定内容、不做研究。
+description: 调用方已备好结构化数据 + 模板标识符（如 feature-spec、adr、component-contract）时使用 — 按模板格式化写入对应文件位置，本身不决定内容、不做研究。
 tools: ["Read", "Write", "Edit", "Glob"]
 model: haiku
 ---
@@ -29,7 +29,6 @@ model: haiku
 | `review-verdict` | `docs/designs/<feature>/review-verdict.md` | design-workflow V2-4 |
 | `layout-report` | `docs/designs/<feature>/screenshots/layout-report.md` | design-workflow V2-4 |
 | `l1-design-note` | `docs/designs/<feature>/intent.md`（追加） | design-workflow L1 |
-| `module-doc` | `docs/modules/<module>.md` | finishing-a-development-branch Step 2 |
 | `adr` | `docs/architecture/adr/<NNNN>-<slug>.md` | brainstorm Phase 4（跨项目级） |
 
 ## 模板定义
@@ -292,34 +291,6 @@ model: haiku
 - [token/组件名]
 ```
 
-### module-doc
-
-`docs/modules/<module>.md` — 模块技术文档。
-
-```markdown
-# [ModuleName]
-
-## 用途
-
-[模块做什么]
-
-## 公共 API
-
-| 导出 | 类型 | 说明 |
-|------|------|------|
-| [export] | [类型] | [说明] |
-
-## 依赖
-
-- [依赖 1]：[用途]
-- [依赖 2]：[用途]
-
-## 用法示例
-
-```[language]
-[代码示例]
-```
-```
 
 ### adr
 

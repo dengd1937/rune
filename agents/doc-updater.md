@@ -21,14 +21,13 @@ docs/
 │   └── screenshots/
 ├── architecture/
 │   └── adr/           # 架构决策记录（brainstorm Phase 4 → doc-writer 写入）
-├── modules/           # 模块文档（development → doc-writer 写入）
 ├── plans/             # 实施方案（writing-plans skill，临时的，开发完成后删除）
 ├── CODEMAP.md         # 代码结构 + 模块索引 + 数据流 + 依赖
 └── FEATURE-CATALOG.md # feature 台账 + UI 组件 + 架构决策
 ```
 
 索引只保留 **2 个文件**。原 MODULE-INDEX / COMPONENT-CATALOG / ADR-INDEX 已并入：
-- MODULE-INDEX → CODEMAP 的「关键模块」表（加 Module Doc 链接列）
+- MODULE-INDEX → CODEMAP 的「关键模块」表
 - COMPONENT-CATALOG → FEATURE-CATALOG 的 Components 段
 - ADR-INDEX → FEATURE-CATALOG 的 Decisions 段
 
@@ -90,9 +89,9 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 [主要目录和用途]
 
 ## 关键模块
-| 模块 | 职责 | 入口文件 | 主要依赖 | Module Doc |
-|------|------|---------|---------|-----------|
-| [模块] | [职责] | [入口文件] | [主要依赖] | [链接 → docs/modules/<m>.md] |
+| 模块 | 职责 | 入口文件 | 主要依赖 |
+|------|------|---------|---------|
+| [模块] | [职责] | [入口文件] | [主要依赖] |
 
 ## 数据流
 [核心数据流描述]
@@ -102,7 +101,7 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 |---|---|
 ```
 
-「Module Doc」列指向 `docs/modules/<module>.md`。完整公共 API 留在 module doc 内，索引不复制（遵循「只链接不复制」）。
+模块的职责与依赖记录在本表（地图）；公共 API 与用法以源码为唯一来源（「入口文件」列指向），不在此复制，避免漂移。
 
 更新时机：onboard 生成；development 完成（doc-sync）重扫源码结构更新。
 
@@ -127,7 +126,7 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 
 ## 工作流
 
-1. **扫描**：遍历 docs/specs/、docs/designs/、docs/architecture/、docs/modules/，收集当前所有产物
+1. **扫描**：遍历 docs/specs/、docs/designs/、docs/architecture/，收集当前所有产物
 2. **比对**：读取现有 CODEMAP / FEATURE-CATALOG，比对差异
 3. **更新**：添加新条目、更新状态变更的条目、标记引用已删除文件的条目为 Deprecated
 4. **写入**：将更新后的索引写回磁盘
@@ -146,7 +145,7 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 | brainstorm Phase 4（跨项目级 ADR）| FEATURE-CATALOG Decisions 段新增 + 评估 README |
 | design-workflow 完成 | FEATURE-CATALOG：该 feature Design Status=Done + Components 段 + 评估 README |
 | subagent-driven-development 完成 | 不直接调；由 finishing/doc-sync 统一处理 |
-| finishing (doc-sync) | CODEMAP（结构+模块）+ FEATURE-CATALOG 状态推进（Implemented/Abandoned）+ module doc 内容 |
+| finishing (doc-sync) | CODEMAP（结构+模块）+ FEATURE-CATALOG 状态推进（Implemented/Abandoned） |
 | onboard 完成 | 初始化 CODEMAP + FEATURE-CATALOG（Pre-Rune 条目）+ 评估 README |
 
 ## 原则

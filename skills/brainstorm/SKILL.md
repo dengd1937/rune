@@ -283,7 +283,7 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 - 读取现有 ADR（`docs/architecture/adr/*.md`），了解已有决策和约束
 - 读取 codemap（`docs/CODEMAP.md`），了解项目整体结构
-- 读取相关模块文档（`docs/modules/*.md`），了解模块职责和公共 API
+- 读 CODEMAP（`docs/CODEMAP.md`）了解模块职责与依赖结构；需要具体公共 API 时直接读源码（入口文件列）
 - 读取相关产品文档，了解需求上下文
 - 扫描相关源码，了解当前实现
 

@@ -81,7 +81,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [feedback](skills/feedback/SKILL.md) | Turn a rune pain point into a GitHub issue — dialog-driven, per-draft consent before submit |
 | [resolve](skills/resolve/SKILL.md) | Drive existing GitHub issues to merged & auto-closed — verify, decide, delegate, PR with Closes #N |
 | [writing-skills](skills/writing-skills/SKILL.md) | Author and maintain Rune skills |
-| [doc-sync](skills/doc-sync/SKILL.md) | Post-implementation doc sync — updates specs, module docs, catalogs, and design artifact status |
+| [doc-sync](skills/doc-sync/SKILL.md) | Post-implementation doc sync — updates specs, catalogs, and design artifact status |
 | [onboard](skills/onboard/SKILL.md) | Scaffold Rune docs topology for existing projects — generates codemap, module index, catalogs, and adoption ADR |
 
 ## Agents

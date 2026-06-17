@@ -79,7 +79,7 @@ rmdir docs/plans/  # 如果目录为空
 
 调用 `/doc-sync` skill，传入 Step 1.5 收集的 feature、base_SHA、changed_files、context。
 
-doc-sync 内部处理 spec 对账、module doc 对账、catalog 状态推进、design artifact 状态更新。
+doc-sync 内部处理 spec 对账、catalog 状态推进、design artifact 状态更新。
 
 doc-sync 不自行 commit；其产出由 Step 2c 统一提交。
 
@@ -103,7 +103,7 @@ message 由 Step 1.5 的 context 决定：
 | context | message |
 |---------|---------|
 | `new-feature` | `sync docs with implementation` |
-| `bug-fix` | `sync module docs and catalog after fix` |
+| `bug-fix` | `sync catalog after fix` |
 | `abandoned` | `mark <feature> as abandoned` |
 
 commit 仅含 `docs/` 下的 `.md` 文件，不触发 `pre-commit-review-check.py`（hook 只对源码扩展名生效）；Conventional Commits 仍由 `pre-bash-guard.sh` 物理强制。

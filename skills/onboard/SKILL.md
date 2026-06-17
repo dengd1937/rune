@@ -52,7 +52,7 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 - README.md → 保留根目录，CODEMAP 中引用
 - 已有架构文档 → 保留原位，CODEMAP 中引用，告知用户可手动移入 `docs/architecture/`
 - 外部 wiki → 不迁移，CODEMAP 中列出链接
-- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / designs / architecture/adr / modules / plans）对比，标记缺失项
+- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / designs / architecture/adr / plans）对比，标记缺失项
 
 向用户报告评估结果与待补缺失子目录列表。
 
@@ -63,7 +63,7 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 基于 Step 3 评估结果，仅创建缺失的 Rune 子目录：
 
 ```bash
-mkdir -p docs/specs docs/designs docs/architecture/adr docs/modules docs/plans
+mkdir -p docs/specs docs/designs docs/architecture/adr docs/plans
 ```
 
 `mkdir -p` 对已存在的目录是 no-op，但 Step 3 评估结果必须作为前置——避免在用户已有自定义 `docs/` 结构（如 `docs/api/`、`docs/guides/`）时无差别注入空目录而无告知。
@@ -75,12 +75,10 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/modules docs/plans
 按 doc-updater agent 的 codemap 格式（`docs/CODEMAP.md`）生成。从源码结构机械提取：
 
 - 目录结构（find 结果）
-- 关键模块表（Step 2 确认的模块：模块 | 职责 | 入口文件 | 主要依赖 | Module Doc）
+- 关键模块表（Step 2 确认的模块：模块 | 职责 | 入口文件 | 主要依赖）
 - 入口文件（从框架约定推断）
 - 外部依赖（从 `package.json` / `requirements.txt` / `go.mod` 解析）
 - 数据流（从框架类型推断通用模式）
-
-「Module Doc」列指向 `docs/modules/<m>.md`。onboard 阶段 module docs 尚未生成（见「不做什么」），该列填 `[待补充]`，后续由 doc-sync 在开发时填充。
 
 无法机械推断的字段填 `[待补充]`，不猜测。
 
@@ -135,7 +133,7 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/modules docs/plans
 
 ## Step 8: 验证 + 报告
 
-1. 验证 Step 4-7 产生的所有文件存在（`docs/specs/`、`docs/designs/`、`docs/architecture/adr/`、`docs/modules/`、`docs/plans/` 及 CODEMAP / FEATURE-CATALOG / ADR-0001）
+1. 验证 Step 4-7 产生的所有文件存在（`docs/specs/`、`docs/designs/`、`docs/architecture/adr/`、`docs/plans/` 及 CODEMAP / FEATURE-CATALOG / ADR-0001）
 2. 调用 doc-updater agent 做 README 同步评估（参考 `agents/doc-updater.md` 的「项目 README 评估」职责）—— agent 仅返回建议清单，不直接修改 README
 3. 向用户展示：创建的文件树 + README 同步建议清单 + 后续步骤
 
@@ -148,7 +146,6 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/modules docs/plans
 - 不反推已有功能的 spec
 - 不迁移外部 wiki 内容（只引用链接）
 - 不移动或修改已有文档文件
-- 不生成 module docs（留空，由 doc-sync 在开发时逐步生成；CODEMAP 的 Module Doc 列相应留 `[待补充]`）
 - 不修改项目根目录的 README.md
 - 不为存量功能反推 Components 段（UI 项目由 design-workflow 在新设计时填充）
 

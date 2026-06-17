@@ -1,6 +1,6 @@
 ---
 name: doc-sync
-description: "Use during finishing phase to sync documentation with implementation — updates specs, module docs, catalogs, and design artifact status. Invoked by finishing-a-development-branch Step 2b."
+description: "Use during finishing phase to sync documentation with implementation — updates specs, catalogs, and design artifact status. Invoked by finishing-a-development-branch Step 2b."
 ---
 
 # Doc Reconciliation
@@ -22,11 +22,11 @@ description: "Use during finishing phase to sync documentation with implementati
 
 不同 context 走不同 Step 组合，避免在无意义的 Step 上空转：
 
-| context | Step 1 Spec 对账 | Step 2 Module Doc | Step 3 索引（FEATURE-CATALOG + CODEMAP） | Step 4 Design |
-|---------|------------------|-------------------|------------------------------------------|---------------|
-| `new-feature` | 执行（spec 不存在则跳过） | 执行 | CODEMAP 重扫；FEATURE-CATALOG Status=Implemented + Impl=Done | 存在则 → Implemented |
-| `bug-fix` | 执行（spec 不存在则跳过） | 执行 | CODEMAP 重扫；不改 feature status | 跳过 |
-| `abandoned` | 跳过 | 跳过 | FEATURE-CATALOG Status=Abandoned（CODEMAP 不变） | 存在则 → Abandoned |
+| context | Step 1 Spec 对账 | Step 2 索引（FEATURE-CATALOG + CODEMAP） | Step 3 Design |
+|---------|------------------|------------------------------------------|---------------|
+| `new-feature` | 执行（spec 不存在则跳过） | CODEMAP 重扫；FEATURE-CATALOG Status=Implemented + Impl=Done | 存在则 → Implemented |
+| `bug-fix` | 执行（spec 不存在则跳过） | CODEMAP 重扫；不改 feature status | 跳过 |
+| `abandoned` | 跳过 | FEATURE-CATALOG Status=Abandoned（CODEMAP 不变） | 存在则 → Abandoned |
 
 ## 执行步骤
 
@@ -70,27 +70,17 @@ test -f docs/specs/<feature>-design.md
 
 不重写 spec，只追加偏离记录。保留原始决策上下文。
 
-### Step 2: Module Doc 对账
-
-**前置判断**：`context=abandoned` 或 `changed_files` 为空 → 跳过本步。
-
-1. 从 changed_files 提取涉及的模块列表
-2. 对每个模块：
-   - `docs/modules/<module>.md` 存在 → 读取现有内容 → 读取源码当前公共 API → 比对 → 有差异则更新 API 表和用法示例
-   - `docs/modules/<module>.md` 不存在 → 创建新 module doc（读源码提取公共 API）
-3. 模块判断标准：changed_files 中的文件按目录层级归组
-
-### Step 3: 索引推进（FEATURE-CATALOG + CODEMAP）
+### Step 2: 索引推进（FEATURE-CATALOG + CODEMAP）
 
 调用 doc-updater agent，scope 同时覆盖 FEATURE-CATALOG 与 CODEMAP：
 
-- **CODEMAP**（`new-feature` / `bug-fix`，即代码有变更时）：重扫 changed_files 的目录与模块结构，更新「目录结构」与「关键模块」表；若 Step 2 已生成 module doc，补上 Module Doc 链接
+- **CODEMAP**（`new-feature` / `bug-fix`，即代码有变更时）：重扫 changed_files 的目录与模块结构，更新「目录结构」与「关键模块」表
 - **FEATURE-CATALOG**，按 context：
   - `new-feature` → 该 feature 的 Status=Implemented **且** Implementation Status=Done（同时设两列，修复原仅设子列的不对称）
-  - `bug-fix` → 不改 feature status（仅 CODEMAP 与 Step 2 的 module doc 反映修复）
+  - `bug-fix` → 不改 feature status（仅 CODEMAP 反映修复）
   - `abandoned` → 该 feature 的 Status=Abandoned
 
-### Step 4: Design Artifact 状态
+### Step 3: Design Artifact 状态
 
 1. 检查 `docs/designs/<feature>/` 是否存在；不存在 → 跳过本步
 2. 确定追加目标文件（按存在性 fallback）：
