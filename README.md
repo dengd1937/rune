@@ -63,7 +63,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → capability spec(s) (or Scale Gate fast-path for chore) |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI design — L1 lightweight / L2 full wireframe → hi-fi → review |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP design + code generation |
-| [writing-plans](skills/writing-plans/SKILL.md) | Implementation plans — task breakdown, no-placeholders, dual quality check |
+| [writing-plans](skills/writing-plans/SKILL.md) | Technical design + task breakdown → docs/changes/ — no-placeholders, dual quality check |
 | [subagent-driven-development](skills/subagent-driven-development/SKILL.md) | Multi-file changes — per-task TDD + review loop |
 | [tdd-workflow](skills/tdd-workflow/SKILL.md) | RED → GREEN → IMPROVE cycle (80%+ coverage) |
 | [investigate](skills/investigate/SKILL.md) | Root-cause analysis → TDD fix → review (no code until cause confirmed) |

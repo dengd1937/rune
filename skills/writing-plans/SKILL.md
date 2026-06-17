@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: "Use when you have a spec or requirements for a multi-step task, before touching code. Creates a task-level implementation plan saved to docs/plans/. User approval required before implementation."
+description: "Use when you have a spec or requirements for a multi-step task, before touching code. Creates design.md + tasks.md in docs/changes/<feature>/ (technical design + task breakdown). User approval required before implementation."
 ---
 
 # Writing Plans
@@ -9,7 +9,7 @@ Create task-level implementation plans for multi-step development work. Plans ar
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Save plans to:** `docs/plans/<feature-name>.md`
+**Save to:** `docs/changes/<feature>/{design.md, tasks.md}`（与 brainstorm 的 proposal/specs.md 同居同一 change 文件夹）
 
 **Context：** writing-plans 阶段本身**不创建** worktree。如果实现阶段需要隔离工作区，由 `subagent-driven-development` 在 Phase 0a 调用 `using-git-worktrees` 完成。计划文件应在 worktree 创建前已 commit 到当前分支，便于 worktree 内可见。
 
@@ -35,14 +35,14 @@ If the spec covers multiple independent subsystems, suggest breaking into separa
 
 ### 1. Requirement Analysis
 
-**前序产物验证：** brainstorm 的 capability mapping 指明本 feature 触及哪些 capability spec（`docs/specs/<capability>-spec.md`）。确认以下产物存在：
+**前序产物验证：** brainstorm 已建 `docs/changes/<feature>/`（含 proposal.md + specs.md delta）。确认以下产物存在：
 
 ```
-capability specs = docs/specs/<capability>-spec.md（brainstorm 写/改的，≥1 个）
-designs          = docs/designs/{feature}/（如经过 design-workflow）
+change folder = docs/changes/<feature>/{proposal.md, specs.md}（brainstorm 产出）
+designs       = docs/designs/{feature}/（如经过 design-workflow）
 ```
 
-capability spec 不存在 → 报告用户（应先跑 brainstorm），不继续。feature 名称确定后，计划文件写入 `docs/plans/{feature}.md`。**本计划吸收 brainstorm Phase 4 的技术设计**（方案/架构/数据模型/API）到「架构变更」段；行为真相引用相关 capability specs。
+change 文件夹不存在 → 报告用户（应先跑 brainstorm），不继续。feature 名称确定后，writing-plans 往同一 `docs/changes/<feature>/` 写 `design.md`（吸收 Phase 4 技术设计）+ `tasks.md`；行为真相引用相关 capability specs（`docs/specs/<capability>-spec.md`）。
 
 - Fully understand feature requirements from spec or user input
 - Ask clarifying questions when necessary
@@ -81,25 +81,39 @@ Before defining tasks, map out which files will be created or modified:
 
 ---
 
-## Plan Document Format
+## Plan Document Format（两文件，写入 `docs/changes/<feature>/`）
+
+writing-plans 与 brainstorm 的 proposal/specs.md 同居 `docs/changes/<feature>/`，产出 `design.md`（技术设计）+ `tasks.md`（任务拆解，SDD 消费）。
+
+### design.md
 
 ```markdown
-# 实现计划：[功能名称]
-
-## 执行方式
-
-本计划通过 `/subagent-driven-development` skill 执行。以下任务描述是 skill 的输入规格，不是直接执行指令。
+# 技术设计：[功能名称]
 
 ## 概述
 [2-3 句摘要]
 
 ## 需求
-- [需求 1]
-- [需求 2]
+引用相关 capability spec(s)（`docs/specs/<capability>-spec.md`）覆盖的 Requirements/Scenarios，点出本 change 范围；不复制行为真相。
 
-## 架构变更
+## 技术设计 / 架构变更
+吸收 brainstorm Phase 4 产出（方案选择 / 架构 / 数据模型 / API 决策）。跨切面决策**引用 ADR 不复述**。
 - [变更 1：文件路径及描述]
 - [变更 2：文件路径及描述]
+
+## 风险与缓解
+- **风险**：[描述]
+  - 缓解：[应对措施]
+```
+
+### tasks.md
+
+```markdown
+# 实现任务：[功能名称]
+
+## 执行方式
+
+本计划通过 `/subagent-driven-development` skill 执行。以下任务描述是 skill 的输入规格，不是直接执行指令。
 
 ## 环境前置（Environment Prerequisites）
 
@@ -135,10 +149,6 @@ Before defining tasks, map out which files will be created or modified:
 - 使用 `data-testid` locator，不用 CSS/XPath
 - 使用 `waitForResponse()` / `waitForSelector()`，不用 `waitForTimeout()`
 - 配置 `trace: 'on-first-retry'`
-
-## 风险与缓解
-- **风险**：[描述]
-  - 缓解：[应对措施]
 
 ## 验收标准
 - [ ] 标准 1
@@ -206,7 +216,7 @@ Agent tool (general-purpose):
   description: "Review plan document quality"
   prompt: |
     [使用 plan-reviewer-prompt.md 模板]
-    - Plan file: docs/plans/<feature>.md
+    - Plan files: docs/changes/<feature>/{design.md, tasks.md}
     - Capability specs: docs/specs/<capability>-spec.md（brainstorm mapping 指明的，如存在）
 ```
 
@@ -219,7 +229,7 @@ Agent tool (general-purpose, model="opus"):
   description: "Technical risk review of plan"
   prompt: |
     [使用 technical-risk-reviewer-prompt.md 模板]
-    - Plan file: docs/plans/<feature>.md
+    - Plan files: docs/changes/<feature>/{design.md, tasks.md}
     - Capability specs: docs/specs/<capability>-spec.md（brainstorm mapping 指明的，如存在）
 ```
 

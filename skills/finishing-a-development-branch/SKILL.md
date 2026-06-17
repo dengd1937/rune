@@ -1,6 +1,6 @@
 ---
 name: finishing-a-development-branch
-description: "Use when implementation is complete and all tasks have passed review — verifies tests, cleans up docs/plans and artifacts, presents structured integration options (PR/merge/keep/discard), and cleans up workspace. Required after subagent-driven-development skill. Not for use when tests fail or review has open issues."
+description: "Use when implementation is complete and all tasks have passed review — verifies tests, applies spec delta + archives docs/changes, presents structured integration options (PR/merge/keep/discard), and cleans up workspace. Required after subagent-driven-development skill. Not for use when tests fail or review has open issues."
 ---
 
 # Finishing a Development Branch
@@ -50,7 +50,7 @@ npm test / pytest / go test ./... / cargo test
 确定以下信息，传给 Step 2b 的 doc-sync 调用：
 
 - **feature**：feature 名称。来源：
-  - SDD 流程 → 从 SDD Phase 1 读取的计划文件名提取
+  - SDD 流程 → 从 SDD Phase 1 读取的 `changes/<feature>/` 文件夹名提取
   - investigate 流程 → 从 Phase 3 调查报告中的修复方向提取模块名
   - 无法确定 → 询问用户
 - **base_SHA**：`git merge-base HEAD <base-branch>` 或 SDD 记录的 first base SHA
@@ -68,20 +68,30 @@ npm test / pytest / go test ./... / cargo test
 
 ## Step 2：文档与产物清理
 
-### 2a. 计划文件清理
-
-```bash
-rm docs/plans/<plan-file>
-rmdir docs/plans/  # 如果目录为空
-```
-
-### 2b. Doc Sync
+### 2a. Doc Sync（apply delta + verify）
 
 调用 `/doc-sync` skill，传入 Step 1.5 收集的 feature、base_SHA、changed_files、context。
 
-doc-sync 内部处理 capability spec 对账（Step 1：定位受影响 capability specs，按 context 原地改/校验）、catalog 状态推进、design artifact 状态更新。
+doc-sync 把 `changes/<feature>/specs.md` delta **apply** 到 `docs/specs/`、catalog 状态推进、design artifact 状态更新、fresh-eyes verify。
 
-doc-sync 不自行 commit；其产出由 Step 2c 统一提交。
+doc-sync 不自行 commit；其产出由 Step 2c 统一提交。**必须先于 2b 归档**（归档会移动 specs.md）。
+
+### 2b. Change 文件夹归档
+
+doc-sync apply 完 delta 后，归档 change 文件夹：
+
+```bash
+# 删实现产物（短命，代码是真相）
+rm docs/changes/<feature>/design.md docs/changes/<feature>/tasks.md
+# 留意图 + delta（耐久），移到 archive
+mkdir -p docs/changes/archive
+git mv docs/changes/<feature> docs/changes/archive/<feature>
+```
+
+- 删 `design.md` + `tasks.md`（实现方案，finishing 后以代码为真相）
+- 留 `proposal.md` + `specs.md`（意图 + 行为 delta），移到 `docs/changes/archive/<feature>/` 作演化日志
+
+bug-fix Case A（无 change 文件夹）→ 跳过本步。
 
 ### 2c. Doc Commit
 

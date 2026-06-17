@@ -23,6 +23,8 @@ model: haiku
 | 模板 ID | 目标路径 | 来源工作流 |
 |---------|---------|-----------|
 | `capability-spec` | `docs/specs/<capability>-spec.md` | brainstorm Phase 5 |
+| `change-proposal` | `docs/changes/<feature>/proposal.md` | brainstorm Phase 5 |
+| `change-specs-delta` | `docs/changes/<feature>/specs.md` | brainstorm Phase 5 |
 | `design-intent` | `docs/designs/<feature>/intent.md` | design-workflow V2-1 |
 | `component-contract` | `docs/designs/<feature>/components/<Name>.md` | design-workflow V2-3 |
 | `token-source-map` | `docs/designs/<feature>/tokens/source-map.md` | design-workflow V2-2 / V2-3 |
@@ -37,7 +39,7 @@ model: haiku
 
 `docs/specs/<capability>-spec.md` — capability 行为契约（事实真相）。纯行为，排除实现。
 
-一个 capability 一个文件，按系统行为域组织（如 `auth-session`、`checkout-payment`），**不按 feature 组织**。feature 是工作单元，开发时直接写/改相关 capability spec。
+一个 capability 一个文件，按系统行为域组织（如 `auth-session`、`checkout-payment`），**不按 feature 组织**。feature 是工作单元；行为变更经 `changes/<feature>/specs.md` delta 表达，finishing apply 到本文件。
 
 ```markdown
 # [Capability] Specification
@@ -62,6 +64,48 @@ The system SHALL [可验证的行为]。
 - **行为可入**（含错误行为，如"WHEN 无效 token THEN 返回 401"）；**实现不入**（不写 Architecture / Data Model / API 内部结构 / 技术选型——那些进 plan）
 - 文件名（capability 名）即锚点；无 per-feature metadata
 - 修改时**原地改到新契约**（spec 是权威，代码 conform 它），不追加 deviation
+
+### change-proposal
+
+`docs/changes/<feature>/proposal.md` — 工作单元意图：what/why + 受影响 capabilities。
+
+```markdown
+# Change: <feature>
+
+## 意图
+[一句话：这个 change 做什么、为什么]
+
+## 受影响 capabilities
+| capability | 动作 |
+|---|---|
+| <capability> | new / modify |
+
+（来自 brainstorm capability mapping）
+
+## 关联 ADR
+- [ADR-NNNN]（若有跨切面决策；无则省略本段）
+```
+
+### change-specs-delta
+
+`docs/changes/<feature>/specs.md` — 行为 delta（OpenSpec diff 格式），finishing apply 到 `docs/specs/`。
+
+```markdown
+# Change: <feature>
+
+## <capability>
+
+### Requirement: <名>
+- <被删旧行为>            （- = REMOVE）
++ <新增/改后行为>          （+ = ADD / MODIFY 后）
+#### Scenario: <名>
+  - GIVEN ...             （无前缀 = 上下文，不改）
++ - WHEN ...
++ - THEN ...
++ #### Scenario: <新场景>   （+ 开整段 = ADD）
+```
+
+`+` = ADD，`-` = REMOVE，无前缀 = 上下文。按 capability 分段（每段一个受影响 capability）。finishing 的 apply：把 `+` 并入、`-` 删出对应 `docs/specs/<capability>-spec.md`。
 
 ### design-intent
 

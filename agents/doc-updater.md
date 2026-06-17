@@ -13,7 +13,7 @@ model: haiku
 
 ```
 docs/
-├── specs/<capability>-spec.md  # capability 行为契约（事实真相；brainstorm → doc-writer 写入）
+├── specs/<capability>-spec.md  # capability 行为契约（事实真相；finishing apply 后的最终态）
 ├── designs/<feature>/ # 设计产物（design-workflow → doc-writer 写入）
 │   ├── intent.md
 │   ├── components/*.md
@@ -21,7 +21,9 @@ docs/
 │   └── screenshots/
 ├── architecture/
 │   └── adr/           # 架构决策记录（brainstorm Phase 4 → doc-writer 写入）
-├── plans/             # 实施方案（writing-plans skill，临时的，开发完成后删除）
+├── changes/
+│   ├── <feature>/          # 活跃工作单元（proposal+specs ← brainstorm；design+tasks ← writing-plans）
+│   └── archive/<feature>/  # 完成后耐久记录（proposal + specs.md；design/tasks 已删）
 ├── CODEMAP.md         # 代码结构 + 模块索引 + 数据流 + 依赖
 └── FEATURE-CATALOG.md # feature 台账 + UI 组件 + 架构决策
 ```

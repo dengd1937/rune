@@ -52,7 +52,7 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 - README.md → 保留根目录，CODEMAP 中引用
 - 已有架构文档 → 保留原位，CODEMAP 中引用，告知用户可手动移入 `docs/architecture/`
 - 外部 wiki → 不迁移，CODEMAP 中列出链接
-- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / designs / architecture/adr / plans）对比，标记缺失项
+- 已有 `docs/` → 列出现有子目录、与 Rune 期望子目录（specs / designs / architecture/adr / changes）对比，标记缺失项
 
 向用户报告评估结果与待补缺失子目录列表。
 
@@ -63,10 +63,12 @@ description: "Use when adopting Rune for an existing project — scaffolds docs/
 基于 Step 3 评估结果，仅创建缺失的 Rune 子目录：
 
 ```bash
-mkdir -p docs/specs docs/designs docs/architecture/adr docs/plans
+mkdir -p docs/specs docs/designs docs/architecture/adr docs/changes docs/changes/archive
 ```
 
 `mkdir -p` 对已存在的目录是 no-op，但 Step 3 评估结果必须作为前置——避免在用户已有自定义 `docs/` 结构（如 `docs/api/`、`docs/guides/`）时无差别注入空目录而无告知。
+
+`docs/changes/` 存活跃工作单元（`<feature>/`）；`docs/changes/archive/` 存完成后归档（proposal.md + specs.md）。
 
 ---
 
@@ -134,7 +136,7 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/plans
 
 ## Step 8: 验证 + 报告
 
-1. 验证 Step 4-7 产生的所有文件存在（`docs/specs/`、`docs/designs/`、`docs/architecture/adr/`、`docs/plans/` 及 CODEMAP / FEATURE-CATALOG / ADR-0001）
+1. 验证 Step 4-7 产生的所有文件存在（`docs/specs/`、`docs/designs/`、`docs/architecture/adr/`、`docs/changes/` 及 CODEMAP / FEATURE-CATALOG / ADR-0001）
 2. 调用 doc-updater agent 做 README 同步评估（参考 `agents/doc-updater.md` 的「项目 README 评估」职责）—— agent 仅返回建议清单，不直接修改 README
 3. 向用户展示：创建的文件树 + README 同步建议清单 + 后续步骤
 

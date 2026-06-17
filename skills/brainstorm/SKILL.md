@@ -352,17 +352,17 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 未命中判据 → 跳过本步，不写 ADR。
 
-> **Phase 4 产物去向**：技术设计（方案选择、架构、数据模型、API 决策）**不进 spec**——交给 writing-plans 写入 `docs/plans/<feature>.md` 的技术设计段。spec 只收行为契约（见 Phase 5）。
+> **Phase 4 产物去向**：技术设计（方案选择、架构、数据模型、API 决策）**不进 spec**——交给 writing-plans 写入 `docs/changes/<feature>/design.md`。spec 只收行为契约（见 Phase 5）。
 
 ---
 
-## Phase 5 — Capability Spec（行为契约）
+## Phase 5 — Capability Spec（行为契约，经 changes/ delta）
 
-把 Phase 1-3 确定的**行为**写成/改进 capability spec(s)。**只写行为，不写实现**——技术设计已在 Phase 4 交 writing-plans（→ plan）；竞品/产品框架/指标是对话级上下文，不入耐久文档。
+把 Phase 1-3 确定的**行为**表达为 change 的 delta（`docs/changes/<feature>/`）。**只写行为，不写实现**——技术设计已在 Phase 4 交 writing-plans（→ `changes/<feature>/design.md`）；竞品/产品框架/指标是对话级上下文，不入耐久文档。**不直接动 `docs/specs/`**——specs/ 的更新由 finishing 把 delta apply 落定。
 
 ### 5a. Capability Mapping
 
-先定位本 feature 触及哪些 capability（决定写哪些 spec）：
+先定位本 feature 触及哪些 capability（决定 delta 段）：
 
 1. 读现有 capability 库 `docs/specs/*-spec.md` + `docs/CODEMAP.md`，了解已有行为域
 2. 判断对每个相关 capability 是 `new`（建新 spec）还是 `modify`（改现有）
@@ -370,25 +370,25 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 一个 feature 可能触及多个 capability；也可能引入全新 capability。
 
-### 5b. 写/改 Capability Spec
+### 5b. 写 Change 文件夹（proposal + specs.md delta）
 
-按 5a 清单，调 doc-writer agent（模板 `capability-spec`）：
+按 5a 清单，调 doc-writer agent 写 `docs/changes/<feature>/`：
 
-- **new** → 创建 `docs/specs/<capability>-spec.md`：Purpose + Requirements[SHALL] + Scenarios[GIVEN/WHEN/THEN]。行为来自 Phase 1 核心场景 + Phase 3 功能分析。
-- **modify** → **原地改**现有 spec 到新契约：增/改/删 Requirements 与 Scenarios。spec 是权威，改到本次决定的新行为。
+- **proposal.md**（模板 `change-proposal`）：意图 + 受影响 capabilities 清单（5a 结果）+ 关联 ADR（若有）
+- **specs.md**（模板 `change-specs-delta`，OpenSpec diff 格式）：按 capability 分段的行为 delta——new capability 全 `+`（ADD）；modify capability 用 `+`/`-` 标增删改的 Requirements/Scenarios。行为来自 Phase 1 核心场景 + Phase 3 功能分析
 
-**纪律**：只写行为（含错误行为）；不写 Architecture / Data Model / API 结构 / 技术选型。文件名（capability 名）即锚点。
+**纪律**：delta 只写行为（含错误行为）；不写 Architecture / Data Model / API 结构 / 技术选型（那些进 `design.md`）。`design.md` + `tasks.md` 由 writing-plans 后续补。
 
 **写入后：**
 → doc-updater agent 更新 FEATURE-CATALOG（Features 段：Status=Draft；Spec 列填触及的 capability spec(s)）
 
-> **寻址锚点变化**：feature 名现在锚定在 `docs/plans/<feature>.md`（writing-plans 写入）；capability spec 按 capability 名寻址。design-workflow / writing-plans 通过本 Phase 的 mapping 知道该读哪些 capability spec。
+> **寻址锚点**：feature 名锚定整个 `docs/changes/<feature>/` 文件夹（proposal/specs/design/tasks 同名同居）；capability spec 按 capability 名寻址于 `docs/specs/`。design-workflow / writing-plans 通过 5a mapping 知道该读哪些 capability spec；finishing 读 `specs.md` delta apply 到 specs/。
 
 ### 5c. Self-Review + 用户审阅
 
-用 fresh eyes 做四项检查：① **Placeholder 扫描**（TBD/TODO/模糊需求）；② **内部一致**（Requirements 与 Scenarios 不矛盾）；③ **行为可验证**（每个 Scenario 能测）；④ **行为/实现分离**（无架构/数据模型等技术内容混入）。发现问题 inline 修复。
+用 fresh eyes 做四项检查：① **Placeholder 扫描**（TBD/TODO/模糊需求）；② **内部一致**（delta 的 +/- 与 proposal 清单一致、无矛盾）；③ **行为可验证**（每个 ADD/MODIFY 的 Scenario 能测）；④ **行为/实现分离**（无架构/数据模型等技术内容混入）。发现问题 inline 修复。
 
-然后**请用户审阅写/改后的 capability spec(s)**，等待确认后才进入 Phase 6。
+然后**请用户审阅 `changes/<feature>/`（proposal + specs.md delta）**，等待确认后才进入 Phase 6。
 
 ---
 
@@ -487,9 +487,11 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 ```
 /brainstorm
   │
-  ├─ Phase 1-3 + capability mapping → doc-writer: capability-spec → docs/specs/<capability>-spec.md
-  │     (Phase 4 技术设计 → writing-plans → docs/plans/<feature>.md)
+  ├─ Phase 1-3 + capability mapping → doc-writer: change-proposal + change-specs-delta
+  │     → docs/changes/<feature>/{proposal,specs}.md
+  │     (Phase 4 技术设计 → writing-plans → docs/changes/<feature>/design.md)
   │     design-workflow V2-1 / writing-plans 读相关 capability specs
+  │     finishing 读 changes/<feature>/specs.md → apply 到 docs/specs/
   │
   └─ doc-updater agent 更新 feature catalog（Spec 列 = 触及的 capability specs）
 ```

@@ -63,7 +63,7 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 | [brainstorm](skills/brainstorm/SKILL.md) | 产品发现 → capability spec(s)（chore 类走 Scale Gate 简化路径） |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI 设计 — L1 轻量 / L2 完整 wireframe → 高保真 → 审查 |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP 设计 + 代码生成 |
-| [writing-plans](skills/writing-plans/SKILL.md) | 实施方案 — 任务拆解、No Placeholders、双重质量检查 |
+| [writing-plans](skills/writing-plans/SKILL.md) | 技术设计 + 任务拆解 → docs/changes/ — No Placeholders、双重质量检查 |
 | [subagent-driven-development](skills/subagent-driven-development/SKILL.md) | 多文件改动 — 逐任务 TDD + 审查循环 |
 | [tdd-workflow](skills/tdd-workflow/SKILL.md) | RED → GREEN → IMPROVE 循环（80%+ 覆盖率） |
 | [investigate](skills/investigate/SKILL.md) | 根因分析 → TDD 修复 → 审查（未确认原因前不改代码） |

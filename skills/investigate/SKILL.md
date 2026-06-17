@@ -224,6 +224,10 @@ async function gitInit(directory: string) {
 - 假设 Y：[排除原因]
 
 **修复方向**：[修复思路 + 需改动的文件]
+
+**Spec 契约分类**（供 finishing 判断是否需 change 文件夹）：
+- **Case A — spec 对、代码错**：相关 capability spec 正确描述预期行为，根因是代码缺陷 → 只改代码，spec 不动，无 change 文件夹
+- **Case B — spec 错 / 缺 / 歧义**：根因是行为契约本身有问题 → 开轻量 change 文件夹（`docs/changes/<fix>/{proposal.md, specs.md}` delta），finishing apply delta + 改代码
 ```
 
 **此时才允许修改代码。**

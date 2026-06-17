@@ -30,37 +30,40 @@ description: "Use during finishing phase to sync documentation with implementati
 
 ## 执行步骤
 
-### Step 1: Capability Spec 对账
+### Step 1: Capability Spec 对账（apply delta + verify）
 
-spec 是权威行为契约，代码 conform 它。**不追加 deviation record**——契约变了就原地改正文到新契约，契约没变就不动。
+spec 是权威行为契约，代码 conform 它。本步把 change 的行为 delta **apply** 到 `docs/specs/`，并 fresh-eyes 校验。
 
-**前置判断：定位受影响的 capability spec**
+**前置判断：定位行为 delta**
 
-- 优先用 brainstorm 的 capability mapping（`docs/FEATURE-CATALOG.md` 该 feature 的 Spec 列）
-- 无 mapping 时：从 `changed_files` → 模块（CODEMAP）→ 该模块的 capability spec 反推
-- 无 capability spec 可定位 → 跳过本步（Pre-Rune 未 specced 的 capability，或 Truly Simple 误升级兜底）
+- 读 `docs/changes/<feature>/specs.md`（brainstorm / bug-fix Case B 写的 delta）
+- 无 specs.md（Case A bug-fix、refactor、或无行为变更）→ 跳过 apply，仅做 verify
 
-**按 context 对账每个受影响 capability spec（`docs/specs/<capability>-spec.md`）：**
+**Apply（specs.md 存在时）：**
 
-| context | spec 动作 |
+把 delta 落到对应 `docs/specs/<capability>-spec.md`：
+- `+` 行（ADD / MODIFY）→ 并入 spec 的 Requirements / Scenarios
+- `-` 行（REMOVE）→ 从 spec 删出
+- new capability（delta 全 `+`）→ 创建新 capability spec 文件
+- 按 capability 分段逐段 apply
+
+**按 context：**
+
+| context | 动作 |
 |---|---|
-| `new-feature` | brainstorm 已把 spec 写/改到**新契约**。校验代码 conform 新契约；代码偏离新契约 = 实现 bug，标记给调用方（**不改 spec**——契约是 brainstorm 定的意图）|
-| `bug-fix` **Case A**（spec 对，代码错）| 校验代码 conform；**spec 不动** |
-| `bug-fix` **Case B**（spec 错 / 缺 / 歧义）| **原地改 spec** 到正确契约（增/改/删 Requirements、Scenarios）+ 代码已修 |
+| `new-feature` | apply `changes/<feature>/specs.md` delta → specs/ |
+| `bug-fix` **Case A**（spec 对）| 无 delta；spec **不动**，仅验代码 conform |
+| `bug-fix` **Case B**（spec 错 / 缺 / 歧义）| apply `changes/<feature>/specs.md` delta → specs/（delta 在 bug-fix 流程中写）+ 代码已修 |
 | `abandoned` | 跳过（Step 2 标 Abandoned）|
-| refactor | spec **必须不动**；若发现需改 spec = 该"refactor"偷改了行为，升级为 feature 或上报 |
+| refactor | 无 delta；spec **必须不动**——若发现需改 spec = 该"refactor"偷改了行为，升级或上报 |
 
-**对账方法（每个受影响 spec）：**
+**Fresh-eyes verify（apply 后，独立视角，非 apply 者 self-check）：**
 
-1. 读 capability spec 的 Requirements / Scenarios
-2. `git diff <base_SHA>..HEAD` 看实际行为变更
-3. 判断实现行为是否符合 spec 契约：
-   - 符合 → 不动 spec
-   - 契约需变（new-feature 新行为 / Case B 契约错）→ **原地改 spec 正文**到新/正确契约
-   - 代码偏离正确契约（Case A）→ 不动 spec，标记代码 bug
-4. refactor 场景：spec 有任何改动冲动 → 停，上报"疑似行为变更"
+1. **Apply 完整性**：delta 每个 `+` 是否进了 spec、每个 `-` 是否已删、MODIFY 是否替换到位
+2. **code↔spec 一致**：`git diff <base_SHA>..HEAD` 的实际行为符合 apply 后的 spec 契约；代码偏离正确契约 = 实现 bug（Case A），标记不改 spec
+3. **refactor 守卫**：refactor 场景 spec 有任何改动冲动 → 停，上报"疑似行为变更"
 
-**核心**：spec 正文只在"契约本身变了"时改（brainstorm 决策 / Case B），不为"代码变了"就抄。deviation-append 机制已废除。
+**核心**：spec 正文只在"契约本身变了"时改（经 delta apply），不为"代码变了"就抄。deviation-append 机制已废除。
 
 ### Step 2: 索引推进（FEATURE-CATALOG + CODEMAP）
 
@@ -105,7 +108,7 @@ spec 是权威行为契约，代码 conform 它。**不追加 deviation record**
 
 ## 不做什么
 
-- 不重写 spec 全文，也不追加 deviation record——契约变了对具体 Requirements/Scenarios 原地改
+- 不重写 spec 全文，也不追加 deviation record——契约变更经 `changes/<feature>/specs.md` delta apply 到具体 Requirements/Scenarios
 - 不引入新的 delta spec 文档格式
 - 不自动删除任何文件
 - 不自动更新 README
