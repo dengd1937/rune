@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Trigger:  PreToolUse — matcher: Bash
-# Behavior: BLOCKS dangerous git commands, wrong package manager usage,
-#           and non-Conventional-Commit messages.
+# Behavior: BLOCKS dangerous git commands, catastrophic rm -rf,
+#           wrong package manager usage, and non-Conventional-Commit messages.
 # Disable:  chmod -x hooks/pre-bash-guard.sh
 
 set -euo pipefail

@@ -6,8 +6,12 @@
 #
 # Detection (粗粒度兜底，不校验 verdict)：
 #   工具名匹配 "Task" 或 "Agent"（Claude Code 实际名为 Agent，
-#   "Task" 保留兼容其他 harness），subagent_type == "general-purpose"
-#   且 prompt 含 GP_REVIEWER_PROMPTS 中任一文件名。
+#   "Task" 保留兼容其他 harness），subagent_type 含 "general-purpose"
+#   （大小写不敏感）且 prompt 含 GP_REVIEWER_PROMPTS 中任一文件名。
+#
+# Window boundary：反向扫描停在上一条*成功*的 git commit；上一条
+#   commit 若失败（hook block 等导致的 tool_result is_error）不算边界，
+#   继续往更早扫——否则被拦掉的重试会把 reviewer 误判为已调用。
 #
 # 设计角色：仅检测"是否调用过 reviewer"。verdict / diff 一致性 / 时效性
 #           校验由 subagent-driven-development skill 的修复闭环兜底，hook 不做。

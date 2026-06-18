@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# SessionStart hook for Rune — inject using-rune SKILL.md as context
+# SessionStart hook for Rune. Two responsibilities:
+#   1. Inject using-rune SKILL.md as additional context.
+#   2. Deploy a commit-msg hook (strips Co-authored-by) into the project's
+#      .git/hooks/commit-msg — idempotent; never overwrites a non-Rune hook.
 # Triggers on startup | clear | compact (configured in hooks/hooks.json)
 
 set -euo pipefail

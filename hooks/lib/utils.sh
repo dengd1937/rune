@@ -12,8 +12,9 @@ log_warn() {
     echo "[hook] WARNING: $*" >&2
 }
 
-# Return 0 if the given file path is in an exempt location (tests, scripts, fixtures).
-# These paths are allowed to contain debug statements and example secrets.
+# Return 0 if the given file path is in an exempt location (tests, scripts,
+# fixtures, spec/). These paths are allowed to contain debug statements and
+# example secrets.
 is_exempt_path() {
     local path="$1"
     echo "$path" | grep -qE '(tests?/|__tests__/|test_fixtures?/|spec/|scripts?/|\.env\.example)'
