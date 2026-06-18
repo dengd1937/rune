@@ -41,7 +41,8 @@ if echo "$FIRST_LINE" | grep -qE "${INVOKE}git\s+reset\s+--hard"; then
 fi
 
 # ── Rule 4: No catastrophic rm -rf ────────────────────────────────────────────
-# Block only when the dangerous target (/ ~ * ..) is the direct argument.
+# Block when the target begins with a bare / ~ * or .. token — this catches
+# rm -rf /, rm -rf /home (any absolute path), rm -rf ~, rm -rf *, rm -rf ..
 if echo "$CMD" | grep -qE "${INVOKE}rm\s+-[rf]{1,2}\s+(\/|~|\*|\.\.)"; then
     log_block "Potentially catastrophic rm -rf. Use a precise relative path instead of /, ~, *, or ../"
     exit 2
