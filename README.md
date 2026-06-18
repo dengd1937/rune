@@ -28,7 +28,7 @@ Four enforcement layers, each with a distinct role:
 ```
 Layer 1  Iron Laws + Routing         using-rune skill (always loaded)
 Layer 2  On-Demand Guidance          Skills (invoked when ≥1% relevant)
-Layer 3  Review Enforcement          code-review skill prompt templates (during review)
+Layer 3  Review Enforcement          code-review / design-review skill prompt templates (during review)
 Layer 4  Physical Interception       8 hooks (block at write/commit time)
 ```
 

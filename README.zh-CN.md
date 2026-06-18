@@ -28,7 +28,7 @@ claude plugin install rune@rune
 ```
 第一层  铁律 + 路由              using-rune skill（始终加载）
 第二层  按需指导                Skills（≥1% 相关时调用）
-第三层  审查强制                code-review skill 内置 prompt 模板（审查时）
+第三层  审查强制                code-review / design-review skills 内置 prompt 模板（审查时）
 第四层  物理拦截                8 个 hooks（写/提交时阻断）
 ```
 
