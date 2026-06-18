@@ -20,7 +20,6 @@ After installation, the following activate automatically:
 - **PreToolUse** hooks block dangerous commands and secret writes
 - **PostToolUse** hooks detect debug statements and quality issues
 - **Skills** — invoke with `/rune:<skill-name>` (full set in the table below)
-- **3 agents** — design reviewer, doc writers
 
 ## How It Works
 
@@ -111,14 +110,8 @@ finishing       →  apply specs.md delta to specs/  →  archive proposal + del
 | [writing-skills](skills/writing-skills/SKILL.md) | Author and maintain Rune skills |
 | [doc-sync](skills/doc-sync/SKILL.md) | Post-implementation doc sync — updates specs, catalogs, and design artifact status |
 | [onboard](skills/onboard/SKILL.md) | Scaffold Rune docs topology for existing projects — generates codemap (with module index), feature catalog, and adoption ADR |
-
-## Agents
-
-| Agent | Purpose | When |
-|-------|---------|------|
-| [design-reviewer](agents/design-reviewer.md) | Design artifact review | Design workflow steps |
-| [doc-writer](agents/doc-writer.md) | Format and write workflow docs from templates | After workflow produces structured data |
-| [doc-updater](agents/doc-updater.md) | Maintain catalogs, indexes, codemaps | After workflow completes |
+| [doc-ops](skills/doc-ops/SKILL.md) | Mechanical docs operations — write templated artifacts (specs/ADR/design) or reconcile FEATURE-CATALOG + CODEMAP |
+| [design-review](skills/design-review/SKILL.md) | Adversarial design-artifact review — design-workflow V2-4 hard gate before handoff |
 
 ## Hooks
 
@@ -140,7 +133,6 @@ rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace entry
 ├── hooks/                 # Physical enforcement layer
 ├── skills/                # auto-discovered skills
-├── agents/                # 3 auto-discovered agents
 ├── CLAUDE.md              # Project instructions
 ├── README.md              # This file
 └── LICENSE                # MIT

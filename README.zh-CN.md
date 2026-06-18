@@ -20,7 +20,6 @@ claude plugin install rune@rune
 - **PreToolUse** hook 拦截危险命令和 secrets 写入
 - **PostToolUse** hook 检测 debug 语句和质量问题
 - **Skills** — 通过 `/rune:<skill-name>` 调用（完整列表见下方表格）
-- **3 个 agents** — design-reviewer、doc-writer 等
 
 ## 工作原理
 
@@ -111,14 +110,8 @@ finishing       →  apply specs.md delta 到 specs/  →  归档 proposal + del
 | [writing-skills](skills/writing-skills/SKILL.md) | 创建和维护 Rune skills |
 | [doc-sync](skills/doc-sync/SKILL.md) | 实现后文档对账 — 更新 spec、catalog、design artifact 状态 |
 | [onboard](skills/onboard/SKILL.md) | 为已有项目搭建 Rune 文档拓扑 — 生成 codemap（含模块索引）、feature catalog 和接入 ADR |
-
-## Agents
-
-| Agent | 用途 | 触发时机 |
-|-------|------|----------|
-| [design-reviewer](agents/design-reviewer.md) | 设计产物审查 | 设计工作流各阶段 |
-| [doc-writer](agents/doc-writer.md) | 按模板格式化并写入工作流文档 | 工作流产出结构化数据后 |
-| [doc-updater](agents/doc-updater.md) | 维护 catalog、索引、codemap | 工作流完成后 |
+| [doc-ops](skills/doc-ops/SKILL.md) | 文档机械操作 — 按模板写产物（spec/ADR/design）或对账 FEATURE-CATALOG + CODEMAP |
+| [design-review](skills/design-review/SKILL.md) | 对抗式设计产物审查 — design-workflow V2-4 hard gate，移交开发前 |
 
 ## Hooks
 
@@ -140,7 +133,6 @@ rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace 入口
 ├── hooks/                 # 物理拦截层
 ├── skills/                # 自动发现的 skills
-├── agents/                # 3 个自动发现的 agents
 ├── CLAUDE.md              # 项目指令
 ├── README.md              # 英文文档
 ├── README.zh-CN.md        # 中文文档（本文件）

@@ -94,9 +94,9 @@ designs          = docs/designs/{feature}/
 - Search the project for reusable design assets and existing `docs/designs/` directories
 - Use `pencil_batch_get` with `patterns: [{ reusable: true }]` to discover reusable components
 - Use `pencil_get_variables` to inspect the existing token system
-- Pass the design intent data to → doc-writer agent 模板：`design-intent`
+- Pass the design intent data to → doc-ops skill（write 模式，模板：`design-intent`
 
-**Output:** `docs/designs/<feature>/intent.md`（通过 doc-writer 写入）
+**Output:** `docs/designs/<feature>/intent.md`（通过 doc-ops write 写入）
 
 **Gate 1:** User confirms the design direction.
 
@@ -118,7 +118,7 @@ Create the page structure and establish the minimum token set needed to support 
    - *Do's and don'ts* is not tokenized — it applies as a validation constraint in V2-3 and V2-4
 2. If `DESIGN.md` does not exist, define/confirm baseline tokens (brand, semantic, surface, typography, radius) as usual — see pencil-design skill for complete token reference.
 3. Verify tokens with `pencil_get_variables`.
-4. Pass token provenance data to → doc-writer agent 模板：`token-source-map` when tokens are derived from DESIGN.md, existing variables, or fallback defaults.
+4. Pass token provenance data to → doc-ops skill（write 模式，模板：`token-source-map` when tokens are derived from DESIGN.md, existing variables, or fallback defaults.
 5. Build the wireframe and page regions using reusable components and tokenized values only.
 6. Capture review screenshots to `screenshots/.tmp/`.
 7. Run `pencil_snapshot_layout({ problemsOnly: true })` on the affected screens.
@@ -151,7 +151,7 @@ Refine the wireframe into the final design, expand the token system, and documen
 5. Run token pipeline — see pencil-design skill.
 6. Verify generated outputs (`tokens.css`, `tokens.ts`, `tailwind-preset.ts`).
 7. Capture final component and screen screenshots to `screenshots/.tmp/`, then promote approved results.
-8. Pass component contract data to → doc-writer agent 模板：`component-contract`（doc-writer 包含完整模板：Variants、States、Responsive、Accessibility、Implementation Mapping、Design Constraints）
+8. Pass component contract data to → doc-ops skill（write 模式，模板：`component-contract`（doc-ops templates/component-contract.md 含完整模板：Variants、States、Responsive、Accessibility、Implementation Mapping、Design Constraints）
 
 **Rule:** Do not duplicate full TypeScript props interfaces in markdown unless design decisions directly constrain the public API. Source code remains the authority for props.
 
@@ -169,12 +169,12 @@ Review all design artifacts before handoff. This is the single hard approval gat
 
 1. Capture final screenshots for each documented breakpoint.
 2. Run `pencil_snapshot_layout({ problemsOnly: true })` on relevant screens.
-3. Pass layout report data to → doc-writer agent 模板：`layout-report`
+3. Pass layout report data to → doc-ops skill（write 模式，模板：`layout-report`
    - approved screenshots → `docs/designs/<feature>/screenshots/`
 
-**Phase 2 - `design-reviewer` agent**
+**Phase 2 - design-review skill**
 
-Run the `design-reviewer` agent against `docs/designs/<feature>/`. The agent checks token coverage, contract completeness, artifact consistency, a11y docs, responsive coverage, and DESIGN.md compliance when DESIGN.md exists.
+调用 design-review skill 审查 `docs/designs/<feature>/`。该 skill 检查 token coverage, contract completeness, artifact consistency, a11y docs, responsive coverage, and DESIGN.md compliance when DESIGN.md exists.
 
 **If `DESIGN.md` exists**, the agent additionally checks:
 - Do all tokens trace back to a DESIGN.md rule?
@@ -188,7 +188,7 @@ Run the `design-reviewer` agent against `docs/designs/<feature>/`. The agent che
 
 1. Review the artifact report in conversation.
 2. Present final screenshots and review findings.
-3. On approval, pass verdict data to → doc-writer agent 模板：`review-verdict`
+3. On approval, pass verdict data to → doc-ops skill（write 模式，模板：`review-verdict`
 
 **Outputs:**
 
@@ -204,7 +204,7 @@ Run the `design-reviewer` agent against `docs/designs/<feature>/`. The agent che
 
 After Gate 3, design artifacts become inputs to the `writing-plans` skill, which produces the plan consumed by `subagent-driven-development`.
 
-**同步设计产物到 FEATURE-CATALOG**（handoff 前必做）：调 doc-updater agent，scope 限定本 feature：
+**同步设计产物到 FEATURE-CATALOG**（handoff 前必做）：调 doc-ops skill（sync 模式，scope 限定本 feature）：
 
 - 该 feature 的 `Design Status` → `Done`
 - 扫描 `docs/designs/<feature>/components/*.md`，写入 FEATURE-CATALOG 的 **Components 段**（Component | Feature | Base Component | Status）

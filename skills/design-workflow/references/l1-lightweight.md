@@ -12,7 +12,7 @@ Use `L1` when **all** of the following are true:
 1. Confirm the change is local and does not introduce new design primitives.
 2. **If `DESIGN.md` exists**, verify the proposed change complies with its *Do's and don'ts* and stays within defined color/typography/component style boundaries. If the change reveals a design identity gap, record it and ask for user decision instead of inventing a new visual rule.
 3. Capture before/after screenshots for the affected area.
-4. Pass the design note data to → doc-writer agent 模板：`l1-design-note`
+4. Pass the design note data to → doc-ops skill（write 模式，模板：`l1-design-note`）
    - what changed
    - why it changed
    - which existing tokens/components were reused

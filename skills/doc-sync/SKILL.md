@@ -67,7 +67,7 @@ spec 是权威行为契约，代码 conform 它。本步把 change 的行为 del
 
 ### Step 2: 索引推进（FEATURE-CATALOG + CODEMAP）
 
-调用 doc-updater agent，scope 同时覆盖 FEATURE-CATALOG 与 CODEMAP：
+调用 doc-ops skill（sync 模式，scope 同时覆盖 FEATURE-CATALOG 与 CODEMAP）：
 
 - **CODEMAP**（`new-feature` / `bug-fix`，即代码有变更时）：重扫 changed_files 的目录与模块结构，更新「目录结构」与「关键模块」表
 - **FEATURE-CATALOG**，按 context：

@@ -347,8 +347,8 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 命中判据：
 
-1. 调 doc-writer agent（模板：`adr`）写入 `docs/architecture/adr/<NNNN>-<slug>.md`（编号扫描 `docs/architecture/adr/` 取下一个）
-2. 调 doc-updater agent 把该 ADR 加入 `docs/FEATURE-CATALOG.md` 的 **Decisions 段**（ADR | 标题 | 状态=已批准 | 日期 | 关联 Feature）
+1. 调 doc-ops skill（write 模式，模板：`adr`）写入 `docs/architecture/adr/<NNNN>-<slug>.md`（编号扫描 `docs/architecture/adr/` 取下一个）
+2. 调 doc-ops skill（sync 模式，scope=Decisions 段）把该 ADR 加入 `docs/FEATURE-CATALOG.md` 的 **Decisions 段**（ADR | 标题 | 状态=已批准 | 日期 | 关联 Feature）
 
 未命中判据 → 跳过本步，不写 ADR。
 
@@ -372,7 +372,7 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 
 ### 5b. 写 Change 文件夹（proposal + specs.md delta）
 
-按 5a 清单，调 doc-writer agent 写 `docs/changes/<feature>/`：
+按 5a 清单，调 doc-ops skill（write 模式）写 `docs/changes/<feature>/`：
 
 - **proposal.md**（模板 `change-proposal`）：意图 + 受影响 capabilities 清单（5a 结果）+ 关联 ADR（若有）
 - **specs.md**（模板 `change-specs-delta`，OpenSpec diff 格式）：按 capability 分段的行为 delta——new capability 全 `+`（ADD）；modify capability 用 `+`/`-` 标增删改的 Requirements/Scenarios。行为来自 Phase 1 核心场景 + Phase 3 功能分析
@@ -380,7 +380,7 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 **纪律**：delta 只写行为（含错误行为）；不写 Architecture / Data Model / API 结构 / 技术选型（那些进 `design.md`）。`design.md` + `tasks.md` 由 writing-plans 后续补。
 
 **写入后：**
-→ doc-updater agent 更新 FEATURE-CATALOG（Features 段：Status=Draft；Spec 列填触及的 capability spec(s)）
+→ 调 doc-ops skill（sync 模式，scope=Features 段）更新 FEATURE-CATALOG（Features 段：Status=Draft；Spec 列填触及的 capability spec(s)）
 
 > **寻址锚点**：feature 名锚定整个 `docs/changes/<feature>/` 文件夹（proposal/specs/design/tasks 同名同居）；capability spec 按 capability 名寻址于 `docs/specs/`。design-workflow / writing-plans 通过 5a mapping 知道该读哪些 capability spec；finishing 读 `specs.md` delta apply 到 specs/。
 
@@ -445,7 +445,7 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 - [ ] Spec 文件已写入并通过 self-review
 - [ ] 用户已审阅 spec 文件并批准
 - [ ] 路由决策经过用户确认
-- [ ] doc-writer 已写入 spec 文件
+- [ ] doc-ops write 已写入 spec 文件
 - [ ] 用户明确表示「可以进入下一步」
 
 ---
@@ -487,11 +487,11 @@ MVP 范围 = P0 功能集合，目标是 [一句话描述 MVP 交付的核心价
 ```
 /brainstorm
   │
-  ├─ Phase 1-3 + capability mapping → doc-writer: change-proposal + change-specs-delta
+  ├─ Phase 1-3 + capability mapping → doc-ops write: change-proposal + change-specs-delta
   │     → docs/changes/<feature>/{proposal,specs}.md
   │     (Phase 4 技术设计 → writing-plans → docs/changes/<feature>/design.md)
   │     design-workflow V2-1 / writing-plans 读相关 capability specs
   │     finishing 读 changes/<feature>/specs.md → apply 到 docs/specs/
   │
-  └─ doc-updater agent 更新 feature catalog（Spec 列 = 触及的 capability specs）
+  └─ 调 doc-ops skill（sync 模式）更新 feature catalog（Spec 列 = 触及的 capability specs）
 ```

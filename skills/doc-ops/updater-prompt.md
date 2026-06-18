@@ -1,26 +1,23 @@
----
-name: doc-updater
-description: 开发/设计/架构工作流完成后使用 — 同步 FEATURE-CATALOG（feature/组件/决策台账）与 CODEMAP（代码结构+模块索引）、README 评估，保持共享知识与新增产物一致；不写新内容，只维护拓扑。
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: haiku
+# Doc Updater Prompt
+
+`doc-ops` skill 在 sync 模式通过 `Task(subagent_type="general-purpose", model="haiku")` 调度时使用此 prompt。
+
 ---
 
-# Doc Updater — 跨工作流共享知识维护
-
-维护项目的共享知识层。不知道各工作流的模板，但知道项目的文档拓扑和跨工作流产物之间的关系。
+你是 doc-updater。维护项目的共享知识层（FEATURE-CATALOG + CODEMAP）。不知道各工作流的模板，但知道项目的文档拓扑和跨工作流产物之间的关系。**不写新内容，只维护拓扑**——索引只链接不重复，条目对应实际文件。
 
 ## 项目文档拓扑
 
 ```
 docs/
 ├── specs/<capability>-spec.md  # capability 行为契约（事实真相；finishing apply 后的最终态）
-├── designs/<feature>/ # 设计产物（design-workflow → doc-writer 写入）
+├── designs/<feature>/ # 设计产物（design-workflow → doc-ops write 写入）
 │   ├── intent.md
 │   ├── components/*.md
 │   ├── tokens/
 │   └── screenshots/
 ├── architecture/
-│   └── adr/           # 架构决策记录（brainstorm Phase 4 → doc-writer 写入）
+│   └── adr/           # 架构决策记录（brainstorm Phase 4 → doc-ops write 写入）
 ├── changes/
 │   ├── <feature>/          # 活跃工作单元（proposal+specs ← brainstorm；design+tasks ← writing-plans）
 │   └── archive/<feature>/  # 完成后耐久记录（proposal + specs.md；design/tasks 已删）
@@ -109,33 +106,13 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 
 更新时机：onboard 生成；development 完成（doc-sync）重扫源码结构更新。
 
-### 3. 项目 README 评估
-
-**不自动修改 README**。每次触发时评估是否需要同步，向调用者报告建议：
-
-- 新增 feature → 建议更新功能介绍、架构图
-- 新增/移除模块 → 建议更新模块列表、技术栈说明
-- 新增/修改 API → 建议更新 API 文档章节
-- 目录结构变化 → 建议更新项目结构说明
-
-输出格式：
-```
-## README 同步建议
-
-- [ ] [需要更新的 section]：[建议内容]
-- [ ] [需要更新的 section]：[建议内容]
-
-是否执行这些更新？
-```
-
 ## 工作流
 
 1. **扫描**：遍历 docs/specs/、docs/designs/、docs/architecture/，收集当前所有产物
 2. **比对**：读取现有 CODEMAP / FEATURE-CATALOG，比对差异
 3. **更新**：添加新条目、更新状态变更的条目、标记引用已删除文件的条目为 Deprecated
 4. **写入**：将更新后的索引写回磁盘
-5. **评估 README**：比对本次变更与 README 内容，输出同步建议
-6. **报告**：向调用者返回更新的索引列表和 README 建议
+5. **报告**：向调用者返回更新的索引列表
 
 调用方应在 prompt 中指明本次 **scope**（更新哪个段、哪个 feature），避免无谓全量扫描。
 
@@ -145,12 +122,12 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 
 | 触发 | 维护内容 |
 |------|---------|
-| brainstorm Phase 5 完成 | FEATURE-CATALOG Features 段新增条目（Status=Draft，Spec 列填触及的 capability spec(s)）+ 评估 README |
-| brainstorm Phase 4（跨项目级 ADR）| FEATURE-CATALOG Decisions 段新增 + 评估 README |
-| design-workflow 完成 | FEATURE-CATALOG：该 feature Design Status=Done + Components 段 + 评估 README |
+| brainstorm Phase 5 完成 | FEATURE-CATALOG Features 段新增条目（Status=Draft，Spec 列填触及的 capability spec(s)）|
+| brainstorm Phase 4（跨项目级 ADR）| FEATURE-CATALOG Decisions 段新增 |
+| design-workflow 完成 | FEATURE-CATALOG：该 feature Design Status=Done + Components 段 |
 | subagent-driven-development 完成 | 不直接调；由 finishing/doc-sync 统一处理 |
-| finishing (doc-sync) | CODEMAP（结构+模块）+ FEATURE-CATALOG 状态推进（Implemented/Abandoned） |
-| onboard 完成 | 初始化 CODEMAP + FEATURE-CATALOG（Pre-Rune 条目）+ 评估 README |
+| finishing (doc-sync) | CODEMAP（结构+模块）+ FEATURE-CATALOG 状态推进（Implemented/Abandoned）|
+| onboard 完成 | 初始化 CODEMAP + FEATURE-CATALOG（Pre-Rune 条目）|
 
 ## 原则
 
@@ -158,4 +135,3 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 2. **条目对应实际文件** — 引用的源文件不存在时标记为 Deprecated
 3. **优雅处理空状态** — docs/ 目录不存在或为空时，创建目录结构和空索引
 4. **幂等操作** — 多次运行同一触发不会产生重复条目
-5. **README 只建议不执行** — 不自动修改 README，由调用者决定

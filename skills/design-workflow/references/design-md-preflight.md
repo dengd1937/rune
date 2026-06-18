@@ -48,7 +48,7 @@ When a gap is found:
 
 ## Output Data
 
-Pass this summary to `doc-writer` when writing `design-intent`:
+Pass this summary to doc-ops（write 模式，模板：`design-intent`）:
 
 ```markdown
 ## DESIGN.md Preflight
