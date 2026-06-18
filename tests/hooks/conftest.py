@@ -107,3 +107,48 @@ def tmp_repo(tmp_path: Path) -> Path:
     ):
         subprocess.run(args, cwd=tmp_path, check=True)
     return tmp_path
+
+
+def make_transcript(tmp_path: Path, events: list[dict]) -> Path:
+    """Write a synthetic session transcript .jsonl for pre-commit-review-check.
+
+    Events are time-ordered; each is one of:
+      {"role":"assistant","tool":"Write|Edit|Bash|Agent|Task","id":..,"input":{...}}
+      {"role":"user","id":..,"is_error":bool}   # tool_result pairing with an assistant id
+    """
+    p = tmp_path / "transcript.jsonl"
+    lines = []
+    for ev in events:
+        if ev["role"] == "assistant":
+            block = {"type": "tool_use", "name": ev["tool"], "id": ev["id"], "input": ev.get("input", {})}
+            lines.append(json.dumps({"type": "assistant", "message": {"content": [block]}}))
+        else:
+            block = {
+                "type": "tool_result",
+                "tool_use_id": ev["id"],
+                "is_error": ev.get("is_error", False),
+                "content": "ok",
+            }
+            lines.append(json.dumps({"type": "user", "message": {"content": [block]}}))
+    p.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return p
+
+
+def write_codemap(repo: Path, rows: list[tuple[str, str | None]]) -> Path:
+    """Write a minimal docs/CODEMAP.md with a 「关键模块」 table.
+
+    rows: (entry_file, capability) — capability None/"" means no spec for that module.
+    Columns parsed by the hook: a[4]=入口文件, a[6]=Capability Spec.
+    """
+    docs = repo / "docs"
+    docs.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# CODEMAP", "", "## 关键模块", "",
+        "| 模块 | 职责 | 入口文件 | 主要依赖 | Capability Spec |",
+        "|------|------|----------|----------|-----------------|",
+    ]
+    for entry, cap in rows:
+        lines.append(f"| mod | responsibility | {entry} | - | {cap or '-'} |")
+    path = docs / "CODEMAP.md"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
