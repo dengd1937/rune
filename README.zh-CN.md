@@ -30,7 +30,7 @@ claude plugin install rune@rune
 第一层  铁律 + 路由              using-rune skill（始终加载）
 第二层  按需指导                Skills（≥1% 相关时调用）
 第三层  审查强制                code-review skill 内置 prompt 模板（审查时）
-第四层  物理拦截                6 个 hooks（写/提交时阻断）
+第四层  物理拦截                8 个 hooks（写/提交时阻断）
 ```
 
 **铁律**（不可绕过）：
@@ -100,6 +100,8 @@ chore 类改动（typo、hook regex、README 调整）走 `brainstorm` skill 的
 | `pre-bash-guard.sh` | PreToolUse | 拦截危险 shell 命令 |
 | `pre-write-secrets.sh` | PreToolUse | 拦截含 API keys / secrets 的写入 |
 | `pre-commit-review-check.py` | PreToolUse | 强制审查通过后才允许 git commit |
+| `pre-strip-llm-attribution.sh` | PreToolUse | 拦截 `gh pr create` 中的 LLM 署名 |
+| `pre-spec-drift-check.sh` | PreToolUse | spec 漂移警告（advisory）—动了 specced 模块代码却没更新 spec/delta |
 | `post-write-debug.sh` | PostToolUse | 检测残留 debug 语句 |
 | `post-write-quality.sh` | PostToolUse | 对超大文件和反模式发出警告 |
 

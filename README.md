@@ -30,7 +30,7 @@ Four enforcement layers, each with a distinct role:
 Layer 1  Iron Laws + Routing         using-rune skill (always loaded)
 Layer 2  On-Demand Guidance          Skills (invoked when ≥1% relevant)
 Layer 3  Review Enforcement          code-review skill prompt templates (during review)
-Layer 4  Physical Interception       6 hooks (block at write/commit time)
+Layer 4  Physical Interception       8 hooks (block at write/commit time)
 ```
 
 **Iron Laws** (cannot be bypassed):
@@ -100,6 +100,8 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | `pre-bash-guard.sh` | PreToolUse | Blocks dangerous shell commands |
 | `pre-write-secrets.sh` | PreToolUse | Blocks writes containing API keys / secrets |
 | `pre-commit-review-check.py` | PreToolUse | Enforces review before git commit |
+| `pre-strip-llm-attribution.sh` | PreToolUse | Blocks LLM attribution in `gh pr create` |
+| `pre-spec-drift-check.sh` | PreToolUse | Warns (advisory) on spec drift — code touched in a specced module without spec/delta update |
 | `post-write-debug.sh` | PostToolUse | Detects leftover debug statements |
 | `post-write-quality.sh` | PostToolUse | Warns on oversized files and anti-patterns |
 

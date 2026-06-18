@@ -77,7 +77,7 @@ mkdir -p docs/specs docs/designs docs/architecture/adr docs/changes docs/changes
 按 doc-updater agent 的 codemap 格式（`docs/CODEMAP.md`）生成。从源码结构机械提取：
 
 - 目录结构（find 结果）
-- 关键模块表（Step 2 确认的模块：模块 | 职责 | 入口文件 | 主要依赖）
+- 关键模块表（Step 2 确认的模块：模块 | 职责 | 入口文件 | 主要依赖 | Capability Spec；Pre-Rune 填 `[待补充]`）
 - 入口文件（从框架约定推断）
 - 外部依赖（从 `package.json` / `requirements.txt` / `go.mod` 解析）
 - 数据流（从框架类型推断通用模式）

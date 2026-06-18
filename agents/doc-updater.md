@@ -93,9 +93,9 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 [主要目录和用途]
 
 ## 关键模块
-| 模块 | 职责 | 入口文件 | 主要依赖 |
-|------|------|---------|---------|
-| [模块] | [职责] | [入口文件] | [主要依赖] |
+| 模块 | 职责 | 入口文件 | 主要依赖 | Capability Spec |
+|------|------|---------|---------|-----------------|
+| [模块] | [职责] | [入口文件] | [主要依赖] | [capability 名 / [待补充]] |
 
 ## 数据流
 [核心数据流描述]
@@ -105,7 +105,7 @@ Design Status / Implementation Status 是进度子列：`None` / `In Progress` /
 |---|---|
 ```
 
-模块的职责与依赖记录在本表（地图）；公共 API 与用法以源码为唯一来源（「入口文件」列指向），不在此复制，避免漂移。
+模块的职责与依赖记录在本表（地图）；公共 API 与用法以源码为唯一来源（「入口文件」列指向），不在此复制，避免漂移。「Capability Spec」列填该模块对应的 capability 名（映射 `docs/specs/<cap>-spec.md`），Pre-Rune 填 `[待补充]`、capability 被 specced 后由 doc-sync 填入；该列是 `pre-spec-drift-check.sh` hook 的 module→spec 映射来源。
 
 更新时机：onboard 生成；development 完成（doc-sync）重扫源码结构更新。
 
