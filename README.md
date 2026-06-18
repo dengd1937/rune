@@ -49,11 +49,39 @@ Chore-class changes (typos, hook regex tweaks, README edits) take a lightweight 
 
 | Phase | Trigger | What happens | Output |
 |-------|---------|-------------|--------|
-| **Brainstorm** | `/rune:brainstorm` | Product discovery, competitive research, feature analysis, technical design, spec — or Scale Gate fast-path for chore-class changes | `docs/specs/` (or skipped for chore) |
+| **Brainstorm** | `/rune:brainstorm` | Product discovery, competitive research, feature analysis, technical design, spec delta — or Scale Gate fast-path for chore-class changes | `docs/changes/<feature>/` (proposal + spec delta; skipped for chore) |
 | **Design** | Auto-routes L1/L2 for UI features | Intent → wireframe → high-fidelity → review gate | `docs/designs/` |
-| **Development** | Implementation phase | Research → plan → per-task TDD → quality gate → review → commit | Committed code (80%+ coverage) |
+| **Development** | Implementation phase | Research → plan → per-task TDD → quality gate → review → commit → finishing (applies spec delta, archives change) | Committed code (80%+ coverage) |
 
 Every change starts with `/rune:brainstorm` — backend-only work skips Design, and chore-class changes (typos, hook tweaks, doc edits) take the Scale Gate fast-path: edit → quality-gate → reviewer → commit, no spec/plan written.
+
+## Documentation Model
+
+Rune is spec-driven, but with **no external engine** — specs are the behavior-contract source of truth, and everything else hangs off them. This is the layout Rune scaffolds and maintains inside a project's `docs/`:
+
+```
+docs/
+├── specs/<capability>-spec.md     # behavior contracts — WHAT, long-lived truth
+├── changes/<feature>/             # active work unit: proposal + spec delta + design + tasks
+│   └── archive/<feature>/         # finished work kept as an evolution log (proposal + delta)
+├── designs/<feature>/             # UI design artifacts
+├── architecture/adr/              # cross-cutting decisions — WHY, long-lived
+├── CODEMAP.md                     # code structure + module → capability-spec map
+└── FEATURE-CATALOG.md             # feature ledger + UI components + decisions
+```
+
+Specs are never edited ad hoc — a change carries its delta, which is applied at the end:
+
+```
+brainstorm      →  changes/<feature>/{proposal.md, specs.md}    # OpenSpec-style +/− delta
+writing-plans   →  changes/<feature>/{design.md, tasks.md}
+finishing       →  apply specs.md delta to specs/  →  archive proposal + delta  →  drop design/tasks
+```
+
+- **specs/** is organized by **capability**, not feature — one feature may touch several capability specs.
+- **changes/** is the two-space staging ground; the delta format (`+` ADD / `-` DROP) mirrors OpenSpec.
+- **architecture/adr/** holds cross-cutting decisions (the *why*); feature-local design lives in `changes/<feature>/design.md` and is deleted once implemented.
+- **`pre-spec-drift-check.sh`** warns when a specced module's code changes without a matching spec or delta update — the mechanical backstop for the manual apply step.
 
 ## Skills
 
@@ -63,7 +91,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [brainstorm](skills/brainstorm/SKILL.md) | Product discovery → capability spec(s) (or Scale Gate fast-path for chore) |
 | [design-workflow](skills/design-workflow/SKILL.md) | UI design — L1 lightweight / L2 full wireframe → hi-fi → review |
 | [pencil-design](skills/pencil-design/SKILL.md) | Pencil MCP design + code generation |
-| [writing-plans](skills/writing-plans/SKILL.md) | Technical design + task breakdown → docs/changes/ — no-placeholders, dual quality check |
+| [writing-plans](skills/writing-plans/SKILL.md) | Technical design + task breakdown → docs/changes/<feature>/ (design.md + tasks.md) — no-placeholders, dual quality check |
 | [subagent-driven-development](skills/subagent-driven-development/SKILL.md) | Multi-file changes — per-task TDD + review loop |
 | [tdd-workflow](skills/tdd-workflow/SKILL.md) | RED → GREEN → IMPROVE cycle (80%+ coverage) |
 | [investigate](skills/investigate/SKILL.md) | Root-cause analysis → TDD fix → review (no code until cause confirmed) |
@@ -82,7 +110,7 @@ Every change starts with `/rune:brainstorm` — backend-only work skips Design, 
 | [resolve](skills/resolve/SKILL.md) | Drive existing GitHub issues to merged & auto-closed — verify, decide, delegate, PR with Closes #N |
 | [writing-skills](skills/writing-skills/SKILL.md) | Author and maintain Rune skills |
 | [doc-sync](skills/doc-sync/SKILL.md) | Post-implementation doc sync — updates specs, catalogs, and design artifact status |
-| [onboard](skills/onboard/SKILL.md) | Scaffold Rune docs topology for existing projects — generates codemap, module index, catalogs, and adoption ADR |
+| [onboard](skills/onboard/SKILL.md) | Scaffold Rune docs topology for existing projects — generates codemap (with module index), feature catalog, and adoption ADR |
 
 ## Agents
 
