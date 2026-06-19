@@ -1,0 +1,21 @@
+diff --git a/src/db.js b/src/db.js
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/db.js
+@@ -0,0 +1,14 @@
++import { Database } from "./database-driver.js";
++
++const db = new Database();
++
++export async function findUserByEmail(email) {
++  // Look up a user by their email address.
++  return db.query(
++    "SELECT id, email, created_at FROM users WHERE email = '" + email + "'"
++  );
++}
++
++export async function countUsers() {
++  return db.query("SELECT COUNT(*) FROM users WHERE email = '" + email + "'");
++}
++
