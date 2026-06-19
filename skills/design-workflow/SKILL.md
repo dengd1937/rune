@@ -1,6 +1,6 @@
 ---
 name: design-workflow
-description: "Use after brainstorm for tasks involving UI — new pages, new components, new visual interactions, or new design tokens. TRIGGER when: new UI feature, new page, new component, or visual change; tasks involving docs/designs/ directories, *.pen files, Pencil MCP tools, or design tokens. Skip for: backend-only, config-only, refactoring without visual impact. Terminal state: handoff to writing-plans skill."
+description: "Use when a task involves UI — new pages, components, visual interactions, or design tokens — including work in docs/designs/, *.pen files, or with Pencil MCP tools. Skip for backend-only, config-only, or refactoring without visual impact. Routes to writing-plans on completion."
 metadata:
   author: sre-copilot
   version: "2.0"

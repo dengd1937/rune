@@ -1,6 +1,6 @@
 ---
 name: code-quality-gate
-description: Run quality checks after editing files — format, typecheck, and console.log detection. Use after writing or modifying source files before moving to the next task.
+description: Use when finishing an edit to source files — runs format, typecheck, and console.log detection before moving to the next task.
 origin: ECC
 ---
 

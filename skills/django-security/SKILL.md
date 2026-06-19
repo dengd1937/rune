@@ -1,6 +1,6 @@
 ---
 name: django-security
-description: Django security best practices, authentication, authorization, CSRF protection, SQL injection prevention, XSS prevention, and secure deployment configurations.
+description: Use when building Django features involving authentication, authorization, user input, sessions, or deployment — covers CSRF, SQL injection, and XSS prevention plus secure production configuration.
 origin: ECC
 ---
 

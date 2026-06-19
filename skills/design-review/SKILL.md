@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: "Use during design-workflow V2-4 hard gate to adversarially review design artifacts — token coverage, contract completeness, artifact consistency, accessibility docs, responsive coverage, DESIGN.md compliance — against docs/designs/<feature>/ before handoff to development."
+description: "Use when reaching the design-workflow V2-4 hard gate — adversarially reviews design artifacts (token coverage, contract completeness, artifact consistency, accessibility docs, responsive coverage, DESIGN.md compliance) against docs/designs/<feature>/ before development handoff."
 ---
 
 # Design Review

@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: "You MUST use this before any creative work — creating features, building components, adding functionality, modifying behavior, or solving ambiguous problems. Guides from vague idea through product discovery, competitive research, feature analysis, technical design, and capability spec writing, producing behavior contracts organized by capability. Terminal state: invokes writing-plans skill (non-UI) or design-workflow skill (UI tasks). This applies to EVERY project regardless of perceived simplicity."
+description: "Use when starting any creative work — creating features, components, or functionality, modifying behavior, or solving ambiguous problems — before design or implementation. Covers product discovery, competitive research, feature analysis, technical design, and capability spec writing. Applies to every project; routes to writing-plans (non-UI) or design-workflow (UI)."
 origin: rune
 ---
 

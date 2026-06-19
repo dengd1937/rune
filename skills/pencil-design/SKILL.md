@@ -1,6 +1,6 @@
 ---
 name: pencil-design
-description: Design UIs in Pencil (.pen files) and generate production code. Activates for tasks involving Pencil MCP tools, .pen files, design-to-code workflows, or UI design with Pencil. Integrates with the design-workflow.md v2 stages for wireframing, token work, and high-fidelity design.
+description: Use when designing UIs in Pencil (.pen files) or generating production code from Pencil designs — covers Pencil MCP tools, .pen files, and design-to-code workflows, integrating with design-workflow v2 stages.
 metadata:
   author: sre-copilot
   version: "1.0"

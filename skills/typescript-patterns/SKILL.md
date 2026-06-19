@@ -1,6 +1,6 @@
 ---
 name: typescript-patterns
-description: TypeScript/React patterns, shadcn/ui conventions, Tailwind v4 usage, and best practices for building robust frontend applications.
+description: Use when writing TypeScript or React — patterns for shadcn/ui conventions, Tailwind v4, hooks, and robust frontend applications.
 origin: rune
 ---
 

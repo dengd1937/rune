@@ -1,6 +1,6 @@
 ---
 name: doc-sync
-description: "Use during finishing phase to sync documentation with implementation — updates specs, catalogs, and design artifact status. Invoked by finishing-a-development-branch Step 2b."
+description: "Use when finishing an implementation — syncs documentation to the change by updating specs, catalogs, and design artifact status (finishing-a-development-branch Step 2b)."
 ---
 
 # Doc Reconciliation

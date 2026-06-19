@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use after implementation (bug fix or feature task) to dispatch appropriate reviewers and return binary APPROVE/BLOCK verdict. Shared by investigate and subagent-driven-development.
+description: Use when implementation of a bug fix or feature task is complete — dispatches the appropriate language and global reviewers and returns a binary APPROVE/BLOCK verdict.
 ---
 
 # Code Review

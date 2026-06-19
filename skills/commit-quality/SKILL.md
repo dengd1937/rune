@@ -1,6 +1,6 @@
 ---
 name: commit-quality
-description: Pre-commit quality gate — validate commit message format, lint staged files, and scan for secrets and debug artifacts. Use before every git commit.
+description: Use when about to git commit — validates commit message format, lints staged files, and scans staged content for secrets and debug artifacts.
 origin: ECC
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: investigate
-description: Root-cause investigation → TDD fix → code review for bugs. Complete bug fix workflow — no code changes until root cause is confirmed, then RED→GREEN→IMPROVE→review.
+description: Use when debugging a bug — root cause must be confirmed before any code change, then TDD (RED→GREEN→IMPROVE) and code review complete the fix.
 origin: rune
 ---
 
