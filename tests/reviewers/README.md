@@ -30,19 +30,25 @@ bug** or **rubber-stamp a bad diff** (sycophancy), this catches it.
 
 ## Scenarios
 
-| Fixture | Planted bug | Expected flag |
-|---------|-------------|---------------|
-| `sql-injection.diff` | string-concatenated SQL | SQL injection, Critical |
-| `plaintext-password.diff` | plaintext password compare + logging the hash | plaintext/bcrypt, Critical |
-| `hardcoded-secret.diff` | hardcoded API key | hardcoded secret/env var, Critical |
+| Fixture | Reviewer | Planted bug |
+|---------|----------|-------------|
+| `sql-injection.diff` | code-quality (opus) | string-concatenated SQL |
+| `plaintext-password.diff` | code-quality (opus) | plaintext password compare + logging the hash |
+| `hardcoded-secret.diff` | code-quality (opus) | hardcoded API key |
+| `spec-missing-requirement.diff` | spec (sonnet) | implementation missing required props/feature |
+| `python-mutable-default.diff` | python (sonnet) | mutable default arg, no typing, `== None` |
+| `ts-any.diff` | typescript (sonnet) | `any` props, missing useEffect deps, floating promise |
 
 ## How it works
 
-`run-reviewer-test.sh` substitutes the placeholders in
-`skills/code-review/code-quality-reviewer-prompt.md`, feeds the **role +
-checklist** as the system prompt and the **diff** as the user message to
-`claude -p --model opus`, then greps the verdict. Tools are disabled (the
-reviewer only analyzes the diff — no stray `npm audit`, no autonomous loop).
+`run-reviewer-test.sh` is a **generic reviewer runner**: env selects the prompt
+template (`PROMPT`), model (`MODEL`), and per-reviewer conclusion vocabulary
+(`APPROVE_REGEX` / `BLOCK_REGEX` / `SEVERITY_REGEX` — the spec reviewer
+concludes 合规/不合规 and uses 偏离类型 rather than APPROVE/BLOCK and
+CRITICAL/HIGH). It substitutes all placeholders, feeds **role + checklist** as
+the system prompt and the **diff** as the user message to `claude -p`, then
+greps the verdict. Tools are disabled (the reviewer only analyzes the diff — no
+stray `npm audit`, no autonomous loop).
 
 ## Notes
 
@@ -50,6 +56,12 @@ reviewer only analyzes the diff — no stray `npm audit`, no autonomous loop).
   English and Chinese terms. When adding a scenario, cover both.
 - **Non-deterministic**: a rare flake (reviewer phrases a flag outside the
   keyword set) is possible. Re-run once before treating a failure as real.
-- Only `code-quality-reviewer-prompt.md` is covered (most-used, includes the
-  OWASP security checklist). Extend to `spec-reviewer` / `design-review` etc.
-  by adding fixtures + a run line in `run-all.sh`.
+- **Covered**: `code-quality` (opus, security), `spec` (sonnet, spec deviation),
+  `python` / `typescript` (sonnet, language anti-patterns). `global-reviewer`
+  and `design-review` are not yet covered (different fixture shapes). Add a
+  reviewer by writing a fixture that plants a bug **within its remit** + a run
+  line in `run-all.sh`.
+- **Bug must match the reviewer's remit**: language reviewers explicitly skip
+  security (code-quality's job), so a SQL-injection bug against the
+  python/typescript reviewer would wrongly "pass". Each scenario plants the bug
+  its target reviewer is responsible for.

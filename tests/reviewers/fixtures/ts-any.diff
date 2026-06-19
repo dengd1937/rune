@@ -1,0 +1,17 @@
+diff --git a/src/components/List.tsx b/src/components/List.tsx
+new file mode 100644
+index 0000000..6666666
+--- /dev/null
++++ b/src/components/List.tsx
+@@ -0,0 +1,11 @@
++export function List({ items }: any) {
++  const [data, setData] = useState(items);
++  useEffect(() => {
++    fetch("/api/refresh").then((r) => r.json()).then(setData);
++  }, []);
++  return (
++    <ul>
++      {items.map((item, i) => (<li key={i}>{item.name}</li>))}
++    </ul>
++  );
++}
