@@ -1,0 +1,28 @@
+diff --git a/src/UserCard.tsx b/src/UserCard.tsx
+new file mode 100644
+index 0000000..4444444
+--- /dev/null
++++ b/src/UserCard.tsx
+@@ -0,0 +1,18 @@
++interface UserCardProps {
++  name: string;
++  email: string;
++  onCancel: () => void;
++  onSelect: () => void;
++  loading?: boolean;
++}
++
++export function UserCard({ name, email, onCancel, onSelect, loading }: UserCardProps) {
++  if (loading) {
++    return (
++      <div role="status" aria-busy="true">
++        <svg className="spinner" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /></svg>
++      </div>
++    );
++  }
++  return (
++    <div onClick={onSelect}><span>{name}</span><span>{email}</span>
++      <button onClick={(e) => { e.stopPropagation(); onCancel(); }}>Cancel</button>
++    </div>
++  );
++}

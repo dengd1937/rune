@@ -1,0 +1,19 @@
+diff --git a/src/auth.js b/src/auth.js
+new file mode 100644
+index 0000000..2222222
+--- /dev/null
++++ b/src/auth.js
+@@ -0,0 +1,13 @@
++import bcrypt from "bcrypt";
++import { db } from "./db.js";
++
++const DUMMY_HASH = "$2b$10$abcdefghijklmnopqrstuv";
++
++// Verifies credentials via bcrypt; returns the user (minus password_hash) or null.
++export async function login(email, password) {
++  const user = await db.findUserByEmail(email);
++  const valid = await bcrypt.compare(password, user ? user.password_hash : DUMMY_HASH);
++  if (!user || !valid) return null;
++  const { password_hash, ...safeUser } = user;
++  return safeUser;
++}

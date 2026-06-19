@@ -1,0 +1,23 @@
+diff --git a/src/components/List.tsx b/src/components/List.tsx
+new file mode 100644
+index 0000000..6666666
+--- /dev/null
++++ b/src/components/List.tsx
+@@ -0,0 +1,19 @@
++import { useEffect, useState } from "react";
++
++interface Item { id: string; name: string }
++interface ListProps { items: Item[] }
++
++export function List({ items }: ListProps): JSX.Element {
++  const [data, setData] = useState<Item[]>(items);
++  useEffect(() => {
++    let active = true;
++    fetch("/api/refresh")
++      .then((r): Promise<Item[]> => r.json())
++      .then((d) => { if (active) setData(d); })
++      .catch((err) => console.error("refresh failed", err));
++    return () => { active = false; };
++  }, []);
++  return <ul>{data.map((item) => <li key={item.id}>{item.name}</li>)}</ul>;
++}

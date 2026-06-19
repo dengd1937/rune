@@ -1,0 +1,17 @@
+diff --git a/src/utils.py b/src/utils.py
+new file mode 100644
+index 0000000..5555555
+--- /dev/null
++++ b/src/utils.py
+@@ -0,0 +1,12 @@
++from typing import Sequence
++
++
++def merge_tags(tags: Sequence[str | None], prefix: list[str] | None = None) -> list[str]:
++    current = prefix if prefix is not None else []
++    names: list[str] = []
++    for tag in tags:
++        if tag is None:
++            continue
++        names.append(f"{tag}_{'_'.join(current)}")
++    return names
