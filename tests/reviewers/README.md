@@ -38,17 +38,24 @@ bug** or **rubber-stamp a bad diff** (sycophancy), this catches it.
 | `spec-missing-requirement.diff` | spec (sonnet) | implementation missing required props/feature |
 | `python-mutable-default.diff` | python (sonnet) | mutable default arg, no typing, `== None` |
 | `ts-any.diff` | typescript (sonnet) | `any` props, missing useEffect deps, floating promise |
+| `global-cross-task-conflict.diff` | global (opus) | cross-task type mismatch (User.id string vs Order.userId number) |
+| `plan-with-defects.md` | plan (sonnet) | placeholders / TODO / vague tasks in a plan document |
+| `plan-with-risks.md` | tech-risk (sonnet) | no tests / N+1 / no pagination in a plan document |
 
 ## How it works
 
-`run-reviewer-test.sh` is a **generic reviewer runner**: env selects the prompt
-template (`PROMPT`), model (`MODEL`), and per-reviewer conclusion vocabulary
-(`APPROVE_REGEX` / `BLOCK_REGEX` / `SEVERITY_REGEX` — the spec reviewer
-concludes 合规/不合规 and uses 偏离类型 rather than APPROVE/BLOCK and
-CRITICAL/HIGH). It substitutes all placeholders, feeds **role + checklist** as
-the system prompt and the **diff** as the user message to `claude -p`, then
-greps the verdict. Tools are disabled (the reviewer only analyzes the diff — no
-stray `npm audit`, no autonomous loop).
+`run-reviewer-test.sh` is a **generic reviewer runner**:
+- env selects the prompt template (`PROMPT` + `PROMPT_SUBDIR`), model (`MODEL`),
+  and per-reviewer conclusion vocabulary (`APPROVE_REGEX` / `BLOCK_REGEX` /
+  `SEVERITY_REGEX` — spec concludes 合规/不合规 + 偏离类型; plan concludes
+  Approved/Issues Found; tech-risk concludes Approved/Needs-Attention/Block).
+- **prompt extraction** handles two template shapes: code-review/design are
+  inline prose (used whole); writing-plans wrap the prompt in a ```Task-tool
+  code block under `prompt: |` (extracted + dedented).
+- the fixture can be a **diff** (code reviewers) OR a **plan document**
+  (plan / tech-risk). The fixture rides in the user message; the role +
+  checklist ride in the system prompt. Tools are disabled (no stray `npm audit`,
+  no autonomous loop).
 
 ## Notes
 
@@ -56,11 +63,12 @@ stray `npm audit`, no autonomous loop).
   English and Chinese terms. When adding a scenario, cover both.
 - **Non-deterministic**: a rare flake (reviewer phrases a flag outside the
   keyword set) is possible. Re-run once before treating a failure as real.
-- **Covered**: `code-quality` (opus, security), `spec` (sonnet, spec deviation),
-  `python` / `typescript` (sonnet, language anti-patterns). `global-reviewer`
-  and `design-review` are not yet covered (different fixture shapes). Add a
-  reviewer by writing a fixture that plants a bug **within its remit** + a run
-  line in `run-all.sh`.
+- **Covered (7/8)**: `code-quality` (opus), `spec` / `python` / `typescript`
+  (sonnet), `global` (opus), `plan-reviewer` / `technical-risk-reviewer`
+  (sonnet). Only `design-review` remains — it reviews design artifacts (not
+  diffs/plans) and needs filesystem Read, so it needs its own harness shape.
+  Add a reviewer by writing a fixture that plants a bug **within its remit** +
+  a run line in `run-all.sh`.
 - **Bug must match the reviewer's remit**: language reviewers explicitly skip
   security (code-quality's job), so a SQL-injection bug against the
   python/typescript reviewer would wrongly "pass". Each scenario plants the bug
