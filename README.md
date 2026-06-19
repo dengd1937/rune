@@ -136,6 +136,7 @@ rune/
 ├── skills/                # auto-discovered skills
 ├── tests/
 │   ├── hooks/             # A-layer: deterministic hook unit tests (pytest, in CI)
+│   ├── skills/            # C-layer: skill manifest integrity tests (pytest, in CI)
 │   └── reviewers/         # B-layer: reviewer-prompt behavioral tests (claude -p, manual)
 ├── CLAUDE.md              # Project instructions
 ├── README.md              # This file
@@ -145,12 +146,16 @@ rune/
 
 ## Testing
 
-Rune tests its own enforcement layer (deterministic) and reviewer prompts (behavioral):
+Rune tests its enforcement layer (hooks), skill registry (skills), and reviewer prompts (reviewers):
 
 - **`tests/hooks/`** — deterministic unit tests for all 8 hooks (pytest, zero LLM). Runs in CI on every push/PR (`.github/workflows/hooks.yml`, ubuntu):
   ```bash
   pip install -r requirements-dev.txt
   pytest tests/hooks/
+  ```
+- **`tests/skills/`** — deterministic manifest tests for the auto-discovered skill layer (frontmatter, naming, README↔skills sync, iron-law spine; pytest, zero LLM). Runs in CI alongside hooks:
+  ```bash
+  pytest tests/skills/
   ```
 - **`tests/reviewers/`** — behavioral tests for reviewer prompts (planted-bug diffs/plan docs fed to `claude -p`). Real LLM, non-deterministic, **manual** — not in CI:
   ```bash

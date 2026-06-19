@@ -136,6 +136,7 @@ rune/
 ├── skills/                # 自动发现的 skills
 ├── tests/
 │   ├── hooks/             # A 层：hook 确定性单元测试（pytest，进 CI）
+│   ├── skills/            # C 层：skill manifest 完整性测试（pytest，进 CI）
 │   └── reviewers/         # B 层：reviewer prompt 行为测试（claude -p，手动）
 ├── CLAUDE.md              # 项目指令
 ├── README.md              # 英文文档
@@ -146,12 +147,16 @@ rune/
 
 ## 测试
 
-Rune 给自己的物理拦截层（确定性）和 reviewer prompt（行为）写了测试：
+Rune 给自己的物理拦截层（hooks，确定性）、skill 注册表（skills，确定性）和 reviewer prompt（reviewers，行为）写了测试：
 
 - **`tests/hooks/`** — 8 个 hook 的确定性单元测试（pytest，零 LLM）。每次 push/PR 进 CI（`.github/workflows/hooks.yml`，ubuntu）：
   ```bash
   pip install -r requirements-dev.txt
   pytest tests/hooks/
+  ```
+- **`tests/skills/`** — 自动发现的 skill 层的确定性 manifest 测试（frontmatter、命名、README↔skills 同步、铁律骨架；pytest，零 LLM）。随 hooks 一起进 CI：
+  ```bash
+  pytest tests/skills/
   ```
 - **`tests/reviewers/`** — reviewer prompt 的行为测试（植虫 diff/plan 喂给 `claude -p`）。真实 LLM、非确定、**手动**跑，不进 CI：
   ```bash

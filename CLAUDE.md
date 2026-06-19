@@ -19,13 +19,14 @@ rune/                                  # Repo root = Plugin root
 ├── skills/                            # auto-discovered by Claude Code
 ├── tests/
 │   ├── hooks/                         # A-layer: deterministic hook unit tests (pytest, in CI)
+│   ├── skills/                        # C-layer: skill manifest integrity tests (pytest, in CI)
 │   └── reviewers/                     # B-layer: reviewer-prompt behavioral tests (claude -p, manual)
-├── .github/workflows/hooks.yml        # CI: hook unit tests on ubuntu
+├── .github/workflows/hooks.yml        # CI: deterministic tests (hooks + skills) on ubuntu
 ├── .claude/
 │   └── settings.local.json            # Dev environment MCP permissions only
 ├── CLAUDE.md
 ├── README.md
-├── requirements-dev.txt               # pytest
+├── requirements-dev.txt               # pytest, pyyaml
 └── LICENSE
 ```
 
