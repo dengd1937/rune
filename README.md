@@ -131,12 +131,31 @@ finishing       →  apply specs.md delta to specs/  →  archive proposal + del
 ```
 rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace entry
+├── .github/workflows/     # CI (hook unit tests on ubuntu)
 ├── hooks/                 # Physical enforcement layer
 ├── skills/                # auto-discovered skills
+├── tests/
+│   ├── hooks/             # A-layer: deterministic hook unit tests (pytest, in CI)
+│   └── reviewers/         # B-layer: reviewer-prompt behavioral tests (claude -p, manual)
 ├── CLAUDE.md              # Project instructions
 ├── README.md              # This file
+├── requirements-dev.txt   # pytest (test dependency)
 └── LICENSE                # MIT
 ```
+
+## Testing
+
+Rune tests its own enforcement layer (deterministic) and reviewer prompts (behavioral):
+
+- **`tests/hooks/`** — deterministic unit tests for all 8 hooks (pytest, zero LLM). Runs in CI on every push/PR (`.github/workflows/hooks.yml`, ubuntu):
+  ```bash
+  pip install -r requirements-dev.txt
+  pytest tests/hooks/
+  ```
+- **`tests/reviewers/`** — behavioral tests for reviewer prompts (planted-bug diffs/plan docs fed to `claude -p`). Real LLM, non-deterministic, **manual** — not in CI:
+  ```bash
+  ./tests/reviewers/run-all.sh
+  ```
 
 ## License
 

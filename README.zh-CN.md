@@ -131,13 +131,32 @@ finishing       →  apply specs.md delta 到 specs/  →  归档 proposal + del
 ```
 rune/
 ├── .claude-plugin/        # Plugin manifest + marketplace 入口
+├── .github/workflows/     # CI（hook 单元测试，ubuntu）
 ├── hooks/                 # 物理拦截层
 ├── skills/                # 自动发现的 skills
+├── tests/
+│   ├── hooks/             # A 层：hook 确定性单元测试（pytest，进 CI）
+│   └── reviewers/         # B 层：reviewer prompt 行为测试（claude -p，手动）
 ├── CLAUDE.md              # 项目指令
 ├── README.md              # 英文文档
 ├── README.zh-CN.md        # 中文文档（本文件）
+├── requirements-dev.txt   # pytest（测试依赖）
 └── LICENSE                # MIT
 ```
+
+## 测试
+
+Rune 给自己的物理拦截层（确定性）和 reviewer prompt（行为）写了测试：
+
+- **`tests/hooks/`** — 8 个 hook 的确定性单元测试（pytest，零 LLM）。每次 push/PR 进 CI（`.github/workflows/hooks.yml`，ubuntu）：
+  ```bash
+  pip install -r requirements-dev.txt
+  pytest tests/hooks/
+  ```
+- **`tests/reviewers/`** — reviewer prompt 的行为测试（植虫 diff/plan 喂给 `claude -p`）。真实 LLM、非确定、**手动**跑，不进 CI：
+  ```bash
+  ./tests/reviewers/run-all.sh
+  ```
 
 ## License
 
