@@ -16,36 +16,49 @@
 #   FIXTURE_LANG  language tag for the fixture code fence (diff / markdown / ...)
 #   SEVERITY_REGEX  severity signal (default "critical|high"; plan/tech-risk use others)
 #   APPROVE_REGEX / BLOCK_REGEX  conclusion vocabulary (defaults cover EN+ZH)
+#   TIMEOUT  seconds before killing claude -p (default 120)
 # Args:
-#   $1 fixture        $2 bug-keyword-regex
+#   $1 fixture        $2 bug-keyword-regex (optional when EXPECT=approve)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+_timeout() {
+  local secs="$1"; shift
+  if command -v timeout >/dev/null 2>&1; then timeout "$secs" "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$secs" "$@"
+  else "$@"
+  fi
+}
+
 : "${PROMPT:?PROMPT env required}"
 : "${MODEL:?MODEL env required}"
-: "${1:?usage: PROMPT=.. MODEL=.. $0 <fixture> <bug-regex>}"
-: "${2:?usage: $0 <fixture> <bug-regex>}"
+: "${1:?usage: PROMPT=.. MODEL=.. $0 <fixture> [bug-regex]}"
 
 FIXTURE="$1"
-BUG_REGEX="$2"
+EXPECT="${EXPECT:-block}"
+if [ "$EXPECT" = "approve" ]; then
+  BUG_REGEX="${2:-__no_bug_expected__}"
+else
+  : "${2:?bug-regex required for block direction}"
+  BUG_REGEX="$2"
+fi
 PROMPT_SUBDIR="${PROMPT_SUBDIR:-code-review}"
 PROMPT_TEMPLATE="$PLUGIN_ROOT/skills/$PROMPT_SUBDIR/$PROMPT"
 TASK_TEXT="${TASK_TEXT:-}"; PLAN_TEXT="${PLAN_TEXT:-}"
 TASK_SUMMARIES="${TASK_SUMMARIES:-}"; IMPLEMENTER_REPORT="${IMPLEMENTER_REPORT:-}"
 RATIFIED_DECISIONS="${RATIFIED_DECISIONS:-}"; SPEC_TEXT="${SPEC_TEXT:-(no spec provided)}"
 USER_CONTEXT="${USER_CONTEXT:-}"; FIXTURE_LANG="${FIXTURE_LANG:-diff}"
-EXPECT="${EXPECT:-block}"   # block (planted-bug: expect flag+severity+block) | approve (clean: expect approve, no block)
 SEVERITY_REGEX="${SEVERITY_REGEX:-critical|high|严重|高危|严重风险}"
-# Broad vocab so positive verdict assertions hold across real reviewer phrasings (EN+ZH).
 APPROVE_REGEX="${APPROVE_REGEX:-approve|approved|规格合规|批准|looks good|lgtm|no issues|没问题|可合并|ready to merge}"
-BLOCK_REGEX="${BLOCK_REGEX:-block|reject|拒绝|request changes|recommend changes|changes requested|needs changes|must fix|必须修复|do not merge|不能合并|不批准|不合规|不通过|未通过|建议修改|需修改}"
+BLOCK_REGEX="${BLOCK_REGEX:-block|reject|拒绝|must fix|必须修复|do not merge|不能合并|不批准|不合规|不通过|未通过}"
 BASE_SHA="${BASE_SHA:-abc1234}"; HEAD_SHA="${HEAD_SHA:-def5678}"
+TIMEOUT="${TIMEOUT:-120}"
 
-SYSTEM_FILE="$(mktemp)"; USER_FILE="$(mktemp)"; OUTPUT_FILE="$(mktemp)"; CONCLUSION_FILE="$(mktemp)"
+SYSTEM_FILE="$(mktemp)"; USER_FILE="$(mktemp)"; OUTPUT_FILE="$(mktemp)"; CONCLUSION_FILE="$(mktemp)"; STDERR_FILE="$(mktemp)"
 KEEP_OUTPUT=0
-trap 'rm -f "$SYSTEM_FILE" "$USER_FILE" "$CONCLUSION_FILE"; [ "$KEEP_OUTPUT" -eq 1 ] || rm -f "$OUTPUT_FILE"' EXIT
+trap 'rm -f "$SYSTEM_FILE" "$USER_FILE" "$CONCLUSION_FILE" "$STDERR_FILE"; [ "$KEEP_OUTPUT" -eq 1 ] || rm -f "$OUTPUT_FILE"' EXIT
 
 # Build the system prompt: extract the real prompt from the template.
 # - code-review/design templates are inline prose -> used as-is.
@@ -104,24 +117,34 @@ parts.append("请按你的审查流程审查上述内容，输出完整审查结
 print("\n".join(parts))
 ' > "$USER_FILE"
 
-echo "Running claude -p ($MODEL, $PROMPT) on $(basename "$FIXTURE")..." >&2
-claude -p "$(cat "$USER_FILE")" \
+echo "Running claude -p ($MODEL, $PROMPT) on $(basename "$FIXTURE") [timeout=${TIMEOUT}s]..." >&2
+if ! _timeout "$TIMEOUT" claude -p "$(cat "$USER_FILE")" \
   --system-prompt-file "$SYSTEM_FILE" \
   --model "$MODEL" \
   --max-turns 3 \
   --disallowed-tools Bash Read Edit Write WebFetch WebSearch \
-  > "$OUTPUT_FILE" 2>&1 || true
+  > "$OUTPUT_FILE" 2>"$STDERR_FILE"; then
+  EXIT_CODE=$?
+  if [ "$EXIT_CODE" -eq 124 ]; then
+    echo "  [FAIL] claude -p timed out after ${TIMEOUT}s" >&2
+    echo "TIMEOUT" > "$OUTPUT_FILE"
+  fi
+fi
 
+set +e
 FAILED=0
 echo "=== Verdict for $(basename "$FIXTURE") [$PROMPT] (expect: $EXPECT) ==="
 
-# Approve/block verdicts ride in the CONCLUSION (after the last 结论/Status
-# marker). Scope that check there so body reasoning — "no SQL injection",
-# "no must-fix issues", "checked for TODOs, none" — isn't misread as a block.
-# (code-family: "### 结论" → **APPROVE**/**BLOCK**; spec: 规格合规/不合规;
-#  plan/tech-risk: **Status:** Approved|Issues Found|Block.)
-awk '/结论|Status[[:space:]]*:/ {out=$0 ORS; found=1; next} found {out=out $0 ORS} END {printf "%s", out}' \
+# Conclusion extraction — three-tier fallback:
+#   1. Last 结论/Status section (prevents body-text pollution)
+#   2. ALL 结论/Status sections (catches verdicts in earlier sections)
+#   3. Last 6 non-blank lines (no markers at all)
+awk '/结论|Status[[:space:]]*:/ {out=""; out=$0 ORS; found=1; next} found {out=out $0 ORS} END {printf "%s", out}' \
   "$OUTPUT_FILE" > "$CONCLUSION_FILE"
+if [ -s "$CONCLUSION_FILE" ] && ! grep -qiE "$APPROVE_REGEX|$BLOCK_REGEX" "$CONCLUSION_FILE"; then
+  awk '/结论|Status[[:space:]]*:/ {found=1} found {out=out $0 ORS} END {printf "%s", out}' \
+    "$OUTPUT_FILE" > "$CONCLUSION_FILE"
+fi
 if [ ! -s "$CONCLUSION_FILE" ]; then
   grep -vE '^[[:space:]]*$' "$OUTPUT_FILE" | tail -6 > "$CONCLUSION_FILE"
 fi
@@ -151,6 +174,10 @@ else
   echo "STATUS: FAILED — output follows:"
   echo "------------------------------------------------------------"
   cat "$OUTPUT_FILE"
+  if [ -s "$STDERR_FILE" ]; then
+    echo "--- stderr ---"
+    cat "$STDERR_FILE"
+  fi
   echo "------------------------------------------------------------"
   KEEP_OUTPUT=1; echo "(output kept at $OUTPUT_FILE)"; exit 1
 fi

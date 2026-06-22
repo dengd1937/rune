@@ -1,6 +1,9 @@
-# Reviewer Behavioral Tests (B-layer)
+# Prompt Behavioral Tests (B-layer)
 
-Behavioral tests for Rune's reviewer prompts, run via `claude -p` (real LLM).
+Behavioral tests for Rune's reviewer and implementer prompts, run via `claude -p` (real LLM).
+
+## Reviewer Tests
+
 Each reviewer is tested in **two directions** — recall × precision:
 
 - **block** (planted bug): plant an obvious bug within the reviewer's remit,
@@ -24,13 +27,17 @@ scenario costs ~$0.1-0.5 and is non-deterministic.
 Run manually — after editing a reviewer prompt, or before a release.
 
 ```bash
-# all scenarios (9 block + 7 approve)
+# all scenarios (9 block + 7 approve + 3 implementer)
 ./tests/reviewers/run-all.sh
 
-# one scenario (defaults to block direction)
+# one reviewer scenario (defaults to block direction)
 PROMPT=code-quality-reviewer-prompt.md MODEL=claude-opus-4-8 \
   ./tests/reviewers/run-reviewer-test.sh tests/reviewers/fixtures/sql-injection.diff \
   "sql injection|injection|注入|parameteriz|参数化|concat|拼接|unsanitiz"
+
+# one implementer scenario
+MODEL=claude-sonnet-4-6 EXPECT=tdd \
+  ./tests/reviewers/run-implementer-test.sh tests/reviewers/fixtures/impl-simple-function.md
 ```
 
 ## Scenarios
@@ -49,6 +56,20 @@ Each reviewer has a planted-bug fixture (block) and a clean counterpart (approve
 
 Each clean fixture mirrors its buggy counterpart's context with the bug fixed —
 a true control, not an unrelated clean file.
+
+## Implementer Tests
+
+`run-implementer-test.sh` tests the implementer subagent prompt (separate runner,
+different assertion logic). Three directions:
+
+| EXPECT | Fixture | What it checks |
+|--------|---------|----------------|
+| `tdd` | `impl-simple-function.md` | RED phase appears before GREEN; status report present |
+| `blocked` | `impl-vague-spec.md` | Reports BLOCKED/NEEDS_CONTEXT; does NOT falsely report DONE |
+| `no-creep` | `impl-scope-creep.md` | Does not implement out-of-scope work (advisory, non-deterministic) |
+
+`tdd` and `blocked` are hard gates; `no-creep` is advisory (same rationale as
+reviewer approve — scope discipline is non-deterministic).
 
 ## How it works
 
@@ -76,10 +97,11 @@ a true control, not an unrelated clean file.
   both English and Chinese terms.
 - **Non-deterministic**: a rare flake (reviewer phrases a flag outside the
   pattern set) is possible. Re-run once before treating a failure as real.
-- **Covered (7/8 reviewers)**: code-quality / spec / python / typescript /
-  global / plan / tech-risk, each in **both directions**. Only `design-review`
-  remains — it reviews design artifacts (not diffs/plans) and needs filesystem
-  Read, so it needs its own harness shape.
+- **Covered (7/8 reviewers + implementer)**: code-quality / spec / python /
+  typescript / global / plan / tech-risk, each in **both directions**; plus the
+  implementer prompt (TDD order / BLOCKED escalation / scope discipline). Only
+  `design-review` remains — it reviews design artifacts (not diffs/plans) and
+  needs filesystem Read, so it needs its own harness shape.
 - **Bug must match the reviewer's remit**: language reviewers skip security
   (code-quality's job), so a SQL-injection bug against the python/typescript
   reviewer would wrongly "pass". Each block scenario plants the bug its target
