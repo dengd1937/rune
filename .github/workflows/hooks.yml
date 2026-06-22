@@ -15,5 +15,5 @@ jobs:
           python-version: "3.11"
       - name: Install deps
         run: pip install -r requirements-dev.txt
-      - name: Run deterministic tests (hooks + skills)
-        run: pytest tests/hooks/ tests/skills/ -v
+      - name: Run deterministic tests (hooks + skills + reviewers harness)
+        run: pytest tests/hooks/ tests/skills/ tests/reviewers/ -v

@@ -91,6 +91,19 @@ reviewer approve — scope discipline is non-deterministic).
   (bug keyword + severity) still scans the full output, since the bug discussion
   lives in the body.
 
+## Harness logic is unit-tested (in CI)
+
+The deterministic stages — build system prompt, build user message, extract
+conclusion, decide verdict — live in **`reviewers_lib.py`** (a single source of
+truth for the regex-vocab defaults too). `run-reviewer-test.sh` is a thin
+orchestrator over that module's CLI; it owns only the env plumbing and the one
+real-LLM call. `test_verdict_logic.py` unit-tests the logic with **synthetic
+reviewer outputs** ($0, deterministic) and runs **in CI** alongside the A/C
+layers — so a verdict/extraction regression or a reviewer output-format change
+is caught before any LLM run. (The behavioral scenarios themselves stay manual:
+the LLM is still non-deterministic.) Three real bugs once hid in this logic and
+each cost a full LLM run to find; the unit tests lock them.
+
 ## Notes
 
 - **Reviewer often replies in Chinese** — keyword/conclusion patterns include

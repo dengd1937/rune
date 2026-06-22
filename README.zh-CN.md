@@ -158,9 +158,10 @@ Rune 给自己的物理拦截层（hooks，确定性）、skill 注册表（skil
   ```bash
   pytest tests/skills/
   ```
-- **`tests/reviewers/`** — reviewer prompt 的行为测试（植虫 diff/plan 喂给 `claude -p`）。真实 LLM、非确定、**手动**跑，不进 CI：
+- **`tests/reviewers/`** — reviewer prompt 的行为测试（植虫 diff/plan 喂给 `claude -p`）。真实 LLM、非确定、**手动**跑。其中确定性的 harness 逻辑（判决 / 结论提取）有进 CI 的单测：
   ```bash
-  ./tests/reviewers/run-all.sh
+  ./tests/reviewers/run-all.sh     # 行为场景（手动）
+  pytest tests/reviewers/           # harness 逻辑单测（CI）
   ```
 
 ## License

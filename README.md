@@ -157,9 +157,10 @@ Rune tests its enforcement layer (hooks), skill registry (skills), and reviewer 
   ```bash
   pytest tests/skills/
   ```
-- **`tests/reviewers/`** — behavioral tests for reviewer prompts (planted-bug diffs/plan docs fed to `claude -p`). Real LLM, non-deterministic, **manual** — not in CI:
+- **`tests/reviewers/`** — behavioral tests for reviewer prompts (planted-bug diffs/plan docs fed to `claude -p`). Real LLM, non-deterministic, **manual**. The deterministic harness logic (verdict / conclusion-extraction) is unit-tested in CI:
   ```bash
-  ./tests/reviewers/run-all.sh
+  ./tests/reviewers/run-all.sh     # behavioral scenarios (manual)
+  pytest tests/reviewers/           # harness-logic unit tests (CI)
   ```
 
 ## License
